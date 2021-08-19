@@ -1,0 +1,8 @@
+file(GLOB_RECURSE SOURCE_FILES *.cpp)
+add_definitions(-DAIR_H_GEN=\"${CMAKE_SOURCE_DIR}/src/api/Air_c.h\")
+add_definitions(-DAIR_CPP_GEN=\"${CMAKE_SOURCE_DIR}/src/api/Air_c.cpp\")
+add_executable(c_interface_gen ${SOURCE_FILES})
+target_include_directories(c_interface_gen PUBLIC ${CMAKE_SOURCE_DIR})
+target_compile_options(c_interface_gen PRIVATE -std=c++14 -Wall -Werror -O3)
+target_link_libraries(c_interface_gen ${CMAKE_THREAD_LIBS_INIT})
+add_custom_target(run_c_interface_gen ALL COMMAND c_interface_gen)

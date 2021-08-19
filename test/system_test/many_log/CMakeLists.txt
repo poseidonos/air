@@ -1,0 +1,5 @@
+file(GLOB_RECURSE SOURCE_FILES *.cpp)
+add_executable(st_many_log ${SOURCE_FILES})
+target_include_directories(st_many_log PUBLIC ${CMAKE_SOURCE_DIR})
+target_compile_options(st_many_log PRIVATE -std=c++14 -Wall -Werror -O3 -mavx2 -fPIC)
+target_link_libraries(st_many_log air pthread)
