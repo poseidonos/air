@@ -146,6 +146,7 @@ enum class ChainHandler : uint32_t
     SWITCHGEAR,
     PREPROCESS,
     DETECT,
+    TRANSFER,
 
     COUNT
 };

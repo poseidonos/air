@@ -22,15 +22,27 @@
  *   SOFTWARE.
  */
 
-#include "src/api/Air.h"
+#ifndef AIR_TRANSFER_H
+#define AIR_TRANSFER_H
 
-air::InstanceManager* AIR<true, true>::instance_manager = nullptr;
-node::NodeManager* AIR<true, true>::node_manager = nullptr;
-collection::CollectionManager* AIR<true, true>::collection_manager = nullptr;
-thread_local node::NodeDataArray* AIR<true, true>::node_data_array = nullptr;
+#include <future>
 
-void
-air_request_data(transfer::node_list nodes, transfer::task_unit&& function)
+namespace transfer
 {
-    transfer::Task::Get().Register(nodes, std::move(function));
-}
+class Transfer
+{
+public:
+    Transfer(void);
+    virtual ~Transfer(void)
+    {
+    }
+
+    void SendData(void);
+
+private:
+    std::future<int> async_tasks;
+};
+
+} // namespace transfer
+
+#endif // AIR_TRANSFER_H

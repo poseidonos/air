@@ -73,6 +73,9 @@ air::InstanceManager::InstanceManager(void)
 
     detector = new detect::Detector{node_manager};
     detect_cor_handler = new detect::DetectCoRHandler{detector};
+
+    transfer = new transfer::Transfer{};
+    transfer_cor_handler = new transfer::TransferCoRHandler{transfer};
 }
 
 void
@@ -295,6 +298,21 @@ air::InstanceManager::_DeleteDetectorModule(void)
     }
 }
 
+void
+air::InstanceManager::_DeleteTransferModule(void)
+{
+    if (nullptr != transfer)
+    {
+        delete transfer;
+        transfer = nullptr;
+    }
+    if (nullptr != transfer_cor_handler)
+    {
+        delete transfer_cor_handler;
+        transfer_cor_handler = nullptr;
+    }
+}
+
 air::InstanceManager::~InstanceManager(void)
 {
     _DeleteProcessModule();
@@ -308,6 +326,7 @@ air::InstanceManager::~InstanceManager(void)
     _DeletePolicyModule();
     _DeleteMetaModule();
     _DeleteLibModule();
+    _DeleteTransferModule();
 }
 
 int
@@ -344,6 +363,8 @@ air::InstanceManager::Initialize(uint32_t cpu_num)
         to_dtype(pi::ChainHandler::PREPROCESS));
     chain_manager->AttachChain(detect_cor_handler,
         to_dtype(pi::ChainHandler::DETECT));
+    chain_manager->AttachChain(transfer_cor_handler,
+        to_dtype(pi::ChainHandler::TRANSFER));
 
     // Step 4. NodeManager Initializing (using Config)
     node_manager->Init();

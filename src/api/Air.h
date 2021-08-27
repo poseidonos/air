@@ -36,7 +36,9 @@
 #include "src/data_structure/NodeManager.h"
 #include "src/lib/Casting.h"
 #include "src/lib/Type.h"
+#include "src/lib/json/Json.h"
 #include "src/object/Instance.h"
+#include "src/transfer/Task.h"
 
 #define air_initialize(...) \
     AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), true>::Initialize(__VA_ARGS__)
@@ -253,5 +255,7 @@ public:
     {
     }
 };
+
+void air_request_data(transfer::node_list nodes, transfer::task_unit&& function);
 
 #endif // AIR_H

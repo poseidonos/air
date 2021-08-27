@@ -52,6 +52,8 @@
 #include "src/target_detector/DetectCorHandler.h"
 #include "src/target_detector/Detector.h"
 #include "src/thread/ThreadManager.h"
+#include "src/transfer/Transfer.h"
+#include "src/transfer/TransferCorHandler.h"
 
 namespace air
 {
@@ -89,6 +91,7 @@ private:
     void _DeleteChainModule(void);
     void _DeleteThreadModule(void);
     void _DeleteDetectorModule(void);
+    void _DeleteTransferModule(void);
 
     meta::NodeMeta* node_meta{nullptr};
     meta::NodeMetaGetter* node_meta_getter{nullptr};
@@ -133,6 +136,9 @@ private:
 
     detect::DetectCoRHandler* detect_cor_handler{nullptr};
     detect::Detector* detector{nullptr};
+
+    transfer::TransferCoRHandler* transfer_cor_handler{nullptr};
+    transfer::Transfer* transfer{nullptr};
 };
 
 } // namespace air

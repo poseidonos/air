@@ -3,6 +3,7 @@ if(BUILD_ST)
     add_subdirectory(c_interface)
     add_subdirectory(io_mock)
     add_subdirectory(many_log)
+    add_subdirectory(data_transfer)
 endif()
 
 add_custom_target(build_st DEPENDS build_system_test)

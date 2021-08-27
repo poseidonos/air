@@ -22,15 +22,57 @@
  *   SOFTWARE.
  */
 
-#include "src/api/Air.h"
+#ifndef AIR_TRANSFER_TASK_H
+#define AIR_TRANSFER_TASK_H
 
-air::InstanceManager* AIR<true, true>::instance_manager = nullptr;
-node::NodeManager* AIR<true, true>::node_manager = nullptr;
-collection::CollectionManager* AIR<true, true>::collection_manager = nullptr;
-thread_local node::NodeDataArray* AIR<true, true>::node_data_array = nullptr;
+#include <deque>
+#include <functional>
+#include <future>
+#include <list>
+#include <mutex>
+#include <string>
 
-void
-air_request_data(transfer::node_list nodes, transfer::task_unit&& function)
+#include "src/lib/json/Json.h"
+
+namespace transfer
 {
-    transfer::Task::Get().Register(nodes, std::move(function));
-}
+using task_unit = std::function<int(const air::JSONdoc&)>;
+using node_list = std::initializer_list<std::string>;
+
+class Task
+{
+public:
+    static Task&
+    Get(void)
+    {
+        static Task* task = new Task{};
+        return *task;
+    }
+    Task(Task const&) = delete;
+    Task(Task&&) = delete;
+    Task& operator=(Task const&) = delete;
+    Task& operator=(Task&&) = delete;
+
+    void Register(node_list nodes, task_unit function);
+    int NotifyAll(air::JSONdoc&& json_data);
+
+private:
+    void _ShiftTasks(void);
+    void _WaitTasksDone(void);
+    void _UnregisterTasks(void);
+
+    struct TaskInfo
+    {
+        task_unit function;
+        std::deque<std::string> nodes;
+        std::future<int> async_task;
+    };
+
+    static std::mutex mutex_outbox;
+    static std::list<TaskInfo> task_outbox;
+    static std::list<TaskInfo> task_list;
+};
+
+} // namespace transfer
+
+#endif // AIR_TRANSFER_TASK_H

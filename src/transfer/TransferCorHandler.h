@@ -22,15 +22,34 @@
  *   SOFTWARE.
  */
 
-#include "src/api/Air.h"
+#ifndef AIR_TRANSFER_COR_HANDLER_H
+#define AIR_TRANSFER_COR_HANDLER_H
 
-air::InstanceManager* AIR<true, true>::instance_manager = nullptr;
-node::NodeManager* AIR<true, true>::node_manager = nullptr;
-collection::CollectionManager* AIR<true, true>::collection_manager = nullptr;
-thread_local node::NodeDataArray* AIR<true, true>::node_data_array = nullptr;
+#include "src/lib/Design.h"
+#include "src/transfer/Transfer.h"
 
-void
-air_request_data(transfer::node_list nodes, transfer::task_unit&& function)
+namespace transfer
 {
-    transfer::Task::Get().Register(nodes, std::move(function));
-}
+class TransferCoRHandler : public lib_design::AbstractCoRHandler
+{
+public:
+    explicit TransferCoRHandler(Transfer* new_transfer)
+    : transfer(new_transfer)
+    {
+    }
+    virtual ~TransferCoRHandler(void)
+    {
+    }
+    virtual void
+    HandleRequest(int option = 0)
+    {
+        transfer->SendData();
+    }
+
+private:
+    Transfer* transfer{nullptr};
+};
+
+} // namespace transfer
+
+#endif // AIR_TRANSFER_COR_HANDLER_H

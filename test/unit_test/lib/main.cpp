@@ -3,8 +3,10 @@
 #include <gtest/gtest.h>
 #include <stdio.h>
 
+#include <deque>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "casting_test.h"
@@ -942,6 +944,92 @@ TEST_F(JsonTest, jsonparser_exception)
     {
         std::cout << e.what() << std::endl;
     }
+
+    air::json_clear();
+}
+
+TEST_F(JsonTest, json_copy)
+{
+    auto& obj = air::json("obj");
+    obj["bool"] = {true};
+    obj["int"] = {123};
+    obj["str"] = {"string"};
+    obj["double_arr"] += {4.44};
+    auto& obj2 = air::json("obj2");
+    obj2["str2"] = {"strstr"};
+    obj["obj"] = {obj2};
+    obj["int_arr"] = {1, 2, 3};
+    obj["multi_arr"] += {"str"};
+    obj["multi_arr"] += {5};
+    auto& obj3 = air::json("obj3");
+    obj3["dd"] = {394.2311};
+    obj["multi_arr"] += {obj3};
+    std::cout << obj << std::endl;
+    std::stringstream stream_obj;
+    stream_obj << obj;
+    std::string str = stream_obj.str();
+    EXPECT_EQ(0, str.compare("{\"bool\": true, \"double_arr\": [4.44], \"int\": 123, \"int_arr\": [1, 2, 3], \"multi_arr\": [\"str\", 5, {\"dd\": 394.231}], \"obj\": {\"str2\": \"strstr\"}, \"str\": \"string\"}"));
+
+    auto copy_obj = air::json_copy("obj");
+    std::cout << copy_obj << std::endl;
+    std::stringstream stream_copy_obj;
+    stream_copy_obj << copy_obj;
+    std::string copy_str = stream_copy_obj.str();
+    EXPECT_EQ(0, copy_str.compare("{\"bool\": true, \"double_arr\": [4.44], \"int\": 123, \"int_arr\": [1, 2, 3], \"multi_arr\": [\"str\", 5, {\"dd\": 394.231}], \"obj\": {\"str2\": \"strstr\"}, \"str\": \"string\"}"));
+
+    air::json_clear();
+    std::cout << copy_obj << std::endl;
+    std::stringstream stream_copy_obj2;
+    stream_copy_obj2 << copy_obj;
+    std::string copy_str2 = stream_copy_obj2.str();
+    EXPECT_EQ(0, copy_str2.compare("{\"bool\": true, \"double_arr\": [4.44], \"int\": 123, \"int_arr\": [1, 2, 3], \"multi_arr\": [\"str\", 5, {\"dd\": 394.231}], \"obj\": {\"str2\": \"strstr\"}, \"str\": \"string\"}"));
+
+    copy_obj.Clear();
+    std::cout << copy_obj << std::endl;
+    std::stringstream stream_copy_obj3;
+    stream_copy_obj3 << copy_obj;
+    std::string copy_str3 = stream_copy_obj3.str();
+    EXPECT_EQ(0, copy_str3.compare("{}"));
+}
+
+TEST_F(JsonTest, json_compound)
+{
+    auto& obj = air::json("obj");
+    auto& groupTop = air::json("groupTop");
+    auto& groupA = air::json("groupA");
+    auto& nodeA = air::json("nodeA");
+    auto& nodeApple = air::json("nodeApple");
+    auto& nodeAnt = air::json("nodeAnt");
+    auto& groupB = air::json("groupB");
+    auto& nodeB = air::json("nodeB");
+    auto& nodeBanana = air::json("nodeBanana");
+    auto& nodeBacon = air::json("nodeBacon");
+    nodeApple["color"] = {"red"};
+    nodeApple["weight(kg)"] = {0.93};
+    nodeAnt["color"] = {"black"};
+    nodeAnt["type"] = {"queen"};
+    nodeA["Apple"] = {nodeApple};
+    nodeA["Ant"] = {nodeAnt};
+    groupA["node"] = {nodeA};
+    groupTop["groupA"] = {groupA};
+    nodeBanana["color"] = {"yellow"};
+    nodeBanana["weight(kg)"] = {2.34};
+    nodeBacon["color"] = {"pink"};
+    nodeB["Banana"] = {nodeBanana};
+    nodeB["Bacon"] = {nodeBacon};
+    groupB["node"] = {nodeB};
+    groupTop["groupB"] = {groupB};
+    obj["group"] = {groupTop};
+
+    std::deque<std::string> q{"Apple", "Banana"};
+    auto compound = obj.Compound(q);
+    std::cout << obj << std::endl;
+    std::cout << compound << std::endl;
+
+    std::stringstream stream;
+    stream << compound;
+    std::string str = stream.str();
+    EXPECT_EQ(0, str.compare("{\"Apple\": {\"color\": \"red\", \"weight(kg)\": 0.93}, \"Banana\": {\"color\": \"yellow\", \"weight(kg)\": 2.34}}"));
 
     air::json_clear();
 }

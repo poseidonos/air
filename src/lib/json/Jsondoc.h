@@ -25,6 +25,7 @@
 #ifndef AIR_JSONDOC_H
 #define AIR_JSONDOC_H
 
+#include <deque>
 #include <initializer_list>
 #include <iostream>
 #include <map>
@@ -193,6 +194,21 @@ public:
         }
     }
 
+    const JSONdoc& operator[](std::string key) const
+    {
+        auto it = map.find(key);
+        if (it != map.end())
+        {
+            void* v = (it->second).data;
+            JSONdoc* doc = reinterpret_cast<JSONdoc*>(v);
+            return *doc;
+        }
+        else
+        {
+            throw std::logic_error("[error][JSONdoc::operator[] invalid key");
+        }
+    }
+
     friend std::ostream&
     operator<<(std::ostream& os, const JSONdoc& doc)
     {
@@ -264,7 +280,7 @@ public:
     }
 
     bool
-    HasKey(std::string key)
+    HasKey(std::string key) const
     {
         auto it = map.find(key);
         if (it != map.end())
@@ -398,6 +414,66 @@ public:
     SetType(JSONtype new_type)
     {
         type = new_type;
+    }
+
+    void
+    Copy(JSONdoc* dst)
+    {
+        for (const auto& v : map)
+        {
+            if (JSONtype::OBJECT == v.second.type)
+            {
+                JSONdoc* doc = reinterpret_cast<JSONdoc*>(v.second.data);
+                JSONdoc* sub_dst = new JSONdoc{doc->type, true, true};
+                dst->map.insert({v.first, {sub_dst, JSONtype::OBJECT}});
+                doc->Copy(sub_dst);
+            }
+            else if (JSONtype::ARRAY == v.second.type)
+            {
+            }
+            else
+            {
+                void* data = new_data(v.second.type, v.second.data);
+                dst->map.insert({v.first, {data, v.second.type}});
+            }
+        }
+    }
+
+    auto
+    begin(void) const
+    {
+        return map.begin();
+    }
+
+    auto
+    end(void) const
+    {
+        return map.end();
+    }
+
+    JSONdoc&&
+    Compound(std::deque<std::string> node_queue)
+    {
+        JSONdoc* doc = new JSONdoc{JSONtype::OBJECT, false, false};
+
+        JSONdoc& groups = (*this)["group"];
+        for (auto& group : groups)
+        {
+            JSONdoc& nodes = groups[group.first]["node"];
+            for (auto& node : nodes)
+            {
+                for (const auto& node_name : node_queue)
+                {
+                    if (node.first == node_name)
+                    {
+                        JSONdoc& item = nodes[node_name];
+                        doc->map.insert({node_name, {(void*)&item, JSONtype::OBJECT}});
+                        break;
+                    }
+                }
+            }
+        }
+        return std::move(*doc);
     }
 
     friend class RangeImpl;

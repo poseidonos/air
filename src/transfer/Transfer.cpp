@@ -22,15 +22,28 @@
  *   SOFTWARE.
  */
 
-#include "src/api/Air.h"
+#include "src/transfer/Transfer.h"
 
-air::InstanceManager* AIR<true, true>::instance_manager = nullptr;
-node::NodeManager* AIR<true, true>::node_manager = nullptr;
-collection::CollectionManager* AIR<true, true>::collection_manager = nullptr;
-thread_local node::NodeDataArray* AIR<true, true>::node_data_array = nullptr;
+#include <sstream>
+
+#include "src/lib/json/Json.h"
+#include "src/transfer/Task.h"
+
+transfer::Transfer::Transfer(void)
+{
+    async_tasks = std::async(std::launch::async, [] { return 0; });
+}
 
 void
-air_request_data(transfer::node_list nodes, transfer::task_unit&& function)
+transfer::Transfer::SendData(void)
 {
-    transfer::Task::Get().Register(nodes, std::move(function));
+    if (async_tasks.valid())
+    {
+        if (0 == async_tasks.get())
+        {
+            air::JSONdoc json_data = air::json_copy("air");
+            async_tasks = std::async(std::launch::async, &Task::NotifyAll,
+                &Task::Get(), std::move(json_data));
+        }
+    }
 }

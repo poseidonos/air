@@ -75,6 +75,55 @@ public:
         return _GetInstance()._GetType(index); // types[index];
     }
 
+    static void*
+    NewData(JSONtype type, void* v)
+    {
+        switch (type)
+        {
+            case JSONtype::SHORT:
+                return new short{*((short*)v)};
+            case JSONtype::INT:
+                return new int{*((int*)v)};
+            case JSONtype::LONG:
+                return new long{*((long*)v)};
+            case JSONtype::LONGLONG:
+                return new long long{*((long long*)v)};
+            case JSONtype::USHORT:
+                return new unsigned short{*((unsigned short*)v)};
+            case JSONtype::UINT:
+                return new unsigned int{*((unsigned int*)v)};
+            case JSONtype::ULONG:
+                return new unsigned long{*((unsigned long*)v)};
+            case JSONtype::ULONGLONG:
+                return new unsigned long long{*((unsigned long long*)v)};
+            case JSONtype::INT16:
+                return new int16_t{*((int16_t*)v)};
+            case JSONtype::INT32:
+                return new int32_t{*((int32_t*)v)};
+            case JSONtype::INT64:
+                return new int64_t{*((int64_t*)v)};
+            case JSONtype::UINT16:
+                return new uint16_t{*((uint16_t*)v)};
+            case JSONtype::UINT32:
+                return new uint32_t{*((uint32_t*)v)};
+            case JSONtype::UINT64:
+                return new uint64_t{*((uint64_t*)v)};
+            case JSONtype::FLOAT:
+                return new float{*((float*)v)};
+            case JSONtype::DOUBLE:
+                return new double{*((double*)v)};
+            case JSONtype::STRING:
+                return new std::string{*((std::string*)v)};
+            case JSONtype::CHARP:
+                return new std::string{*((std::string*)v)};
+            case JSONtype::BOOL:
+                return new bool{*((bool*)v)};
+            default:
+                return nullptr;
+        }
+        return nullptr;
+    }
+
 private:
     CPPtype(void)
     {
@@ -132,6 +181,7 @@ private:
 };
 
 constexpr auto cpp_type = CPPtype::Type;
+constexpr auto new_data = CPPtype::NewData;
 
 } // namespace air
 

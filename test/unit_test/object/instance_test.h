@@ -82,6 +82,11 @@
 #include "src/thread/Thread.h"
 #include "src/thread/ThreadManager.cpp"
 #include "src/thread/ThreadManager.h"
+#include "src/transfer/Task.cpp"
+#include "src/transfer/Task.h"
+#include "src/transfer/Transfer.cpp"
+#include "src/transfer/Transfer.h"
+#include "src/transfer/TransferCorHandler.h"
 
 class InstanceTest : public ::testing::Test
 {

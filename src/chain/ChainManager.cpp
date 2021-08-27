@@ -90,6 +90,7 @@ chain::AnalysisTask::RunChain(lib_design::AbstractCoRHandler** cor_handler,
     meta::GlobalMeta* g_meta, int32_t option)
 {
     cor_handler[to_dtype(pi::ChainHandler::PROCESS)]->HandleRequest(option);
+    cor_handler[to_dtype(pi::ChainHandler::TRANSFER)]->HandleRequest(option);
     cor_handler[to_dtype(pi::ChainHandler::STREAM)]->HandleRequest(option);
 
     if (true == g_meta->AirPlay())
