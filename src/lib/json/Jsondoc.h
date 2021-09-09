@@ -200,8 +200,7 @@ public:
         if (it != map.end())
         {
             void* v = (it->second).data;
-            JSONdoc* doc = reinterpret_cast<JSONdoc*>(v);
-            return *doc;
+            return *(reinterpret_cast<JSONdoc*>(v));
         }
         else
         {
