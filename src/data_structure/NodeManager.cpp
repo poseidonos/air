@@ -24,6 +24,8 @@
 
 #include "src/data_structure/NodeManager.h"
 
+#include <utility>
+
 node::NodeDataArray*
 node::NodeManager::GetNodeDataArray(uint32_t tid)
 {

@@ -57,9 +57,9 @@ public:
     int NotifyAll(air::JSONdoc&& json_data);
 
 private:
-    void _ShiftTasks(void);
-    void _WaitTasksDone(void);
-    void _UnregisterTasks(void);
+    void _Outbox2List(void);
+    void _WaitJobDone(void);
+    void _EraseFinishedJob(void);
 
     struct TaskInfo
     {

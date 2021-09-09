@@ -33,16 +33,14 @@ namespace process
 {
 class QueueProcessor : public Processor
 {
-private:
-    void _ProcessData(lib::Data* air_data, lib::AccData* acc_data) override;
-    void _InitData(lib::Data* air_data, lib::AccData* acc_data) override;
-
 public:
     virtual ~QueueProcessor(void)
     {
     }
 
 private:
+    void _InitData(lib::Data* air_data, lib::AccData* acc_data) override;
+    void _ProcessData(lib::Data* air_data, lib::AccData* acc_data) override;
     void _JsonifyData(lib::Data* air_data, lib::AccData* acc_data,
         air::string_view& node_name_view, uint32_t tid, const char* tname,
         uint64_t hash_value, uint32_t filter_index) override;

@@ -34,6 +34,8 @@ namespace air
 class string_view
 {
 public:
+    const static std::size_t npos{0x0FFFFFFF};
+
     template<std::size_t N>
     constexpr string_view(const char (&a)[N])
     : str(a),
@@ -46,12 +48,12 @@ public:
     {
     }
     constexpr std::size_t
-    size() const
+    size(void) const
     {
         return len;
     }
     constexpr const char*
-    data() const noexcept
+    data(void) const noexcept
     {
         return str;
     }
@@ -149,7 +151,6 @@ public:
         }
         return os;
     }
-    const static std::size_t npos{0x0FFFFFFF};
 
 private:
     const char* str;

@@ -24,6 +24,8 @@
 
 #include "src/api/Air.h"
 
+#include <utility>
+
 air::InstanceManager* AIR<true, true>::instance_manager = nullptr;
 node::NodeManager* AIR<true, true>::node_manager = nullptr;
 collection::CollectionManager* AIR<true, true>::collection_manager = nullptr;

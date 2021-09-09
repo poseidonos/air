@@ -33,17 +33,15 @@ namespace process
 {
 class PerformanceProcessor : public Processor
 {
-private:
-    void _JsonifyData(lib::Data* air_data, lib::AccData* acc_data,
-        air::string_view& node_name_view, uint32_t tid, const char* tname,
-        uint64_t hash_value, uint32_t filter_index) override;
-
 public:
     virtual ~PerformanceProcessor(void)
     {
     }
 
 private:
+    void _JsonifyData(lib::Data* air_data, lib::AccData* acc_data,
+        air::string_view& node_name_view, uint32_t tid, const char* tname,
+        uint64_t hash_value, uint32_t filter_index) override;
     void _InitData(lib::Data* air_data, lib::AccData* acc_data) override;
     void _ProcessData(lib::Data* air_data, lib::AccData* acc_data) override;
 };

@@ -25,6 +25,7 @@
 #include "src/transfer/Transfer.h"
 
 #include <sstream>
+#include <utility>
 
 #include "src/lib/json/Json.h"
 #include "src/transfer/Task.h"

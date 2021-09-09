@@ -25,6 +25,7 @@
 #include "src/transfer/Task.h"
 
 #include <unistd.h>
+#include <utility>
 
 #include <stdexcept>
 
@@ -46,7 +47,7 @@ transfer::Task::Register(node_list nodes, task_unit function)
 }
 
 void
-transfer::Task::_ShiftTasks(void)
+transfer::Task::_Outbox2List(void)
 {
     const std::lock_guard<std::mutex> lock(mutex_outbox);
     while (false == task_outbox.empty())
@@ -57,7 +58,7 @@ transfer::Task::_ShiftTasks(void)
 }
 
 void
-transfer::Task::_WaitTasksDone(void)
+transfer::Task::_WaitJobDone(void)
 {
     size_t task_done_count = 0;
     while (task_done_count != task_list.size())
@@ -76,7 +77,7 @@ transfer::Task::_WaitTasksDone(void)
 }
 
 void
-transfer::Task::_UnregisterTasks(void)
+transfer::Task::_EraseFinishedJob(void)
 {
     auto task_it = task_list.begin();
     while (task_it != task_list.end())
@@ -96,7 +97,7 @@ transfer::Task::_UnregisterTasks(void)
 int
 transfer::Task::NotifyAll(air::JSONdoc&& json_data)
 {
-    _ShiftTasks();
+    _Outbox2List();
 
     for (auto& task_info : task_list)
     {
@@ -107,8 +108,8 @@ transfer::Task::NotifyAll(air::JSONdoc&& json_data)
             });
     }
 
-    _WaitTasksDone();
-    _UnregisterTasks();
+    _WaitJobDone();
+    _EraseFinishedJob();
 
     try
     {

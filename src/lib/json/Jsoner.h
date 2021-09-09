@@ -28,6 +28,7 @@
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 #include "src/lib/json/Jsondoc.h"
 

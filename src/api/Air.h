@@ -256,6 +256,7 @@ public:
     }
 };
 
-void air_request_data(transfer::node_list nodes, transfer::task_unit&& function);
+void
+air_request_data(transfer::node_list nodes, transfer::task_unit&& function);
 
 #endif // AIR_H
