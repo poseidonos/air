@@ -45,7 +45,7 @@ public:
     static Task&
     Get(void)
     {
-        static Task* task = new Task{};
+        static Task* task = new Task {};
         return *task;
     }
     Task(Task const&) = delete;

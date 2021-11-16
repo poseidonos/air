@@ -84,19 +84,19 @@ collection::CollectionManager::Init(void)
         switch (node_meta_getter->ProcessorType(i))
         {
             case (air::ProcessorType::PERFORMANCE):
-                collector[i] = new PerformanceCollector{new PerformanceWriter};
+                collector[i] = new PerformanceCollector {new PerformanceWriter};
                 break;
             case (air::ProcessorType::LATENCY):
-                collector[i] = new LatencyCollector{new LatencyWriter};
+                collector[i] = new LatencyCollector {new LatencyWriter};
                 break;
             case (air::ProcessorType::QUEUE):
-                collector[i] = new QueueCollector{new QueueWriter};
+                collector[i] = new QueueCollector {new QueueWriter};
                 break;
             case (air::ProcessorType::UTILIZATION):
-                collector[i] = new UtilizationCollector{new UtilizationWriter};
+                collector[i] = new UtilizationCollector {new UtilizationWriter};
                 break;
             case (air::ProcessorType::COUNT):
-                collector[i] = new CountCollector{new CountWriter};
+                collector[i] = new CountCollector {new CountWriter};
                 break;
             default:
                 assert(0);

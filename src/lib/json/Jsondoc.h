@@ -86,7 +86,7 @@ public:
         {
             std::string value_type(typeid(*it).name());
 
-            T* dt = new T{*it};
+            T* dt = new T {*it};
 
             type = cpp_type(std::type_index(typeid(*dt)));
 
@@ -132,7 +132,7 @@ public:
             if (0 == value_type.compare("PKc"))
             {
                 type = JSONtype::CHARP;
-                std::string* str_value = new std::string{*it};
+                std::string* str_value = new std::string {*it};
                 map.insert({std::to_string(map_key), {str_value, JSONtype::CHARP}});
             }
             ++it;
@@ -166,7 +166,7 @@ public:
             size_t map_key = map.size();
             while (it != t.end())
             {
-                JSONdoc* doc = new JSONdoc{};
+                JSONdoc* doc = new JSONdoc {};
                 doc->type = (*it).type; // JSONtype::OBJECT;
                 doc->map = (*it).map;
                 doc->ownership = false;
@@ -189,7 +189,7 @@ public:
         }
         else
         { // not found
-            JSONdoc* doc = new JSONdoc{JSONtype::OBJECT, true, true};
+            JSONdoc* doc = new JSONdoc {JSONtype::OBJECT, true, true};
             map.insert({key, {doc, JSONtype::OBJECT}});
             return *doc;
         }
@@ -424,7 +424,7 @@ public:
             if (JSONtype::OBJECT == v.second.type)
             {
                 JSONdoc* doc = reinterpret_cast<JSONdoc*>(v.second.data);
-                JSONdoc* sub_dst = new JSONdoc{doc->type, true, true};
+                JSONdoc* sub_dst = new JSONdoc {doc->type, true, true};
                 dst->map.insert({v.first, {sub_dst, JSONtype::OBJECT}});
                 doc->Copy(sub_dst);
             }
@@ -454,7 +454,7 @@ public:
     JSONdoc&&
     Compound(std::deque<std::string> node_queue)
     {
-        JSONdoc* doc = new JSONdoc{JSONtype::OBJECT, false, false};
+        JSONdoc* doc = new JSONdoc {JSONtype::OBJECT, false, false};
 
         JSONdoc& groups = (*this)["group"];
         for (auto& group : groups)

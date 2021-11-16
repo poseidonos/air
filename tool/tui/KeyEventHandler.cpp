@@ -39,18 +39,13 @@ air::TerminalSetting::SaveDefaultTermios(void)
 void
 air::TerminalSetting::RestoreDefaultTermios(void)
 {
-    int fd;
-
     tcsetattr(STDIN_FILENO, TCSANOW, &default_termios);
 
-    fd = fcntl(STDIN_FILENO, F_GETFL, 0);
-    if (-1 != fd)
+    int fd;
+    fd = fcntl(STDIN_FILENO, F_SETFL, O_APPEND);
+    if (-1 == fd)
     {
-        fd = fcntl(STDIN_FILENO, F_SETFL, fd);
-        if (-1 == fd)
-        {
-            std::cout << "TerminalSetting::RestoreDefaultTermios failed\n";
-        }
+        std::cout << "TerminalSetting::RestoreDefaultTermios failed\n";
     }
 }
 

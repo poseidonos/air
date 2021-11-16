@@ -28,54 +28,53 @@
 
 air::InstanceManager::InstanceManager(void)
 {
-    node_meta = new meta::NodeMeta{};
-    node_meta_getter = new meta::NodeMetaGetter{node_meta};
-    global_meta = new meta::GlobalMeta{};
-    global_meta_getter = new meta::GlobalMetaGetter{global_meta};
+    node_meta = new meta::NodeMeta {};
+    node_meta_getter = new meta::NodeMetaGetter {node_meta};
+    global_meta = new meta::GlobalMeta {};
+    global_meta_getter = new meta::GlobalMetaGetter {global_meta};
 
-    in_subject = new input::Subject{};
-    in_command = new input::InCommand{in_subject};
-    in_cor_handler = new input::InCoRHandler{in_command};
+    in_subject = new input::Subject {};
+    in_command = new input::InCommand {in_subject};
+    in_cor_handler = new input::InCoRHandler {in_command};
 
-    policy_ruler = new policy::Ruler{node_meta, global_meta};
-    policy_subject = new policy::Subject{};
-    policy_rule_manager = new policy::RuleManager{policy_ruler, policy_subject};
-    policy_observer = new policy::Observer{policy_rule_manager};
-    policy_cor_handler = new policy::PolicyCoRHandler{policy_observer};
+    policy_ruler = new policy::Ruler {node_meta, global_meta};
+    policy_subject = new policy::Subject {};
+    policy_rule_manager = new policy::RuleManager {policy_ruler, policy_subject};
+    policy_observer = new policy::Observer {policy_rule_manager};
+    policy_cor_handler = new policy::PolicyCoRHandler {policy_observer};
 
-    node_manager = new node::NodeManager{global_meta_getter, node_meta_getter};
+    node_manager = new node::NodeManager {global_meta_getter, node_meta_getter};
 
-    process_manager = new process::ProcessManager{global_meta_getter,
+    process_manager = new process::ProcessManager {global_meta_getter,
         node_meta_getter, node_manager};
-    process_cor_handler = new process::ProcessCoRHandler{process_manager};
-    preprocessor = new process::Preprocessor{node_meta_getter, node_manager};
-    preprocess_cor_handler = new process::PreprocessCoRHandler{preprocessor};
+    process_cor_handler = new process::ProcessCoRHandler {process_manager};
+    preprocessor = new process::Preprocessor {node_meta_getter, node_manager};
+    preprocess_cor_handler = new process::PreprocessCoRHandler {preprocessor};
 
-    out_command = new output::OutCommand{};
-    out_manager = new output::OutputManager{out_command};
-    out_observer = new output::Observer{out_manager};
-    out_cor_handler = new output::OutputCoRHandler{out_observer};
+    out_command = new output::OutCommand {};
+    out_manager = new output::OutputManager {out_command};
+    out_observer = new output::Observer {out_manager};
+    out_cor_handler = new output::OutputCoRHandler {out_observer};
 
-    stream = new stream::Stream{};
-    stream_cor_handler = new stream::StreamCoRHandler{stream};
+    stream = new stream::Stream {};
+    stream_cor_handler = new stream::StreamCoRHandler {stream};
 
-    collection_subject = new collection::Subject{};
-    collection_manager = new collection::CollectionManager{
+    collection_subject = new collection::Subject {};
+    collection_manager = new collection::CollectionManager {
         global_meta_getter, node_meta_getter, node_manager, collection_subject};
-    collection_observer = new collection::Observer{collection_manager};
-    collection_cor_handler =
-        new collection::CollectionCoRHandler{collection_observer};
-    switch_gear = new collection::SwitchGear{node_meta_getter, node_manager};
-    switch_gear_cor_handler = new collection::SwitchGearCoRHandler{switch_gear};
+    collection_observer = new collection::Observer {collection_manager};
+    collection_cor_handler = new collection::CollectionCoRHandler {collection_observer};
+    switch_gear = new collection::SwitchGear {node_meta_getter, node_manager};
+    switch_gear_cor_handler = new collection::SwitchGearCoRHandler {switch_gear};
 
-    chain_manager = new chain::ChainManager{global_meta};
-    thread_manager = new thread::ThreadManager{chain_manager};
+    chain_manager = new chain::ChainManager {global_meta};
+    thread_manager = new thread::ThreadManager {chain_manager};
 
-    detector = new detect::Detector{node_manager};
-    detect_cor_handler = new detect::DetectCoRHandler{detector};
+    detector = new detect::Detector {node_manager};
+    detect_cor_handler = new detect::DetectCoRHandler {detector};
 
-    transfer = new transfer::Transfer{};
-    transfer_cor_handler = new transfer::TransferCoRHandler{transfer};
+    transfer = new transfer::Transfer {};
+    transfer_cor_handler = new transfer::TransferCoRHandler {transfer};
 }
 
 void

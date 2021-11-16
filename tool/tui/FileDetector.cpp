@@ -37,6 +37,7 @@
 int
 air::FileDetector::Detect(void)
 {
+    fcntl(STDIN_FILENO, F_SETFL, O_APPEND);
     std::cout << "Detecting...\n";
     waiting = true;
 

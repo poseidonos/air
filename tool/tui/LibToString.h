@@ -103,29 +103,49 @@ std::string
 ULL2StringWithLatencyFormat(uint64_t value)
 {
     std::stringstream stream;
+    std::string str_unit;
+    uint64_t num_unit;
 
     if (value < 1000ULL)
     {
-        stream << value << "ns";
+        str_unit = "ns";
+        num_unit = 1;
     }
     else if (value < 1000000ULL)
     {
-        stream << (value / 1000ULL) << "us";
+        str_unit = "us";
+        num_unit = 1000;
     }
     else if (value < 1000000000ULL)
     {
-        stream << (value / 1000000ULL) << "ms";
+        str_unit = "ms";
+        num_unit = 1000000;
     }
     else
     {
-        stream << (value / 1000000000ULL) << "s";
+        str_unit = "s";
+        num_unit = 1000000000;
     }
 
-    size_t padding_count = 5 - stream.str().size();
-    while (0 < padding_count)
+    if (10 > (value / num_unit))
     {
-        stream << " ";
-        padding_count--;
+        stream << std::fixed << std::setprecision(1);
+        stream << (double)value / num_unit;
+    }
+    else
+    {
+        stream << value / num_unit;
+    }
+    stream << str_unit;
+
+    if (5 > stream.str().size())
+    {
+        size_t padding_count = 5 - stream.str().size();
+        while (0 < padding_count)
+        {
+            stream << " ";
+            padding_count--;
+        }
     }
 
     return stream.str();

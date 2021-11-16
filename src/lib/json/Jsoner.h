@@ -50,7 +50,7 @@ public:
     static JSONdoc&&
     Copy(std::string key)
     {
-        JSONdoc* doc = new JSONdoc{JSONtype::OBJECT, true, false};
+        JSONdoc* doc = new JSONdoc {JSONtype::OBJECT, true, false};
         _GetInstance()._GetDocument(key).Copy(doc);
         return std::move(*doc);
     }
@@ -85,7 +85,7 @@ private:
     JSONdoc&
     _CreateDocument(std::string key)
     {
-        JSONdoc* doc = new JSONdoc{JSONtype::OBJECT, true, false};
+        JSONdoc* doc = new JSONdoc {JSONtype::OBJECT, true, false};
         docs.insert({key, doc});
         return *doc;
     }
