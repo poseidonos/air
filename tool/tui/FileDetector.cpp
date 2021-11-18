@@ -37,7 +37,11 @@
 int
 air::FileDetector::Detect(void)
 {
-    fcntl(STDIN_FILENO, F_SETFL, O_APPEND);
+    int fd = fcntl(STDIN_FILENO, F_SETFL, O_APPEND);
+    if (-1 == fd)
+    {
+        std::cout << "FileDetector::Detect fcntl failed\n";
+    }
     std::cout << "Detecting...\n";
     waiting = true;
 

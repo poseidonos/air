@@ -31,6 +31,9 @@
 #include "src/lib/Data.h"
 #include "src/meta/NodeMeta.h"
 
+#include <map>
+#include <vector>
+
 namespace process
 {
 class Preprocessor
@@ -48,13 +51,26 @@ public:
     void Run(int option);
 
 private:
-    void _MatchKey(lib::LatencyData* curr_data, lib::LatencyData* next_data,
-        lib::AccLatencyData* acc_data);
-    meta::NodeMetaGetter* node_meta_getter{nullptr};
-    node::NodeManager* node_manager{nullptr};
-    collection::LatencyWriter latency_writer{};
-    static const uint64_t MAX_TIME{900000000}; // 900 ms
-    const uint32_t MAX_NID_SIZE{cfg::GetSentenceCount(config::ParagraphType::NODE)};
+    void _GetStopOrFullData(void);
+    void _ConvertData(void);
+    void _MatchData(void);
+    void _CleanData(int option);
+
+    struct match_st
+    {
+        std::vector<lib::LatencyData*> done_from;
+        std::vector<lib::LatencyData*> done_to;
+        std::map<uint64_t, timespec> timestamp_from;
+        std::vector<lib::TimeLog> timelog_to;
+        bool done {false};
+        bool update {false};
+    };
+    std::map<uint64_t, struct match_st> match_map;
+    meta::NodeMetaGetter* node_meta_getter {nullptr};
+    node::NodeManager* node_manager {nullptr};
+    collection::LatencyWriter latency_writer {};
+    static const uint64_t MAX_TIME {900000000}; // 900 ms
+    const uint32_t MAX_NID_SIZE {cfg::GetSentenceCount(config::ParagraphType::NODE)};
 };
 
 } // namespace process

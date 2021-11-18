@@ -24,26 +24,21 @@
 
 #include "src/process/Preprocessor.h"
 
-#include <algorithm>
-#include <map>
-#include <vector>
-
 #include "src/lib/Protocol.h"
 #include "src/lib/Timelag.h"
 
 void
 process::Preprocessor::Run(int option)
 {
-    struct match_st
-    {
-        uint32_t run_state_count{0};
-        std::vector<lib::LatencyData*> curr_v;
-        std::vector<lib::LatencyData*> next_v;
-    };
+    _GetStopOrFullData();
+    _ConvertData();
+    _MatchData();
+    _CleanData(option);
+}
 
-    std::map<uint64_t, struct match_st> match_map;
-    match_map.clear();
-
+void
+process::Preprocessor::_GetStopOrFullData(void)
+{
     for (auto& kv : node_manager->nda_map)
     {
         for (uint32_t nid = 0; nid < MAX_NID_SIZE; nid++)
@@ -56,94 +51,29 @@ process::Preprocessor::Run(int option)
                 {
                     for (uint32_t filter_index = 0; filter_index < filter_size - 1; filter_index++)
                     {
-                        lib::LatencyData* to = static_cast<lib::LatencyData*>(
-                            kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index + 1));
                         lib::LatencyData* from = static_cast<lib::LatencyData*>(
                             kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index));
-
-                        if (from->access || to->access)
+                        if (lib::TimeLogState::STOP == from->start_state ||
+                            lib::TimeLogState::FULL == from->start_state)
                         {
-                            uint64_t key{0};
+                            from->start_state = lib::TimeLogState::DONE;
+                            uint64_t key {0};
                             key = ((uint64_t)nid << 48) + ((uint64_t)hash_index << 32) +
                                 ((uint64_t)filter_index);
-                            struct match_st match_value;
-                            match_value.run_state_count = 0;
-                            match_value.curr_v.clear();
-                            match_value.next_v.clear();
-
-                            auto it_finder = match_map.find(key);
-                            if (it_finder == match_map.end())
-                            {
-                                match_map.insert({key, match_value});
-                            }
-
-                            switch (from->start_state)
-                            {
-                                case (lib::TimeLogState::RUN):
-                                    match_map[key].run_state_count += 1;
-                                    break;
-                                case (lib::TimeLogState::STOP):
-                                case (lib::TimeLogState::FULL):
-                                    if (!from->start_v.empty())
-                                    {
-                                        match_map[key].curr_v.push_back(from);
-                                    }
-                                    break;
-                                case (lib::TimeLogState::DONE):
-                                case (lib::TimeLogState::IDLE):
-                                default:
-                                    break;
-                            }
-
-                            switch (to->end_state)
-                            {
-                                case (lib::TimeLogState::RUN):
-                                    match_map[key].run_state_count += 1;
-                                    break;
-                                case (lib::TimeLogState::STOP):
-                                case (lib::TimeLogState::FULL):
-                                    if (!to->end_v.empty())
-                                    {
-                                        match_map[key].next_v.push_back(to);
-                                    }
-                                    break;
-                                case (lib::TimeLogState::DONE):
-                                case (lib::TimeLogState::IDLE):
-                                default:
-                                    break;
-                            }
+                            match_map[key].done_from.push_back(from);
                         }
-                    }
-                }
-            }
-        }
-    }
 
-    for (auto& kv : match_map)
-    {
-        if (0 == kv.second.run_state_count)
-        {
-            if ((!kv.second.curr_v.empty()) && (!kv.second.next_v.empty()))
-            {
-                uint32_t nid = ((kv.first >> 48) & 0xFFFF);
-                uint32_t hash_index = (kv.first >> 32 & 0xFFFF);
-                uint32_t filter_index = (kv.first & 0xFFFFFFFF);
-
-                for (auto curr_v : kv.second.curr_v)
-                {
-                    for (auto next_v : kv.second.next_v)
-                    {
-                        _MatchKey(curr_v, next_v,
-                            node_manager->GetAccLatData(nid, hash_index, filter_index));
-                    }
-                }
-
-                for (auto curr_v : kv.second.curr_v)
-                {
-                    for (auto next_v : kv.second.next_v)
-                    {
-                        curr_v->start_v.clear();
-                        next_v->end_v.clear();
+                        lib::LatencyData* to = static_cast<lib::LatencyData*>(
+                            kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index + 1));
+                        if (lib::TimeLogState::STOP == to->end_state ||
+                            lib::TimeLogState::FULL == to->end_state)
+                        {
+                            to->end_state = lib::TimeLogState::DONE;
+                            uint64_t key {0};
+                            key = ((uint64_t)nid << 48) + ((uint64_t)hash_index << 32) +
+                                ((uint64_t)filter_index);
+                            match_map[key].done_to.push_back(to);
+                        }
                     }
                 }
             }
@@ -152,33 +82,98 @@ process::Preprocessor::Run(int option)
 }
 
 void
-process::Preprocessor::_MatchKey(lib::LatencyData* curr_data,
-    lib::LatencyData* next_data,
-    lib::AccLatencyData* acc_data)
+process::Preprocessor::_ConvertData(void)
 {
-    curr_data->start_state = lib::TimeLogState::DONE;
-    next_data->end_state = lib::TimeLogState::DONE;
-
-    uint64_t timelag{0};
-
-    for (auto it_start = curr_data->start_v.begin(); it_start != curr_data->start_v.end();)
+    for (auto& it : match_map)
     {
-        for (auto it_end = next_data->end_v.begin(); it_end != next_data->end_v.end();)
+        auto& data = it.second;
+        if (data.done)
         {
-            if (it_start->key == it_end->key)
+            continue;
+        }
+
+        bool need_update {false};
+        while (!data.done_from.empty())
+        {
+            lib::LatencyData* lat_data = data.done_from.back();
+            for (auto& timelog : lat_data->start_v)
             {
-                timelag = Timelag::GetDiff(it_end->timestamp, it_start->timestamp);
+                data.timestamp_from[timelog.key] = timelog.timestamp;
+                need_update = true;
+            }
+            data.done_from.pop_back();
+        }
+        while (!data.done_to.empty())
+        {
+            lib::LatencyData* lat_data = data.done_to.back();
+            for (auto& timelog : lat_data->end_v)
+            {
+                data.timelog_to.push_back(timelog);
+                need_update = true;
+            }
+            data.done_to.pop_back();
+        }
+
+        if (need_update)
+        {
+            data.update = true;
+        }
+    }
+}
+
+void
+process::Preprocessor::_MatchData(void)
+{
+    for (auto& it : match_map)
+    {
+        auto& data = it.second;
+        if (data.done || !data.update)
+        {
+            continue;
+        }
+        data.update = false;
+
+        for (auto& timelog : data.timelog_to)
+        {
+            auto it_match = data.timestamp_from.find(timelog.key);
+            if (it_match != data.timestamp_from.end())
+            {
+                uint64_t key = it.first;
+                uint32_t nid = ((key >> 48) & 0xFFFF);
+                uint32_t hash_index = (key >> 32 & 0xFFFF);
+                uint32_t filter_index = (key & 0xFFFFFFFF);
+                lib::AccLatencyData* acc_data =
+                    node_manager->GetAccLatData(nid, hash_index, filter_index);
+
+                uint64_t timelag = Timelag::GetDiff(timelog.timestamp, it_match->second);
+                data.timestamp_from.erase(it_match);
+
                 if (MAX_TIME > timelag)
                 {
-                    latency_writer.AddTimelag(acc_data, timelag);
-                    curr_data->start_match_count++;
-                    next_data->end_match_count++;
+                    if (!latency_writer.AddTimelag(acc_data, timelag))
+                    {
+                        data.done = true;
+                        break;
+                    }
                 }
-
-                break;
             }
-            it_end++;
         }
-        it_start++;
+    }
+}
+
+void
+process::Preprocessor::_CleanData(int option)
+{
+    if (to_dtype(pi::PreprocessOption::FORCED) == option)
+    {
+        for (auto& it : match_map)
+        {
+            auto& data = it.second;
+            data.done_from.clear();
+            data.done_to.clear();
+            data.timestamp_from.clear();
+            data.timelog_to.clear();
+        }
+        match_map.clear();
     }
 }

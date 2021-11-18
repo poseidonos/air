@@ -74,12 +74,12 @@ public:
         }
     }
 
-    inline void
+    inline bool
     AddTimelag(lib::AccLatencyData* lat_data, uint64_t timelag)
     {
-        if (nullptr == lat_data)
+        if (nullptr == lat_data || lib::TIMELAG_SIZE <= lat_data->sample_count)
         {
-            return;
+            return false;
         }
 
         if (timelag > lat_data->max)
@@ -87,16 +87,15 @@ public:
             lat_data->max = timelag;
         }
 
-        if ((timelag != 0) && ((lat_data->min == 0) || (timelag < lat_data->min)))
+        if ((0 != timelag) && ((0 == lat_data->min) || (timelag < lat_data->min)))
         {
             lat_data->min = timelag;
         }
 
-        if (lib::TIMELAG_SIZE > lat_data->sample_count)
-        {
-            lat_data->timelag[lat_data->sample_count] = timelag;
-            lat_data->sample_count++;
-        }
+        lat_data->timelag[lat_data->sample_count] = timelag;
+        lat_data->sample_count++;
+
+        return true;
     }
 
     int

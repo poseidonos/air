@@ -193,15 +193,15 @@ TEST_F(PreprocessorTest, Run)
     lib::LatencyData* lat_data_2 = static_cast<lib::LatencyData*>(data);
 
     timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
     lat_data_0->start_v.push_back({123, ts});
     lat_data_0->start_v.push_back({124, ts});
     lat_data_0->start_state = lib::TimeLogState::STOP;
-    lat_data_0->start_match_count = 0;
 
+    clock_gettime(CLOCK_MONOTONIC, &ts);
     lat_data_1->end_v.push_back({123, ts});
     lat_data_1->end_v.push_back({125, ts});
     lat_data_1->end_state = lib::TimeLogState::STOP;
-    lat_data_1->end_match_count = 0;
 
     lat_data_1->start_state = lib::TimeLogState::RUN;
 
@@ -209,8 +209,10 @@ TEST_F(PreprocessorTest, Run)
 
     preprocessor->Run(0);
 
-    EXPECT_EQ((unsigned int)1, lat_data_0->start_match_count);
-    EXPECT_EQ((unsigned int)1, lat_data_1->end_match_count);
+    EXPECT_EQ(lib::TimeLogState::DONE, lat_data_0->start_state);
+    EXPECT_EQ(lib::TimeLogState::DONE, lat_data_1->end_state);
+    lib::AccLatencyData* acc_data = fake_node_manager->GetAccLatData(1, 0, 0);
+    EXPECT_EQ(1, acc_data->sample_count);
 }
 
 int

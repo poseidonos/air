@@ -78,28 +78,10 @@ process::TimingDistributor::_ResetTiming(lib::LatencyData* curr_data,
     lib::LatencyData* next_data, int32_t time_value)
 {
     curr_data->start_deadline = time_value;
-    if ((900 >= curr_data->start_size) && (MATCH_LOW_WM > curr_data->start_match_count))
-    {
-        curr_data->start_size += 100;
-    }
-    else if ((200 <= curr_data->start_size) && (MATCH_HIGH_WM < curr_data->start_match_count))
-    {
-        curr_data->start_size -= 100;
-    }
-    curr_data->start_match_count = 0;
     curr_data->start_v.clear();
     curr_data->start_state = lib::TimeLogState::IDLE;
 
     next_data->end_deadline = time_value;
-    if ((900 >= next_data->end_size) && (MATCH_LOW_WM > next_data->end_match_count))
-    {
-        next_data->end_size += 100;
-    }
-    else if ((200 <= next_data->end_size) && (MATCH_HIGH_WM < next_data->end_match_count))
-    {
-        next_data->end_size -= 100;
-    }
-    next_data->end_match_count = 0;
     next_data->end_v.clear();
     next_data->end_state = lib::TimeLogState::IDLE;
 }

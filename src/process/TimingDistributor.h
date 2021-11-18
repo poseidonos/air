@@ -49,11 +49,9 @@ private:
     void _ResetTiming(lib::LatencyData* curr_data,
         lib::LatencyData* next_data, int32_t time_value);
     std::random_device rand_device;
-    std::default_random_engine rand_engine{rand_device()};
-    std::uniform_int_distribution<int32_t> dist{1, 10};
-    static const int32_t MATCH_LOW_WM{5};
-    static const int32_t MATCH_HIGH_WM{30};
-    const uint32_t MAX_NID_SIZE{cfg::GetSentenceCount(config::ParagraphType::NODE)};
+    std::default_random_engine rand_engine {rand_device()};
+    std::uniform_int_distribution<int32_t> dist {1, 10};
+    const uint32_t MAX_NID_SIZE {cfg::GetSentenceCount(config::ParagraphType::NODE)};
 };
 
 } // namespace process
