@@ -32,6 +32,11 @@
 #include <unistd.h>
 
 #include "src/collection/CollectionManager.h"
+#include "src/collection/writer/CountWriter.h"
+#include "src/collection/writer/LatencyWriter.h"
+#include "src/collection/writer/PerformanceWriter.h"
+#include "src/collection/writer/QueueWriter.h"
+#include "src/collection/writer/UtilizationWriter.h"
 #include "src/config/ConfigInterface.h"
 #include "src/data_structure/NodeManager.h"
 #include "src/lib/Casting.h"
@@ -51,10 +56,11 @@
 
 #define airlog(node_name, filter_item, node_index, data)                                        \
     AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"),                           \
-        cfg::GetIntValue(config::ParagraphType::NODE, "Build",                                  \
-            node_name)>::LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, node_name), \
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item",                                 \
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", node_name), filter_item)>(node_index, data)
+        cfg::GetIntValue(config::ParagraphType::NODE, "Build", node_name)>                      \
+        ::LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, node_name),                \
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",                             \
+            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", node_name), filter_item),   \
+            cfg::GetNodeType(node_name)>(node_index, data)
 
 // Primary template
 template<bool AirBuild, bool NodeBuild>
@@ -66,14 +72,10 @@ public:
     static void Deactivate(void);
     static void Finalize(void);
 
-    template<int32_t node_id, int32_t filter_index>
+    template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
+        air::ProcessorType enable = air::ProcessorType::PROCESSORTYPE_NULL>
     static void LogData(uint64_t node_index, uint64_t value);
     static void LogData(uint32_t node_id, uint32_t filter_index, uint64_t node_index, uint64_t value);
-
-    static air::InstanceManager* instance_manager;
-    static node::NodeManager* node_manager;
-    static collection::CollectionManager* collection_manager;
-    static thread_local node::NodeDataArray* node_data_array;
 };
 
 // AIR build : true && Node build : true
@@ -116,29 +118,59 @@ public:
         collection_manager = instance_manager->GetCollectionManager();
     }
 
-    template<int32_t node_id, int32_t filter_index>
+    template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
+        typename std::enable_if<air::ProcessorType::PERFORMANCE == node_type, air::ProcessorType>::type = node_type>
     static void
     LogData(uint64_t node_index, uint64_t value)
     {
         static_assert(-1 != node_id, "Invalid Node");
         static_assert(-1 != filter_index, "Invalid Filter Item");
 
-        if ((nullptr == collection_manager) ||
-            (false == collection_manager->IsLog(node_id)))
-        {
-            return;
-        }
+        perf_writer.LogData(_GetData(node_id, filter_index, node_index), value);
+    }
 
-        if (nullptr != node_data_array)
-        {
-            collection_manager->LogData(node_id, filter_index, node_data_array, node_index, value);
-        }
-        else if (nullptr != node_manager)
-        {
-            uint32_t tid = syscall(SYS_gettid);
-            node_data_array = node_manager->GetNodeDataArray(tid);
-            node_manager->SetNodeDataArrayName(tid);
-        }
+    template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
+        typename std::enable_if<air::ProcessorType::LATENCY == node_type, air::ProcessorType>::type = node_type>
+    static void
+    LogData(uint64_t node_index, uint64_t value)
+    {
+        static_assert(-1 != node_id, "Invalid Node");
+        static_assert(-1 != filter_index, "Invalid Filter Item");
+
+        lat_writer.LogData(_GetData(node_id, filter_index, node_index), value);
+    }
+
+    template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
+        typename std::enable_if<air::ProcessorType::QUEUE == node_type, air::ProcessorType>::type = node_type>
+    static void
+    LogData(uint64_t node_index, uint64_t value)
+    {
+        static_assert(-1 != node_id, "Invalid Node");
+        static_assert(-1 != filter_index, "Invalid Filter Item");
+
+        queue_writer.LogData(_GetData(node_id, filter_index, node_index), value);
+    }
+
+    template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
+        typename std::enable_if<air::ProcessorType::UTILIZATION == node_type, air::ProcessorType>::type = node_type>
+    static void
+    LogData(uint64_t node_index, uint64_t value)
+    {
+        static_assert(-1 != node_id, "Invalid Node");
+        static_assert(-1 != filter_index, "Invalid Filter Item");
+
+        util_writer.LogData(_GetData(node_id, filter_index, node_index), value);
+    }
+
+    template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
+        typename std::enable_if<air::ProcessorType::COUNT == node_type, air::ProcessorType>::type = node_type>
+    static void
+    LogData(uint64_t node_index, uint64_t value)
+    {
+        static_assert(-1 != node_id, "Invalid Node");
+        static_assert(-1 != filter_index, "Invalid Filter Item");
+
+        count_writer.LogData(_GetData(node_id, filter_index, node_index), value);
     }
 
     static void
@@ -162,53 +194,49 @@ public:
         }
     }
 
+protected:
+    static lib::Data*
+    _GetData(int32_t node_id, int32_t filter_index, uint64_t node_index)
+    {
+        if ((nullptr == collection_manager) ||
+            (false == collection_manager->IsLog(node_id)))
+        {
+            return nullptr;
+        }
+        if (nullptr != node_data_array)
+        {
+            node::NodeData* node_data = node_data_array->node[node_id];
+            if (nullptr == node_data)
+            {
+                return nullptr;
+            }
+            return node_data->GetUserDataByNodeIndex(node_index, filter_index);
+        }
+        else if (nullptr != node_manager)
+        {
+            uint32_t tid = syscall(SYS_gettid);
+            node_data_array = node_manager->GetNodeDataArray(tid);
+            node_manager->SetNodeDataArrayName(tid);
+        }
+        return nullptr;
+    }
     static air::InstanceManager* instance_manager;
     static node::NodeManager* node_manager;
     static collection::CollectionManager* collection_manager;
     static thread_local node::NodeDataArray* node_data_array;
+    static collection::PerformanceWriter perf_writer;
+    static collection::LatencyWriter lat_writer;
+    static collection::QueueWriter queue_writer;
+    static collection::UtilizationWriter util_writer;
+    static collection::CountWriter count_writer;
 };
 
-// AIR build : false && Node build : true
+// AIR build : true && Node build : false
 template<>
 class AIR<true, false>
 {
 public:
-    static void
-    Initialize(uint32_t cpu_num = 0)
-    {
-        instance_manager = new air::InstanceManager();
-        instance_manager->Initialize(cpu_num);
-        node_manager = instance_manager->GetNodeManager();
-        collection_manager = instance_manager->GetCollectionManager();
-    }
-    static void
-    Activate(void)
-    {
-        if (nullptr != instance_manager)
-        {
-            instance_manager->Activate();
-        }
-    }
-    static void
-    Deactivate(void)
-    {
-        if (nullptr != instance_manager)
-        {
-            instance_manager->Deactivate();
-        }
-    }
-    static void
-    Finalize(void)
-    {
-        if (nullptr != instance_manager)
-        {
-            instance_manager->Finalize();
-            delete instance_manager;
-            instance_manager = nullptr;
-        }
-    }
-
-    template<int32_t node_id, int32_t filter_index>
+    template<int32_t node_id, int32_t filter_index, air::ProcessorType type>
     static void
     LogData(uint64_t node_index, uint64_t value)
     {
@@ -217,11 +245,6 @@ public:
     LogData(uint32_t node_id, uint32_t filter_index, uint64_t node_index, uint64_t value)
     {
     }
-
-    static air::InstanceManager* instance_manager;
-    static node::NodeManager* node_manager;
-    static collection::CollectionManager* collection_manager;
-    static thread_local node::NodeDataArray* node_data_array;
 };
 
 // AIR build : false
@@ -245,7 +268,7 @@ public:
     Finalize(void)
     {
     }
-    template<int32_t node_id, int32_t filter_index>
+    template<int32_t node_id, int32_t filter_index, air::ProcessorType type>
     static void
     LogData(uint64_t node_index, uint64_t value)
     {

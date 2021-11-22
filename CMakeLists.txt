@@ -4,12 +4,13 @@ set(CMAKE_C_COMPILER "gcc")
 
 project(
     AIR
-    VERSION 0.7.0
+    VERSION 0.7.1
     DESCRIPTION "Analytics In Real-time"
     LANGUAGES CXX C
 )
 
 find_package(Threads)
+find_package(benchmark)
 
 if(DEFINED CONFIG)
     message(STATUS "CONFIG is defined: ${CONFIG}")

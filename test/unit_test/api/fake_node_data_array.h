@@ -22,42 +22,14 @@
  *   SOFTWARE.
  */
 
-#ifndef AIR_COLLECTION_UTILIZATION_WRITER_H
-#define AIR_COLLECTION_UTILIZATION_WRITER_H
+#ifndef AIR_UT_FAKE_NODE_DATA_ARRAY_H
+#define AIR_UT_FAKE_NODE_DATA_ARRAY_H
 
-#include "src/collection/writer/Writer.h"
-#include "src/lib/Data.h"
+#include "src/data_structure/NodeData.h"
+#include "src/data_structure/NodeManager.h"
 
-namespace collection
+struct FakeNodeDataArray : public node::NodeDataArray
 {
-class UtilizationWriter : public Writer
-{
-public:
-    UtilizationWriter(void)
-    {
-    }
-    virtual ~UtilizationWriter(void)
-    {
-    }
-    inline void
-    LogData(lib::Data* data, uint64_t usage) override
-    {
-        if (nullptr == data)
-        {
-            return;
-        }
-        lib::UtilizationData* util_data = static_cast<lib::UtilizationData*>(data);
-        util_data->access = true;
-
-        util_data->usage += usage;
-    }
-    int
-    SetSamplingRate(uint32_t rate) override
-    {
-        return 0;
-    }
 };
 
-} // namespace collection
-
-#endif // AIR_COLLECTION_UTILIZATION_WRITER_H
+#endif // AIR_UT_FAKE_NODE_DATA_ARRAY_H

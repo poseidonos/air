@@ -30,6 +30,11 @@ air::InstanceManager* AIR<true, true>::instance_manager = nullptr;
 node::NodeManager* AIR<true, true>::node_manager = nullptr;
 collection::CollectionManager* AIR<true, true>::collection_manager = nullptr;
 thread_local node::NodeDataArray* AIR<true, true>::node_data_array = nullptr;
+collection::PerformanceWriter AIR<true, true>::perf_writer;
+collection::LatencyWriter AIR<true, true>::lat_writer;
+collection::QueueWriter AIR<true, true>::queue_writer;
+collection::UtilizationWriter AIR<true, true>::util_writer;
+collection::CountWriter AIR<true, true>::count_writer;
 
 void
 air_request_data(transfer::node_list nodes, transfer::task_unit&& function)

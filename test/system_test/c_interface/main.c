@@ -20,7 +20,7 @@ void* test_func(void* data)
         AIRLOG(LAT_PROCESS, AIR_1, 0, key);
         key++;
         AIRLOG(Q_SUBMISSION, AIR_BASE, 2, 22);
-        AIRLOG_FAKE(Q_COMPLETION, AIR_BASE, 3, 33);
+        AIRLOG_DUMMY(Q_COMPLETION, AIR_BASE, 3, 33);
     }
 }
 

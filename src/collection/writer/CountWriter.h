@@ -42,6 +42,10 @@ public:
     inline void
     LogData(lib::Data* data, uint64_t value) override
     {
+        if (nullptr == data)
+        {
+            return;
+        }
         lib::CountData* count_data = static_cast<lib::CountData*>(data);
         count_data->access = true;
 
@@ -63,8 +67,8 @@ public:
     }
 
 private:
-    const uint64_t MAX_INT64_VALUE{9223372036854775807};
-    const uint64_t NEGATIVE_ONE{0xffffffffffffffff};
+    const uint64_t MAX_INT64_VALUE {9223372036854775807};
+    const uint64_t NEGATIVE_ONE {0xffffffffffffffff};
 };
 
 } // namespace collection

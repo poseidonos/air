@@ -39,6 +39,10 @@ public:
     inline void
     LogData(lib::Data* data, uint64_t io_size) override
     {
+        if (nullptr == data)
+        {
+            return;
+        }
         lib::PerformanceData* perf_data = static_cast<lib::PerformanceData*>(data);
         perf_data->access = true;
 

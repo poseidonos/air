@@ -41,6 +41,10 @@ public:
     inline void
     LogData(lib::Data* data, uint64_t key) override
     {
+        if (nullptr == data)
+        {
+            return;
+        }
         lib::LatencyData* lat_data = static_cast<lib::LatencyData*>(data);
 
         lat_data->access = true;

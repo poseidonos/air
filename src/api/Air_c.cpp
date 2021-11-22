@@ -23,3 +23,42 @@
  */
 
 #include "src/api/Air_c.h"
+#include "src/api/Air.h"
+
+extern "C"
+void AIR_INITIALIZE(uint32_t cpu_num)
+{
+    air_initialize(cpu_num);
+}
+
+extern "C"
+void AIR_ACTIVATE(void)
+{
+    air_activate();
+}
+
+extern "C"
+void AIR_DEACTIVATE(void)
+{
+    air_deactivate();
+}
+
+extern "C"
+void AIR_FINALIZE(void)
+{
+    air_finalize();
+}
+
+extern "C"
+void AIRLOG(uint32_t node_id, uint32_t filter_item, uint64_t node_index, uint64_t value)
+{
+    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), true>::
+        LogData(node_id, filter_item, node_index, value);
+}
+
+extern "C"
+void AIRLOG_DUMMY(uint32_t node_id, uint32_t filter_item, uint64_t node_index, uint64_t value)
+{
+    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), false>::
+        LogData(node_id, filter_item, node_index, value);
+}

@@ -4,6 +4,7 @@ if(BUILD_ST)
     add_subdirectory(io_mock)
     add_subdirectory(many_log)
     add_subdirectory(data_transfer)
+    add_subdirectory(benchmark)
 endif()
 
 add_custom_target(build_st DEPENDS build_system_test)

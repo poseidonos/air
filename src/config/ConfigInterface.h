@@ -30,6 +30,7 @@
 #include "src/config/ConfigLib.h"
 #include "src/config/ConfigParser.h"
 #include "src/lib/StringView.h"
+#include "src/lib/Type.h"
 
 namespace config
 {
@@ -206,6 +207,35 @@ public:
         int32_t index = config_parser.GetIndexFromParagraph(ParagraphType::FILTER, filter_name);
         air::string_view sentence = config_parser.GetSentenceFromParagraph(ParagraphType::FILTER, index);
         return config_parser.GetItemSizeFromFilterSentence(sentence);
+    }
+
+    static constexpr air::ProcessorType
+    GetNodeType(air::string_view node_name)
+    {
+        int32_t index = config_parser.GetIndexFromParagraph(ParagraphType::NODE, node_name);
+        air::string_view sentence = config_parser.GetSentenceFromParagraph(ParagraphType::NODE, index);
+        air::string_view type = config_parser.GetStrValueFromSentence(sentence, "Type");
+        if (0 == type.compare("PERFORMANCE") || 0 == type.compare("Performance"))
+        {
+            return air::ProcessorType::PERFORMANCE;
+        }
+        else if (0 == type.compare("LATENCY") || 0 == type.compare("Latency"))
+        {
+            return air::ProcessorType::LATENCY;
+        }
+        else if (0 == type.compare("QUEUE") || 0 == type.compare("Queue"))
+        {
+            return air::ProcessorType::QUEUE;
+        }
+        else if (0 == type.compare("UTILIZATION") || 0 == type.compare("Utilization"))
+        {
+            return air::ProcessorType::UTILIZATION;
+        }
+        else if (0 == type.compare("COUNT") || 0 == type.compare("Count"))
+        {
+            return air::ProcessorType::COUNT;
+        }
+        return air::ProcessorType::PROCESSORTYPE_NULL;
     }
 
 private:

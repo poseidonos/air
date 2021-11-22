@@ -46,6 +46,10 @@ public:
     inline void
     LogData(lib::Data* data, uint64_t q_depth) override
     {
+        if (nullptr == data)
+        {
+            return;
+        }
         lib::QueueData* queue_data = static_cast<lib::QueueData*>(data);
         if (false == IsSampling(queue_data))
         {
@@ -77,7 +81,7 @@ public:
     inline bool
     IsSampling(lib::QueueData* queue_data)
     {
-        bool result{false};
+        bool result {false};
         if (sampling_rate != queue_data->sampling_rate)
         {
             queue_data->sampling_rate = sampling_rate;
@@ -102,7 +106,7 @@ public:
             }
             else
             {
-                uint32_t rand_uint = std::uniform_int_distribution<uint32_t>{
+                uint32_t rand_uint = std::uniform_int_distribution<uint32_t> {
                     0, sampling_rate}(queue_data->mersenne);
                 float rand_float = rand_uint * 0.8;
                 queue_data->logging_point = rand_float + (sampling_rate * 0.1);
@@ -119,12 +123,12 @@ public:
 
 private:
     void _UpdateRand(void);
-    static const uint32_t PADDING{10};
-    static const uint32_t DEFAULT_RATIO{1000}; // tmp. 1000
-    static const uint32_t MIN_RATIO{1};
-    static const uint32_t MAX_RATIO{10000};
+    static const uint32_t PADDING {10};
+    static const uint32_t DEFAULT_RATIO {1000}; // tmp. 1000
+    static const uint32_t MIN_RATIO {1};
+    static const uint32_t MAX_RATIO {10000};
 
-    uint32_t sampling_rate{DEFAULT_RATIO};
+    uint32_t sampling_rate {DEFAULT_RATIO};
     std::random_device rand;
     std::mt19937 mersenne;
 };
