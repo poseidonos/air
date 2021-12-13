@@ -7,9 +7,8 @@ if(BUILD_ST)
     add_subdirectory(benchmark)
 endif()
 
-add_custom_target(build_st DEPENDS build_system_test)
-add_custom_command(
-    OUTPUT build_system_test
+add_custom_target(
+    build_st
     COMMAND cmake ../.. -DBUILD_ST=ON -DCONFIG=${CMAKE_SOURCE_DIR}/config/system_test.cfg
     COMMAND make -j 8
 )

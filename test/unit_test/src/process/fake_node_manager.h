@@ -5,8 +5,8 @@
 
 #include "src/data_structure/NodeManager.cpp"
 #include "src/data_structure/NodeManager.h"
-#include "test/unit_test/process/fake_global_meta_getter.h"
-#include "test/unit_test/process/fake_node_meta_getter.h"
+#include "fake_global_meta_getter.h"
+#include "fake_node_meta_getter.h"
 
 class FakeNodeManager : public node::NodeManager
 {
