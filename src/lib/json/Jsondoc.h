@@ -456,6 +456,14 @@ public:
     {
         JSONdoc* doc = new JSONdoc {JSONtype::OBJECT, false, false};
 
+        if (this->HasKey("timestamp"))
+        {
+            doc->map.insert({"timestamp", {this->map["timestamp"]}});
+        }
+        if (this->HasKey("interval"))
+        {
+            doc->map.insert({"interval", {this->map["interval"]}});
+        }
         JSONdoc& groups = (*this)["group"];
         for (auto& group : groups)
         {

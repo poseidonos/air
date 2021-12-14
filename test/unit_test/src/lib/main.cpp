@@ -995,6 +995,8 @@ TEST_F(JsonTest, json_copy)
 TEST_F(JsonTest, json_compound)
 {
     auto& obj = air::json("obj");
+    obj["interval"] = {3};
+    obj["timestamp"] = {1639469944};
     auto& groupTop = air::json("groupTop");
     auto& groupA = air::json("groupA");
     auto& nodeA = air::json("nodeA");
@@ -1029,7 +1031,7 @@ TEST_F(JsonTest, json_compound)
     std::stringstream stream;
     stream << compound;
     std::string str = stream.str();
-    EXPECT_EQ(0, str.compare("{\"Apple\": {\"color\": \"red\", \"weight(kg)\": 0.93}, \"Banana\": {\"color\": \"yellow\", \"weight(kg)\": 2.34}}"));
+    EXPECT_EQ(0, str.compare("{\"Apple\": {\"color\": \"red\", \"weight(kg)\": 0.93}, \"Banana\": {\"color\": \"yellow\", \"weight(kg)\": 2.34}, \"interval\": 3, \"timestamp\": 1639469944}"));
 
     air::json_clear();
 }

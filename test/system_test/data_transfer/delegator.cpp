@@ -33,6 +33,14 @@ ex1_function(const air::JSONdoc& data)
             std::cout << "}\n";
         }
     }
+    if (data.HasKey("timestamp"))
+    {
+        std::cout << "timestamp:" << data["timestamp"] << std::endl;
+    }
+    if (data.HasKey("interval"))
+    {
+        std::cout << "interval:" << data["interval"] << std::endl;
+    }
 
     return 0;
 }
