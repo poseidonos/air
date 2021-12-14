@@ -1,7 +1,7 @@
 if(BUILD_UT OR RUN_UT)
     message(STATUS "build unit test")
     add_subdirectory(src)
-    #add_subdirectory(tool)
+    add_subdirectory(tool)
 endif()
 
 add_custom_target(

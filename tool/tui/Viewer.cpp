@@ -413,8 +413,8 @@ air::Viewer::_DrawNode(ANode& node, std::string name, JSONdoc& doc)
 
     if (NodeType::PERFORMANCE == node_type)
     {
-        std::cout << "        SUM_Period(iops:" << Double2String((double)sum_iops)
-                  << ", bw:" << Double2StringWithBWFormat((double)sum_bw) << ")" << std::endl;
+        std::cout << "        SUM_Period(iops:" << NumberToStrSIFmt(sum_iops)
+                  << ", bw:" << NumberToStrSIFmt(sum_bw, "B") << ")" << std::endl;
         curr_row++;
         if (ws_row <= curr_row)
         {
@@ -568,14 +568,28 @@ air::Viewer::_DrawPerf(JSONdoc& doc, uint32_t remain_col)
 
     stream.str("");
     stream << doc["iops"];
-    number = std::stod(stream.str());
-    str += Double2String(number);
+    try
+    {
+        number = std::stod(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += ", bw:";
 
     stream.str("");
     stream << doc["bw"];
-    number = std::stod(stream.str());
-    str += Double2StringWithBWFormat(number);
+    try
+    {
+        number = std::stod(stream.str());
+        str += NumberToStrSIFmt(number, "B");
+    }
+    catch(...)
+    {
+        str += "INV     ";
+    }
     str += ", ";
 
     for (uint32_t index = 1; index <= 10; index++)
@@ -595,14 +609,28 @@ air::Viewer::_DrawPerf(JSONdoc& doc, uint32_t remain_col)
 
     stream.str("");
     stream << doc["iops_avg"];
-    number = std::stod(stream.str());
-    str += Double2String(number);
+    try
+    {
+        number = std::stod(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += ", bw_avg:";
 
     stream.str("");
     stream << doc["bw_avg"];
-    number = std::stod(stream.str());
-    str += Double2StringWithBWFormat(number);
+    try
+    {
+        number = std::stod(stream.str());
+        str += NumberToStrSIFmt(number, "B");
+    }
+    catch(...)
+    {
+        str += "INV     ";
+    }
     str += ")";
 
     std::cout << str.substr(0, remain_col);
@@ -619,50 +647,106 @@ air::Viewer::_DrawLat(JSONdoc& doc, uint32_t remain_col)
 
     stream.str("");
     stream << doc["mean"];
-    number = std::stoull(stream.str());
-    str += ULL2StringWithLatencyFormat(number);
+    try
+    {
+        number = std::stoull(stream.str());
+        str += ULLToStrLatFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV  ";
+    }
     str += ", median:";
 
     stream.str("");
     stream << doc["median"];
-    number = std::stoull(stream.str());
-    str += ULL2StringWithLatencyFormat(number);
+    try
+    {
+        number = std::stoull(stream.str());
+        str += ULLToStrLatFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV  ";
+    }
     str += ", max:";
 
     stream.str("");
     stream << doc["max"];
-    number = std::stoull(stream.str());
-    str += ULL2StringWithLatencyFormat(number);
+    try
+    {
+        number = std::stoull(stream.str());
+        str += ULLToStrLatFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV  ";
+    }
     str += ", sample:";
 
     stream.str("");
     stream << doc["sample_cnt"];
-    number = std::stod(stream.str());
-    str += Double2String(number);
+    try
+    {
+        number = std::stod(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += "), Total(avg:";
 
     stream.str("");
     stream << doc["total_mean"];
-    number = std::stoull(stream.str());
-    str += ULL2StringWithLatencyFormat(number);
+    try
+    {
+        number = std::stoull(stream.str());
+        str += ULLToStrLatFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV  ";
+    }
     str += ", median:";
 
     stream.str("");
     stream << doc["total_median"];
-    number = std::stoull(stream.str());
-    str += ULL2StringWithLatencyFormat(number);
+    try
+    {
+        number = std::stoull(stream.str());
+        str += ULLToStrLatFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV  ";
+    }
     str += ", max:";
 
     stream.str("");
     stream << doc["total_max"];
-    number = std::stoull(stream.str());
-    str += ULL2StringWithLatencyFormat(number);
+    try
+    {
+        number = std::stoull(stream.str());
+        str += ULLToStrLatFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV  ";
+    }
     str += ", sample:";
 
     stream.str("");
     stream << doc["total_sample_cnt"];
-    number = std::stod(stream.str());
-    str += Double2String(number);
+    try
+    {
+        number = std::stod(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += ")";
 
     std::cout << str.substr(0, remain_col);
@@ -679,26 +763,54 @@ air::Viewer::_DrawQueue(JSONdoc& doc, uint32_t remain_col)
 
     stream.str("");
     stream << doc["depth_period_avg"];
-    number = std::stod(stream.str());
-    str += Double2String(number);
+    try
+    {
+        number = std::stod(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += ", max:";
 
     stream.str("");
     stream << doc["depth_period_max"];
-    number = std::stod(stream.str());
-    str += Double2String(number);
+    try
+    {
+        number = std::stod(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += "), Total(avg:";
 
     stream.str("");
     stream << doc["depth_total_avg"];
-    number = std::stod(stream.str());
-    str += Double2String(number);
+    try
+    {
+        number = std::stod(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += ", max:";
 
     stream.str("");
     stream << doc["depth_total_max"];
-    number = std::stod(stream.str());
-    str += Double2String(number);
+    try
+    {
+        number = std::stod(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += ")";
 
     std::cout << str.substr(0, remain_col);
@@ -709,14 +821,21 @@ air::Viewer::_DrawUtilization(JSONdoc& doc, uint32_t remain_col)
 {
     std::string str;
     std::stringstream stream;
-    uint64_t number;
+    uint64_t number {0};
 
     str = " Period(usage:";
 
     stream.str("");
     stream << doc["usage"];
-    number = std::stoull(stream.str());
-    str += Double2String((double)number);
+    try
+    {
+        number = std::stoull(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += ", ";
 
     stream.str("");
@@ -730,8 +849,15 @@ air::Viewer::_DrawUtilization(JSONdoc& doc, uint32_t remain_col)
 
     stream.str("");
     stream << doc["total_usage"];
-    number = std::stoull(stream.str());
-    str += Double2String((double)number);
+    try
+    {
+        number = std::stoull(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += ", ";
 
     stream.str("");
@@ -751,20 +877,34 @@ air::Viewer::_DrawCount(JSONdoc& doc, uint32_t remain_col)
 {
     std::string str;
     std::stringstream stream;
-    uint64_t number;
+    int64_t number;
 
     str = " Period(count:";
 
     stream.str("");
     stream << doc["count"];
-    number = std::stoll(stream.str());
-    str += LL2String(number);
+    try
+    {
+        number = std::stoll(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += "), Total(count:";
 
     stream.str("");
     stream << doc["total_count"];
-    number = std::stoll(stream.str());
-    str += LL2String(number);
+    try
+    {
+        number = std::stoll(stream.str());
+        str += NumberToStrSIFmt(number);
+    }
+    catch(...)
+    {
+        str += "INV    ";
+    }
     str += ")";
 
     std::cout << str.substr(0, remain_col);
