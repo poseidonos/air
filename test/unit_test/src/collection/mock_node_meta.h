@@ -40,6 +40,15 @@ public:
             case 14:
                 ptype = air::ProcessorType::QUEUE;
                 break;
+            case 15:
+                ptype = air::ProcessorType::UTILIZATION;
+                break;
+            case 16:
+                ptype = air::ProcessorType::COUNT;
+                break;
+            case 17:
+                ptype = air::ProcessorType::HISTOGRAM;
+                break;
             default:
                 break;
         }

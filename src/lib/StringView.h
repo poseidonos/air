@@ -129,6 +129,43 @@ public:
         }
         return air::string_view::npos;
     }
+    constexpr std::size_t
+    rfind(air::string_view arg, std::size_t pos = air::string_view::npos) const
+    {
+        std::size_t match_len {arg.size()};
+        std::size_t match_cnt {0};
+        std::size_t curr_pos {len - 1};
+        if (curr_pos > pos)
+        {
+            curr_pos = pos;
+        }
+
+        while (match_len > match_cnt)
+        {
+            if (arg[match_len - match_cnt - 1] == str[curr_pos])
+            {
+                match_cnt++;
+            }
+            else
+            {
+                match_cnt = 0;
+            }
+
+            if (match_len == match_cnt)
+            {
+                return curr_pos;
+            }
+
+            curr_pos--;
+
+            if (0 == curr_pos)
+            {
+                return air::string_view::npos;
+            }
+        }
+
+        return air::string_view::npos;
+    }
     constexpr air::string_view
     substr(std::size_t start, std::size_t length) const
     {

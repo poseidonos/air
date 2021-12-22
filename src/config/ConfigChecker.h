@@ -58,7 +58,7 @@ public:
         }
         else if (ParagraphType::GROUP == type)
         {
-            air::string_view key = "Group";
+            air::string_view key {"Group"};
             if (0 > CheckValueDuplication(key, paragraph))
             {
                 throw std::logic_error("Group value duplicated");
@@ -66,15 +66,23 @@ public:
         }
         else if (ParagraphType::FILTER == type)
         {
-            air::string_view key = "Filter";
+            air::string_view key {"Filter"};
             if (0 > CheckValueDuplication(key, paragraph))
             {
                 throw std::logic_error("Filter value duplicated");
             }
         }
+        else if (ParagraphType::HISTOGRAM == type)
+        {
+            air::string_view key {"Histogram"};
+            if (0 > CheckValueDuplication(key, paragraph))
+            {
+                throw std::logic_error("Histogram value duplicated");
+            }
+        }
         else if (ParagraphType::NODE == type)
         {
-            air::string_view key = "Node";
+            air::string_view key {"Node"};
             if (0 > CheckValueDuplication(key, paragraph))
             {
                 throw std::logic_error("Node value duplicated");
@@ -91,7 +99,7 @@ public:
     static constexpr int32_t
     CheckKeyRule(ParagraphType type, air::string_view sentence)
     {
-        uint32_t num_mandatory{num_mandatory_list[dtype(type)]};
+        uint32_t num_mandatory {num_mandatory_list[dtype(type)]};
 
         if (ParagraphType::DEFAULT == type)
         {
@@ -126,9 +134,20 @@ public:
                 throw std::logic_error("Filter mandatory key missing");
             }
         }
+        else if (ParagraphType::HISTOGRAM == type)
+        {
+            if (0 > CheckKeyTypo(type, histogram_keys, sentence))
+            {
+                throw std::logic_error("Histogram key typo");
+            }
+            if (0 > CheckMandatoryKey(histogram_keys, num_mandatory, sentence))
+            {
+                throw std::logic_error("Histogram mandatory key missing");
+            }
+        }
         else if (ParagraphType::NODE == type)
         {
-            if (0 > CheckKeyTypo(type, node_keys, sentence))
+            if (0 > CheckKeyTypoNode(node_keys, sentence))
             {
                 throw std::logic_error("Node key typo");
             }
@@ -162,16 +181,18 @@ public:
     }
 
 private:
-    static constexpr air::string_view default_keys[NUM_DEFAULT_KEY]{
+    static constexpr air::string_view default_keys[NUM_DEFAULT_KEY] {
         "StreamingInterval", "AirBuild", "NodeBuild", "NodeRun", "NodeSamplingRatio", "NodeIndexSize"};
-    static constexpr air::string_view group_keys[NUM_GROUP_KEY]{
+    static constexpr air::string_view group_keys[NUM_GROUP_KEY] {
         "Group", "NodeBuild", "NodeRun", "NodeSamplingRatio", "NodeIndexSize"};
-    static constexpr air::string_view filter_keys[NUM_FILTER_KEY]{
+    static constexpr air::string_view filter_keys[NUM_FILTER_KEY] {
         "Filter", "Item"};
-    static constexpr air::string_view node_keys[NUM_NODE_KEY]{
-        "Node", "Type", "Group", "Filter", "Build", "Run", "SamplingRatio", "IndexSize"};
+    static constexpr air::string_view histogram_keys[NUM_HISTOGRAM_KEY] {
+        "Histogram", "DataRange", "BucketRange"};
+    static constexpr air::string_view node_keys[NUM_NODE_KEY] {
+        "Node", "Type", "Group", "Filter", "Build", "Run", "SamplingRatio", "IndexSize", "Histogram"};
 
-    static constexpr uint32_t num_mandatory_list[4]{6, 1, 2, 4};
+    static constexpr uint32_t num_mandatory_list[5] {6, 1, 2, 3, 4};
 };
 
 } // namespace config

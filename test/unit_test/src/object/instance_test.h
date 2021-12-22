@@ -13,6 +13,8 @@
 #include "src/collection/SwitchGearCorHandler.h"
 #include "src/collection/writer/CountWriter.cpp"
 #include "src/collection/writer/CountWriter.h"
+#include "src/collection/writer/HistogramWriter.cpp"
+#include "src/collection/writer/HistogramWriter.h"
 #include "src/collection/writer/LatencyWriter.cpp"
 #include "src/collection/writer/LatencyWriter.h"
 #include "src/collection/writer/PerformanceWriter.cpp"
@@ -91,7 +93,7 @@
 class InstanceTest : public ::testing::Test
 {
 public:
-    air::InstanceManager* instance_manager{nullptr};
+    air::InstanceManager* instance_manager {nullptr};
 
 protected:
     InstanceTest()

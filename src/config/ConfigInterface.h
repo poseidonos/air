@@ -59,7 +59,7 @@ public:
     static constexpr air::string_view
     GetSentenceName(ParagraphType type, uint32_t index)
     {
-        air::string_view key{""};
+        air::string_view key {""};
         if (ParagraphType::GROUP == type)
         {
             key = "Group";
@@ -71,6 +71,10 @@ public:
         else if (ParagraphType::FILTER == type)
         {
             key = "Filter";
+        }
+        else if (ParagraphType::HISTOGRAM == type)
+        {
+            key = "Histogram";
         }
         else
         {
@@ -106,6 +110,13 @@ public:
                 return -1;
             }
         }
+        else if (ParagraphType::HISTOGRAM == type)
+        {
+            if (key != "BucketRange")
+            {
+                return -1;
+            }
+        }
         else if (ParagraphType::NODE == type)
         {
             if (key != "Build" && key != "Run" && key != "SamplingRatio" && key != "IndexSize")
@@ -114,13 +125,123 @@ public:
             }
         }
 
-        int32_t index = index_c;
-        air::string_view sentence = config_parser.GetSentenceFromParagraph(type, index);
-        int32_t ret = config_parser.GetIntValueFromSentence(sentence, key, item);
+        int32_t index {index_c};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(type, index)};
+        int32_t ret {config_parser.GetIntValueFromSentence(sentence, key, item)};
 
-        if (0 > ret && ParagraphType::NODE == type)
+        if (0 > ret && (ParagraphType::NODE == type || ParagraphType::GROUP == type))
         {
-            air::string_view group_name = config_parser.GetStrValueFromSentence(sentence, "Group");
+            ret = _GetIntValueFromUpperLevel(type, key, index, sentence);
+        }
+
+        return ret;
+    }
+
+    static constexpr int32_t
+    GetIntValue(ParagraphType type, air::string_view key, air::string_view name = "", air::string_view item = "")
+    {
+        int32_t index {config_parser.GetIndexFromParagraph(type, name)};
+        return GetIntValue(type, key, index, item);
+    }
+
+    static constexpr air::string_view
+    GetStrValue(ParagraphType type, air::string_view key, air::string_view name = "")
+    {
+        int32_t index {config_parser.GetIndexFromParagraph(type, name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(type, index)};
+        return config_parser.GetStrValueFromSentence(sentence, key);
+    }
+
+    static constexpr air::ProcessorType
+    GetNodeType(air::string_view node_name)
+    {
+        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::NODE, node_name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::NODE, index)};
+        air::string_view type {config_parser.GetStrValueFromSentence(sentence, "Type")};
+        if (0 == type.compare("PERFORMANCE") || 0 == type.compare("Performance"))
+        {
+            return air::ProcessorType::PERFORMANCE;
+        }
+        else if (0 == type.compare("LATENCY") || 0 == type.compare("Latency"))
+        {
+            return air::ProcessorType::LATENCY;
+        }
+        else if (0 == type.compare("QUEUE") || 0 == type.compare("Queue"))
+        {
+            return air::ProcessorType::QUEUE;
+        }
+        else if (0 == type.compare("UTILIZATION") || 0 == type.compare("Utilization"))
+        {
+            return air::ProcessorType::UTILIZATION;
+        }
+        else if (0 == type.compare("COUNT") || 0 == type.compare("Count"))
+        {
+            return air::ProcessorType::COUNT;
+        }
+        else if (0 == type.compare("HISTOGRAM") || 0 == type.compare("Histogram"))
+        {
+            return air::ProcessorType::HISTOGRAM;
+        }
+        return air::ProcessorType::PROCESSORTYPE_NULL;
+    }
+
+    static std::string
+    GetItemStrWithNodeName(air::string_view node_name, uint32_t item_index)
+    {
+        air::string_view filter_name {GetStrValue(ParagraphType::NODE, "Filter", node_name)};
+        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::FILTER, filter_name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::FILTER, index)};
+        return config_parser.GetItemStrFromFilterSentence(sentence, item_index);
+    }
+
+    static std::string
+    GetItemStrWithFilterName(air::string_view filter_name, uint32_t item_index)
+    {
+        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::FILTER, filter_name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::FILTER, index)};
+        return config_parser.GetItemStrFromFilterSentence(sentence, item_index);
+    }
+
+    static constexpr int32_t
+    GetItemSizeWithFilterName(air::string_view filter_name)
+    {
+        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::FILTER, filter_name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::FILTER, index)};
+        return config_parser.GetItemSizeFromFilterSentence(sentence);
+    }
+
+    static constexpr int64_t
+    GetMinValueWithHistogramName(air::string_view histogram_name)
+    {
+        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::HISTOGRAM, histogram_name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::HISTOGRAM, index)};
+        return config_parser.GetMinValueFromHistogramSentence(sentence);
+    }
+
+    static constexpr int64_t
+    GetMaxValueWithHistogramName(air::string_view histogram_name)
+    {
+        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::HISTOGRAM, histogram_name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::HISTOGRAM, index)};
+        return config_parser.GetMaxValueFromHistogramSentence(sentence);
+    }
+
+    static constexpr bool
+    IsLinearTypeWithHistogramName(air::string_view histogram_name)
+    {
+        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::HISTOGRAM, histogram_name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::HISTOGRAM, index)};
+        return config_parser.IsLinearTypeFromHistogramSentence(sentence);
+    }
+
+private:
+    static constexpr int32_t
+    _GetIntValueFromUpperLevel(ParagraphType type, air::string_view key, int32_t index, air::string_view sentence)
+    {
+        int32_t ret {-1};
+        if (ParagraphType::NODE == type)
+        {
+            air::string_view group_name {config_parser.GetStrValueFromSentence(sentence, "Group")};
             index = config_parser.GetIndexFromParagraph(ParagraphType::GROUP, group_name);
             sentence = config_parser.GetSentenceFromParagraph(ParagraphType::GROUP, index);
             if (key == "Build")
@@ -160,85 +281,14 @@ public:
                 }
             }
         }
-        else if (0 > ret && ParagraphType::GROUP == type)
+        else if (ParagraphType::GROUP == type)
         {
             sentence = config_parser.GetSentenceFromParagraph(ParagraphType::DEFAULT, 0);
             ret = config_parser.GetIntValueFromSentence(sentence, key);
         }
-
         return ret;
     }
 
-    static constexpr int32_t
-    GetIntValue(ParagraphType type, air::string_view key, air::string_view name = "", air::string_view item = "")
-    {
-        int32_t index = config_parser.GetIndexFromParagraph(type, name);
-        return GetIntValue(type, key, index, item);
-    }
-
-    static constexpr air::string_view
-    GetStrValue(ParagraphType type, air::string_view key, air::string_view name = "")
-    {
-        int32_t index = config_parser.GetIndexFromParagraph(type, name);
-        air::string_view sentence = config_parser.GetSentenceFromParagraph(type, index);
-        return config_parser.GetStrValueFromSentence(sentence, key);
-    }
-
-    static std::string
-    GetItemStrWithNodeName(air::string_view node_name, uint32_t item_index)
-    {
-        air::string_view filter_name = GetStrValue(ParagraphType::NODE, "Filter", node_name);
-        int32_t index = config_parser.GetIndexFromParagraph(ParagraphType::FILTER, filter_name);
-        air::string_view sentence = config_parser.GetSentenceFromParagraph(ParagraphType::FILTER, index);
-        return config_parser.GetItemStrFromFilterSentence(sentence, item_index);
-    }
-
-    static std::string
-    GetItemStrWithFilterName(air::string_view filter_name, uint32_t item_index)
-    {
-        int32_t index = config_parser.GetIndexFromParagraph(ParagraphType::FILTER, filter_name);
-        air::string_view sentence = config_parser.GetSentenceFromParagraph(ParagraphType::FILTER, index);
-        return config_parser.GetItemStrFromFilterSentence(sentence, item_index);
-    }
-
-    static constexpr int32_t
-    GetItemSizeWithFilterName(air::string_view filter_name)
-    {
-        int32_t index = config_parser.GetIndexFromParagraph(ParagraphType::FILTER, filter_name);
-        air::string_view sentence = config_parser.GetSentenceFromParagraph(ParagraphType::FILTER, index);
-        return config_parser.GetItemSizeFromFilterSentence(sentence);
-    }
-
-    static constexpr air::ProcessorType
-    GetNodeType(air::string_view node_name)
-    {
-        int32_t index = config_parser.GetIndexFromParagraph(ParagraphType::NODE, node_name);
-        air::string_view sentence = config_parser.GetSentenceFromParagraph(ParagraphType::NODE, index);
-        air::string_view type = config_parser.GetStrValueFromSentence(sentence, "Type");
-        if (0 == type.compare("PERFORMANCE") || 0 == type.compare("Performance"))
-        {
-            return air::ProcessorType::PERFORMANCE;
-        }
-        else if (0 == type.compare("LATENCY") || 0 == type.compare("Latency"))
-        {
-            return air::ProcessorType::LATENCY;
-        }
-        else if (0 == type.compare("QUEUE") || 0 == type.compare("Queue"))
-        {
-            return air::ProcessorType::QUEUE;
-        }
-        else if (0 == type.compare("UTILIZATION") || 0 == type.compare("Utilization"))
-        {
-            return air::ProcessorType::UTILIZATION;
-        }
-        else if (0 == type.compare("COUNT") || 0 == type.compare("Count"))
-        {
-            return air::ProcessorType::COUNT;
-        }
-        return air::ProcessorType::PROCESSORTYPE_NULL;
-    }
-
-private:
     static ConfigParser config_parser;
 };
 

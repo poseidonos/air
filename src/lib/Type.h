@@ -36,6 +36,7 @@ enum class ProcessorType : uint32_t
     QUEUE,
     UTILIZATION,
     COUNT,
+    HISTOGRAM,
     PROCESSORTYPE_NULL
 };
 

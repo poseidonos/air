@@ -80,6 +80,10 @@ policy::RuleManager::SetNodeMetaConfig(void* node)
         {
             node_meta[i].processor_type = air::ProcessorType::COUNT;
         }
+        else if (0 == type.compare("HISTOGRAM") || 0 == type.compare("Histogram"))
+        {
+            node_meta[i].processor_type = air::ProcessorType::HISTOGRAM;
+        }
         node_meta[i].run = run;
 
         air::string_view group_name = cfg::GetStrValue(config::ParagraphType::NODE, "Group", node_name);

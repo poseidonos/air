@@ -45,8 +45,8 @@ public:
     constexpr int32_t
     CheckKeyRule(ParagraphType type)
     {
-        const uint32_t paragraph_type_index{dtype(type)};
-        int32_t result{0};
+        const uint32_t paragraph_type_index {dtype(type)};
+        int32_t result {0};
 
         for (uint32_t sentence_index = 0; sentence_index < sentences_count[paragraph_type_index]; sentence_index++)
         {
@@ -64,8 +64,8 @@ public:
     constexpr int32_t
     CheckValueRule(ParagraphType type)
     {
-        const uint32_t paragraph_type_index{dtype(type)};
-        int32_t result{0};
+        const uint32_t paragraph_type_index {dtype(type)};
+        int32_t result {0};
 
         for (uint32_t sentence_index = 0; sentence_index < sentences_count[paragraph_type_index]; sentence_index++)
         {

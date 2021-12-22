@@ -108,6 +108,18 @@ public:
     }
 };
 
+class HistogramCollector : public Collector
+{
+public:
+    explicit HistogramCollector(Writer* new_writer)
+    : Collector(new_writer)
+    {
+    }
+    virtual ~HistogramCollector(void)
+    {
+    }
+};
+
 class CountCollector : public Collector
 {
 public:

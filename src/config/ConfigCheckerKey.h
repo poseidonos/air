@@ -36,17 +36,15 @@ namespace config
 static constexpr int32_t
 CheckKeyTypo(ParagraphType type, const air::string_view* key_list, air::string_view sentence)
 {
-    size_t cur_pos{sentence.find(":")};
-    size_t prev_pos{0};
-    bool is_type_violation = false;
-    bool has_sampling_ratio = false;
+    size_t cur_pos {sentence.find(":")};
+    size_t prev_pos {0};
 
     while (air::string_view::npos != cur_pos)
     {
-        air::string_view key = sentence.substr(prev_pos, cur_pos - prev_pos);
+        air::string_view key {sentence.substr(prev_pos, cur_pos - prev_pos)};
         key = Strip(key);
 
-        bool find = false;
+        bool find {false};
 
         if (ParagraphType::DEFAULT == type)
         {
@@ -81,33 +79,14 @@ CheckKeyTypo(ParagraphType type, const air::string_view* key_list, air::string_v
                 }
             }
         }
-        else if (ParagraphType::NODE == type)
+        else if (ParagraphType::HISTOGRAM == type)
         {
-            for (uint32_t i = 0; i < NUM_NODE_KEY; i++)
+            for (uint32_t i = 0; i < NUM_HISTOGRAM_KEY; i++)
             {
                 if (key == key_list[i])
                 {
                     find = true;
                     break;
-                }
-            }
-            if (key == "SamplingRatio")
-            {
-                has_sampling_ratio = true;
-            }
-            if (key == "Type")
-            {
-                size_t next_comma = sentence.find(",", cur_pos + 1);
-                if (air::string_view::npos == next_comma)
-                {
-                    next_comma = sentence.size();
-                }
-                air::string_view value = sentence.substr(cur_pos + 1, next_comma - cur_pos - 1);
-                value = Strip(value);
-                if (value == "PERFORMANCE" || value == "LATENCY" || value == "UTILIZATION" || value == "COUNT" ||
-                    value == "Performance" || value == "Latency" || value == "Utilization" || value == "Count")
-                {
-                    is_type_violation = true;
                 }
             }
         }
@@ -121,14 +100,89 @@ CheckKeyTypo(ParagraphType type, const air::string_view* key_list, air::string_v
             throw std::logic_error("Invalid key was used");
         }
 
-        if (is_type_violation && has_sampling_ratio)
+        cur_pos = sentence.find(":", cur_pos + 1);
+        prev_pos = sentence.rfind(",", cur_pos + 1);
+        prev_pos += 1;
+    }
+
+    return 0;
+}
+
+static constexpr int32_t
+CheckKeyTypoNode(const air::string_view* key_list, air::string_view sentence)
+{
+    size_t cur_pos {sentence.find(":")};
+    size_t prev_pos {0};
+    bool is_queue_type {false};
+    bool has_sampling_ratio {false};
+    bool is_histogram_type {false};
+    bool has_histogram_type {false};
+
+    while (air::string_view::npos != cur_pos)
+    {
+        air::string_view key {sentence.substr(prev_pos, cur_pos - prev_pos)};
+        key = Strip(key);
+
+        bool find {false};
+
+        if (key == "SamplingRatio")
         {
-            throw std::logic_error("Only queue type can have SamplingRatio");
+            has_sampling_ratio = true;
+        }
+        if (key == "Histogram")
+        {
+            has_histogram_type = true;
+        }
+        if (key == "Type")
+        {
+            size_t next_comma {sentence.find(",", cur_pos + 1)};
+            if (air::string_view::npos == next_comma)
+            {
+                next_comma = sentence.size();
+            }
+            air::string_view value {sentence.substr(cur_pos + 1, next_comma - cur_pos - 1)};
+            value = Strip(value);
+            if (value == "QUEUE" || value == "Queue")
+            {
+                is_queue_type = true;
+            }
+            else if (value == "HISTOGRAM" || value == "Histogram")
+            {
+                is_histogram_type = true;
+            }
+        }
+        for (uint32_t i = 0; i < NUM_NODE_KEY; i++)
+        {
+            if (key == key_list[i])
+            {
+                find = true;
+                break;
+            }
         }
 
-        prev_pos = sentence.find(",", prev_pos + 1);
-        prev_pos += 1;
+        if (false == find)
+        {
+            throw std::logic_error("Invalid key was used");
+        }
+
         cur_pos = sentence.find(":", cur_pos + 1);
+        prev_pos = sentence.rfind(",", cur_pos + 1);
+        prev_pos += 1;
+    }
+
+    if (!is_queue_type && has_sampling_ratio)
+    {
+        throw std::logic_error("Only queue type can have SamplingRatio option");
+    }
+
+    if (!is_histogram_type && has_histogram_type)
+    {
+        throw std::logic_error("Only histogram type can have Histogram option");
+    }
+
+    if (is_histogram_type && !has_histogram_type)
+    {
+        throw std::logic_error("Histogram type must have Histogram option");
     }
 
     return 0;
@@ -137,19 +191,19 @@ CheckKeyTypo(ParagraphType type, const air::string_view* key_list, air::string_v
 static constexpr int32_t
 CheckMandatoryKey(const air::string_view* key_list, uint32_t num_mandatory, air::string_view sentence)
 {
-    int key_cnt = 0;
+    int key_cnt {0};
 
-    uint32_t num_find = 0;
+    uint32_t num_find {0};
     for (uint32_t index = 0; index < num_mandatory; index++, key_cnt++)
     {
-        size_t cur_pos = sentence.find(":");
-        size_t prev_pos{0};
-        air::string_view mandatory_key = key_list[key_cnt];
-        bool find{false};
+        size_t cur_pos {sentence.find(":")};
+        size_t prev_pos {0};
+        air::string_view mandatory_key {key_list[key_cnt]};
+        bool find {false};
 
         while (air::string_view::npos != cur_pos)
         {
-            air::string_view sentence_key = sentence.substr(prev_pos, cur_pos - prev_pos);
+            air::string_view sentence_key {sentence.substr(prev_pos, cur_pos - prev_pos)};
             sentence_key = Strip(sentence_key);
 
             if (mandatory_key == sentence_key)
@@ -159,9 +213,9 @@ CheckMandatoryKey(const air::string_view* key_list, uint32_t num_mandatory, air:
                 break;
             }
 
-            prev_pos = sentence.find(",", prev_pos + 1);
-            prev_pos += 1;
             cur_pos = sentence.find(":", cur_pos + 1);
+            prev_pos = sentence.rfind(",", cur_pos + 1);
+            prev_pos += 1;
         }
 
         if (false == find)
@@ -176,20 +230,20 @@ CheckMandatoryKey(const air::string_view* key_list, uint32_t num_mandatory, air:
 static constexpr int32_t
 CheckKeyDuplication(air::string_view sentence)
 {
-    size_t colon_pos{sentence.find(":")};
-    size_t comma_pos{0};
+    size_t colon_pos {sentence.find(":")};
+    size_t comma_pos {0};
 
     while (air::string_view::npos != colon_pos)
     {
-        air::string_view target_key = sentence.substr(comma_pos, colon_pos - comma_pos);
+        air::string_view target_key {sentence.substr(comma_pos, colon_pos - comma_pos)};
         target_key = Strip(target_key);
 
-        size_t comparative_colon{sentence.find(":", colon_pos + 1)};
-        size_t comparative_comma{sentence.find(",", comma_pos + 1)};
+        size_t comparative_colon {sentence.find(":", colon_pos + 1)};
+        size_t comparative_comma {sentence.find(",", comma_pos + 1)};
         comparative_comma += 1;
         while (air::string_view::npos != comparative_colon)
         {
-            air::string_view comparative_key = sentence.substr(comparative_comma, comparative_colon - comparative_comma);
+            air::string_view comparative_key {sentence.substr(comparative_comma, comparative_colon - comparative_comma)};
             comparative_key = Strip(comparative_key);
 
             if (target_key == comparative_key)
@@ -197,14 +251,14 @@ CheckKeyDuplication(air::string_view sentence)
                 throw std::logic_error("Key duplicated");
             }
 
-            comparative_comma = sentence.find(",", comparative_comma + 1);
-            comparative_comma += 1;
             comparative_colon = sentence.find(":", comparative_colon + 1);
+            comparative_comma = sentence.rfind(",", comparative_colon + 1);
+            comparative_comma += 1;
         }
 
-        comma_pos = sentence.find(",", comma_pos + 1);
-        comma_pos += 1;
         colon_pos = sentence.find(":", colon_pos + 1);
+        comma_pos = sentence.rfind(",", colon_pos + 1);
+        comma_pos += 1;
     }
     return 0;
 }

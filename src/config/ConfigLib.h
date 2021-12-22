@@ -39,16 +39,18 @@ dtype(E e) noexcept // to primitive data types
 
 namespace config
 {
-static constexpr uint32_t NUM_DEFAULT_KEY{6};
-static constexpr uint32_t NUM_GROUP_KEY{5};
-static constexpr uint32_t NUM_FILTER_KEY{2};
-static constexpr uint32_t NUM_NODE_KEY{8};
+static constexpr uint32_t NUM_DEFAULT_KEY {6};
+static constexpr uint32_t NUM_GROUP_KEY {5};
+static constexpr uint32_t NUM_FILTER_KEY {2};
+static constexpr uint32_t NUM_HISTOGRAM_KEY {3};
+static constexpr uint32_t NUM_NODE_KEY {9};
 
 enum class ParagraphType : uint32_t
 {
     DEFAULT = 0,
     GROUP,
     FILTER,
+    HISTOGRAM,
     NODE,
 
     COUNT,
@@ -58,7 +60,7 @@ enum class ParagraphType : uint32_t
 static constexpr bool
 HasSpace(air::string_view value)
 {
-    size_t pos{0};
+    size_t pos {0};
 
     if (0 == value.size())
     {
@@ -92,7 +94,7 @@ IsSpace(char c)
 static constexpr bool
 IsUInt(air::string_view value)
 {
-    size_t pos{0};
+    size_t pos {0};
 
     if (0 == value.size())
     {
@@ -115,7 +117,7 @@ Strip(air::string_view str)
 {
     if (0 != str.size())
     {
-        std::size_t tail = str.size() - 1;
+        std::size_t tail {str.size() - 1};
 
         if (IsSpace(str[0]))
         {
@@ -129,26 +131,88 @@ Strip(air::string_view str)
     return str;
 }
 
-static constexpr uint32_t
+static constexpr int64_t
 Stoi(air::string_view str)
 {
-    uint32_t length = str.size();
-    uint32_t int_value = 0;
-    for (uint32_t idx_length = 0; idx_length < length; idx_length++)
+    int64_t result {0};
+    uint32_t len {static_cast<uint32_t>(str.size())};
+    int64_t pow_of_ten {1};
+    for (int32_t len_idx = len - 1; len_idx >= 0; len_idx--)
     {
-        uint32_t num = str[idx_length] - '0';
-        uint32_t pow = length - idx_length - 1;
-        uint32_t pow_of_ten = 1;
-        if (0 < pow)
+        uint32_t num {static_cast<uint32_t>(str[len_idx]) - '0'};
+        if (9 < num)
         {
-            for (uint32_t idx_pow = 0; idx_pow < pow; idx_pow++)
+            continue;
+        }
+        result += num * pow_of_ten;
+        pow_of_ten *= 10;
+    }
+    return result;
+}
+
+static constexpr int64_t
+StolWithExponent(air::string_view str)
+{
+    int64_t result {0};
+    uint32_t len {static_cast<uint32_t>(str.size())};
+    int64_t pow_of_ten {1};
+    int32_t len_last {0};
+    bool is_positive {true};
+    if ('-' == str[0])
+    {
+        is_positive = false;
+        len_last = 1;
+    }
+
+    size_t pow_pos {str.find("^")};
+    if (air::string_view::npos != pow_pos)
+    {
+        int64_t base {StolWithExponent(str.substr(0, pow_pos))};
+        int64_t exponent {StolWithExponent(str.substr(pow_pos + 1, str.size() - pow_pos - 1))};
+        if (0 == exponent)
+        {
+            if (is_positive)
             {
-                pow_of_ten *= 10;
+                return 1;
+            }
+            else
+            {
+                return -1;
             }
         }
-        int_value += num * pow_of_ten;
+        else
+        {
+            result = 1;
+            while (exponent)
+            {
+                result *= base;
+                exponent--;
+            }
+
+            if (!is_positive && 0 < result)
+            {
+                result *= -1;
+            }
+
+            return result;
+        }
     }
-    return int_value;
+
+    for (int32_t len_idx = len - 1; len_idx >= len_last; len_idx--)
+    {
+        uint32_t num {static_cast<uint32_t>(str[len_idx]) - '0'};
+        result += num * pow_of_ten;
+        pow_of_ten *= 10;
+    }
+
+    if (is_positive)
+    {
+        return result;
+    }
+    else
+    {
+        return -1 * result;
+    }
 }
 
 } // namespace config

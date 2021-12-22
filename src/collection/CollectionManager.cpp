@@ -27,6 +27,7 @@
 #include <cassert>
 
 #include "src/collection/writer/CountWriter.h"
+#include "src/collection/writer/HistogramWriter.h"
 #include "src/collection/writer/LatencyWriter.h"
 #include "src/collection/writer/PerformanceWriter.h"
 #include "src/collection/writer/QueueWriter.h"
@@ -97,6 +98,9 @@ collection::CollectionManager::Init(void)
                 break;
             case (air::ProcessorType::COUNT):
                 collector[i] = new CountCollector {new CountWriter};
+                break;
+            case (air::ProcessorType::HISTOGRAM):
+                collector[i] = new HistogramCollector {new HistogramWriter};
                 break;
             default:
                 assert(0);

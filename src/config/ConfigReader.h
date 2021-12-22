@@ -43,8 +43,8 @@ struct ConfigReader
     static constexpr uint32_t
     GetStrArrSize(air::string_view cfg_str)
     {
-        size_t count{0};
-        size_t pos{0};
+        size_t count {0};
+        size_t pos {0};
 
         pos = cfg_str.find("\"");
         while (air::string_view::npos != pos)
@@ -59,8 +59,8 @@ struct ConfigReader
     static constexpr air::string_view
     GetStrArrFromRawData(air::string_view start_del, air::string_view end_del)
     {
-        size_t start_pos = raw_data.find(start_del) + start_del.size() + 1;
-        size_t end_pos = raw_data.find(end_del);
+        size_t start_pos {raw_data.find(start_del) + start_del.size() + 1};
+        size_t end_pos {raw_data.find(end_del)};
         return raw_data.substr(start_pos, end_pos - start_pos);
     }
 
@@ -70,16 +70,18 @@ private:
         ;
 };
 
-static constexpr air::string_view paragraphs[dtype(ParagraphType::COUNT)] = {
+static constexpr air::string_view paragraphs[dtype(ParagraphType::COUNT)] {
     ConfigReader::GetStrArrFromRawData("[DEFAULT]", "[/DEFAULT]"),
     ConfigReader::GetStrArrFromRawData("[GROUP]", "[/GROUP]"),
     ConfigReader::GetStrArrFromRawData("[FILTER]", "[/FILTER]"),
+    ConfigReader::GetStrArrFromRawData("[HISTOGRAM]", "[/HISTOGRAM]"),
     ConfigReader::GetStrArrFromRawData("[NODE]", "[/NODE]")};
 
-static constexpr uint32_t sentences_count[dtype(ParagraphType::COUNT)] = {
+static constexpr uint32_t sentences_count[dtype(ParagraphType::COUNT)] {
     ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::DEFAULT)]),
     ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::GROUP)]),
     ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::FILTER)]),
+    ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::HISTOGRAM)]),
     ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::NODE)])};
 
 } // namespace config

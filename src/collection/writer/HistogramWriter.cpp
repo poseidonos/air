@@ -22,26 +22,4 @@
  *   SOFTWARE.
  */
 
-#include <gtest/gtest.h>
-
-#include "src/config/ConfigInterface.h"
-
-class ConfigInterfaceTest : public ::testing::Test
-{
-public:
-protected:
-    ConfigInterfaceTest()
-    {
-    }
-    ~ConfigInterfaceTest()
-    {
-    }
-    void
-    SetUp() override
-    {
-    }
-    void
-    TearDown() override
-    {
-    }
-};
+#include "src/collection/writer/HistogramWriter.h"

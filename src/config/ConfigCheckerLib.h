@@ -36,19 +36,19 @@ namespace config
 static constexpr int32_t
 CheckCharacterFormat(air::string_view sentence)
 {
-    size_t start_quote = sentence.find("\"");
+    size_t start_quote {sentence.find("\"")};
     if (air::string_view::npos == start_quote)
     {
         throw std::logic_error("Sentence has to start with quotes");
     }
 
-    size_t end_quote = sentence.find("\"", start_quote + 1);
+    size_t end_quote {sentence.find("\"", start_quote + 1)};
     if (air::string_view::npos == end_quote)
     {
         throw std::logic_error("Sentence has to end with quotes");
     }
 
-    size_t pos{start_quote};
+    size_t pos {start_quote};
     while (pos < end_quote)
     {
         pos++;
@@ -81,6 +81,10 @@ CheckCharacterFormat(air::string_view sentence)
         {
             continue;
         }
+        else if ('[' == sentence[pos] || ']' == sentence[pos])
+        {
+            continue;
+        }
         else
         {
             throw std::logic_error("Sentence has invalid character");
@@ -97,13 +101,13 @@ CheckSentenceFormat(air::string_view sentence)
     {
         throw std::logic_error("Invalid character format");
     }
-    size_t start_quote = sentence.find("\"");
-    size_t end_quote = sentence.find("\"", start_quote + 1);
+    size_t start_quote {sentence.find("\"")};
+    size_t end_quote {sentence.find("\"", start_quote + 1)};
 
-    size_t curr_colon_pos{0};
-    size_t curr_comma_pos{0};
-    int colon_cnt{0};
-    int comma_cnt{0};
+    size_t curr_colon_pos {0};
+    size_t curr_comma_pos {0};
+    int colon_cnt {0};
+    int comma_cnt {0};
 
     while (curr_colon_pos < sentence.size() && curr_comma_pos < sentence.size())
     {
@@ -139,7 +143,7 @@ CheckSentenceFormat(air::string_view sentence)
         throw std::logic_error("Wrong key:value pair");
     }
 
-    size_t prev_comma_pos{start_quote};
+    size_t prev_comma_pos {start_quote};
     while (prev_comma_pos < sentence.size())
     {
         curr_colon_pos = sentence.find(":", prev_comma_pos);
@@ -149,10 +153,8 @@ CheckSentenceFormat(air::string_view sentence)
             curr_comma_pos = end_quote;
         }
 
-        air::string_view key =
-            sentence.substr(prev_comma_pos + 1, curr_colon_pos - prev_comma_pos - 1);
-        air::string_view value =
-            sentence.substr(curr_colon_pos + 1, curr_comma_pos - curr_colon_pos - 1);
+        air::string_view key {sentence.substr(prev_comma_pos + 1, curr_colon_pos - prev_comma_pos - 1)};
+        air::string_view value {sentence.substr(curr_colon_pos + 1, curr_comma_pos - curr_colon_pos - 1)};
         key = Strip(key);
         value = Strip(value);
 
@@ -175,8 +177,8 @@ CheckSentenceFilterFormat(air::string_view sentence)
         throw std::logic_error("Invalid character format in filter sentence");
     }
 
-    size_t pos{0};
-    const size_t range_start_pos = sentence.find("(");
+    size_t pos {0};
+    const size_t range_start_pos {sentence.find("(")};
     if (air::string_view::npos == range_start_pos)
     {
         throw std::logic_error("Range expression() is missing in filter sentence");
@@ -185,7 +187,7 @@ CheckSentenceFilterFormat(air::string_view sentence)
     {
         throw std::logic_error("Invalid range expression() in filter sentence");
     }
-    const size_t range_end_pos = sentence.find(")");
+    const size_t range_end_pos {sentence.find(")")};
     if (air::string_view::npos == range_end_pos)
     {
         throw std::logic_error("Range expression() is missing in filter sentence");
@@ -194,8 +196,8 @@ CheckSentenceFilterFormat(air::string_view sentence)
     {
         throw std::logic_error("Invalid range expression() in filter sentence");
     }
-    size_t comma_cnt{0};
-    size_t colon_cnt{0};
+    size_t comma_cnt {0};
+    size_t colon_cnt {0};
 
     while (pos < sentence.size())
     {
@@ -228,15 +230,15 @@ CheckSentenceFilterFormat(air::string_view sentence)
         throw std::logic_error("Wrong key:value pair in filter sentence");
     }
 
-    size_t filter_key_pos = sentence.find("Filter");
+    size_t filter_key_pos {sentence.find("Filter")};
     if (air::string_view::npos == filter_key_pos)
     {
         throw std::logic_error("Filter key is missing in filter sentence");
     }
-    size_t filter_value_start_pos = sentence.find(":", filter_key_pos) + 1;
-    size_t filter_value_end_pos = sentence.find(",", filter_value_start_pos);
-    air::string_view filter_value = sentence.substr(filter_value_start_pos,
-        filter_value_end_pos - filter_value_start_pos);
+    size_t filter_value_start_pos {sentence.find(":", filter_key_pos) + 1};
+    size_t filter_value_end_pos {sentence.find(",", filter_value_start_pos)};
+    air::string_view filter_value {sentence.substr(filter_value_start_pos,
+        filter_value_end_pos - filter_value_start_pos)};
 
     filter_value = Strip(filter_value);
     if (0 == filter_value.size())
@@ -244,8 +246,8 @@ CheckSentenceFilterFormat(air::string_view sentence)
         throw std::logic_error("Filter value is empty in filter sentence");
     }
 
-    air::string_view item_value = sentence.substr(range_start_pos + 1,
-        range_end_pos - range_start_pos - 1);
+    air::string_view item_value {sentence.substr(range_start_pos + 1,
+        range_end_pos - range_start_pos - 1)};
     if (0 == item_value.size())
     {
         throw std::logic_error("Item value is empty in filter sentence");
@@ -255,13 +257,19 @@ CheckSentenceFilterFormat(air::string_view sentence)
 }
 
 static constexpr int32_t
+CheckSentenceHistogramFormat(air::string_view sentence)
+{
+    return 0;
+}
+
+static constexpr int32_t
 CheckParagraphFormat(ParagraphType type, air::string_view paragraph)
 {
-    size_t start_quote{0};
-    size_t end_quote{0};
-    size_t curr_pos{0};
-    size_t start_cnt{0};
-    size_t end_cnt{0};
+    size_t start_quote {0};
+    size_t end_quote {0};
+    size_t curr_pos {0};
+    size_t start_cnt {0};
+    size_t end_cnt {0};
 
     while (curr_pos < paragraph.size())
     {
@@ -284,6 +292,13 @@ CheckParagraphFormat(ParagraphType type, air::string_view paragraph)
             if (0 != CheckSentenceFilterFormat(paragraph.substr(start_quote, end_quote - start_quote + 1)))
             {
                 throw std::logic_error("SentenceFilterFormat violation");
+            }
+        }
+        else if (ParagraphType::HISTOGRAM == type)
+        {
+            if (0 != CheckSentenceHistogramFormat(paragraph.substr(start_quote, end_quote - start_quote + 1)))
+            {
+                throw std::logic_error("SentenceHistogramFormat violation");
             }
         }
         else
@@ -313,15 +328,15 @@ CheckParagraphFormat(ParagraphType type, air::string_view paragraph)
 static constexpr int32_t
 CheckValueDuplication(air::string_view key, air::string_view paragraph)
 {
-    size_t pos = paragraph.find(key);
+    size_t pos {paragraph.find(key)};
 
     while (pos < paragraph.size())
     {
-        size_t colon_pos = paragraph.find(":", pos + 1);
-        size_t comma_pos = paragraph.find(",", colon_pos + 1);
-        size_t quote_pos = paragraph.find("\"", colon_pos + 1);
+        size_t colon_pos {paragraph.find(":", pos + 1)};
+        size_t comma_pos {paragraph.find(",", colon_pos + 1)};
+        size_t quote_pos {paragraph.find("\"", colon_pos + 1)};
 
-        air::string_view value{""};
+        air::string_view value {""};
         if (quote_pos < comma_pos)
         {
             value = paragraph.substr(colon_pos + 1, quote_pos - colon_pos - 1);
@@ -332,21 +347,21 @@ CheckValueDuplication(air::string_view key, air::string_view paragraph)
         }
         value = Strip(value);
 
-        size_t next_pos = paragraph.find(key, pos + 1);
+        size_t next_pos {paragraph.find(key, pos + 1)};
         while (next_pos < paragraph.size())
         {
-            size_t next_colon = paragraph.find(":", next_pos + 1);
+            size_t next_colon {paragraph.find(":", next_pos + 1)};
             if (air::string_view::npos == next_colon)
             {
                 throw std::logic_error("Sentence syntax is invalid");
             }
-            size_t next_comma = paragraph.find(",", next_pos + 1);
+            size_t next_comma {paragraph.find(",", next_pos + 1)};
             if (air::string_view::npos == next_comma)
             {
                 next_comma = paragraph.find("\"", next_pos + 1);
             }
 
-            air::string_view next_value = paragraph.substr(next_colon + 1, next_comma - next_colon - 1);
+            air::string_view next_value {paragraph.substr(next_colon + 1, next_comma - next_colon - 1)};
             next_value = Strip(next_value);
 
             if (value == next_value)

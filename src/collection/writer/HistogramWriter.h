@@ -22,26 +22,34 @@
  *   SOFTWARE.
  */
 
-#include <gtest/gtest.h>
+#ifndef AIR_COLLECTION_HISTOGRAM_WRITER_H
+#define AIR_COLLECTION_HISTOGRAM_WRITER_H
 
-#include "src/config/ConfigInterface.h"
+#include "src/collection/writer/Writer.h"
+#include "src/lib/Data.h"
 
-class ConfigInterfaceTest : public ::testing::Test
+namespace collection
+{
+class HistogramWriter : public Writer
 {
 public:
-protected:
-    ConfigInterfaceTest()
+    HistogramWriter(void)
     {
     }
-    ~ConfigInterfaceTest()
+    virtual ~HistogramWriter(void)
     {
     }
-    void
-    SetUp() override
+    inline void
+    LogData(lib::Data* data, uint64_t usage) override
     {
     }
-    void
-    TearDown() override
+    int
+    SetSamplingRate(uint32_t rate) override
     {
+        return 0;
     }
 };
+
+} // namespace collection
+
+#endif // AIR_COLLECTION_HISTOGRAM_WRITER_H
