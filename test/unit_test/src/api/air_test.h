@@ -22,12 +22,12 @@
  *   SOFTWARE.
  */
 
+#include <gmock/gmock.h>
+
 #include "fake_collection_manager.h"
 #include "fake_instance_manager.h"
 #include "fake_node_manager.h"
 #include "fake_node_data_array.h"
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
 #include "src/config/ConfigInterface.h"
 
 class MockAIR : public AIR<true, true>

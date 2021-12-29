@@ -114,6 +114,19 @@ node::NodeData::NodeData(air::ProcessorType ptype, uint32_t index_size, uint32_t
             }
             break;
         }
+        case (air::ProcessorType::HISTOGRAM):
+        {
+            for (uint32_t index = 0; index < index_size; index++)
+            {
+                for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
+                {
+                    user_data[index][filter_index] = new lib::HistogramData;
+                    air_data[index][filter_index] = new lib::HistogramData;
+                    acc_data[index][filter_index] = new lib::AccHistogramData;
+                }
+            }
+            break;
+        }
         default:
         {
             break;

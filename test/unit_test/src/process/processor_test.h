@@ -1,125 +1,58 @@
-#pragma once
+/*
+ *   MIT License
+ *
+ *   Copyright (c) 2021 Samsung Electronics Corporation
+ *
+ *   Permission is hereby granted, free of charge, to any person obtaining a copy
+ *   of this software and associated documentation files (the "Software"), to deal
+ *   in the Software without restriction, including without limitation the rights
+ *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *   copies of the Software, and to permit persons to whom the Software is
+ *   furnished to do so, subject to the following conditions:
+ *
+ *   The above copyright notice and this permission notice shall be included in all
+ *   copies or substantial portions of the Software.
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *   SOFTWARE.
+ */
 
-#include <iostream>
-
-#include "fake_global_meta_getter.h"
-#include "fake_node_data.h"
-#include "fake_node_manager.h"
-#include "fake_node_meta_getter.h"
-#include "src/lib/Data.h"
-#include "src/lib/Type.h"
-#include "src/process/processor/CountProcessor.cpp"
+#include "src/data_structure/NodeData.h"
 #include "src/process/processor/CountProcessor.h"
-#include "src/process/processor/LatencyProcessor.cpp"
-#include "src/process/processor/LatencyProcessor.h"
-#include "src/process/processor/PerformanceProcessor.cpp"
+#include "src/process/processor/HistogramProcessor.h"
 #include "src/process/processor/PerformanceProcessor.h"
-#include "src/process/processor/Processor.cpp"
-#include "src/process/processor/Processor.h"
-#include "src/process/processor/QueueProcessor.cpp"
 #include "src/process/processor/QueueProcessor.h"
-#include "src/process/processor/UtilizationProcessor.cpp"
 #include "src/process/processor/UtilizationProcessor.h"
+
+#include "mock_global_meta_getter.h"
+#include "mock_node_manager.h"
+#include "mock_node_meta_getter.h"
+
+using ::testing::_;
+using ::testing::Invoke;
+using ::testing::NiceMock;
+using ::testing::Return;
 
 class ProcessorTest : public ::testing::Test
 {
 public:
-    process::Processor* perf_processor{nullptr};
-    process::Processor* lat_processor{nullptr};
-    process::Processor* q_processor{nullptr};
-    process::Processor* util_processor{nullptr};
-    process::Processor* count_processor{nullptr};
-    FakeNodeData* fake_perf_data{nullptr};
-    FakeNodeData* fake_lat_data{nullptr};
-    FakeNodeData* fake_q_data{nullptr};
-    FakeNodeData* fake_util_data{nullptr};
-    FakeNodeData* fake_count_data{nullptr};
-    FakeNodeMetaGetter* fake_node_meta_getter{nullptr};
-    FakeGlobalMetaGetter* fake_global_meta_getter{nullptr};
-    FakeNodeManager* fake_node_manager{nullptr};
+    process::PerformanceProcessor perf_processor;
+    node::NodeData perf_data {air::ProcessorType::PERFORMANCE, 32, 32};
+    process::QueueProcessor queue_processor;
+    node::NodeData queue_data {air::ProcessorType::QUEUE, 32, 32};
+    process::UtilizationProcessor util_processor;
+    node::NodeData util_data {air::ProcessorType::UTILIZATION, 32, 32};
+    process::CountProcessor count_processor;
+    node::NodeData count_data {air::ProcessorType::COUNT, 32, 32};
+    process::HistogramProcessor histogram_processor;
+    node::NodeData histogram_data {air::ProcessorType::HISTOGRAM, 32, 32};
 
 protected:
-    ProcessorTest()
-    {
-        perf_processor = new process::PerformanceProcessor;
-        lat_processor = new process::LatencyProcessor;
-        q_processor = new process::QueueProcessor;
-        util_processor = new process::UtilizationProcessor;
-        count_processor = new process::CountProcessor;
-
-        fake_perf_data = new FakeNodeData(air::ProcessorType::PERFORMANCE, 32, 32);
-        fake_lat_data = new FakeNodeData(air::ProcessorType::LATENCY, 32, 32);
-        fake_q_data = new FakeNodeData(air::ProcessorType::QUEUE, 32, 32);
-        fake_util_data = new FakeNodeData(air::ProcessorType::UTILIZATION, 32, 32);
-        fake_count_data = new FakeNodeData(air::ProcessorType::COUNT, 32, 32);
-        fake_node_meta_getter = new FakeNodeMetaGetter;
-        fake_global_meta_getter = new FakeGlobalMetaGetter;
-        fake_node_manager = new FakeNodeManager{fake_global_meta_getter,
-            fake_node_meta_getter};
-    }
-    virtual ~ProcessorTest()
-    {
-        if (nullptr != fake_perf_data)
-        {
-            delete fake_perf_data;
-            fake_perf_data = nullptr;
-        }
-        if (nullptr != fake_lat_data)
-        {
-            delete fake_lat_data;
-            fake_lat_data = nullptr;
-        }
-        if (nullptr != fake_q_data)
-        {
-            delete fake_q_data;
-            fake_q_data = nullptr;
-        }
-        if (nullptr != fake_util_data)
-        {
-            delete fake_util_data;
-            fake_util_data = nullptr;
-        }
-        if (nullptr != fake_count_data)
-        {
-            delete fake_count_data;
-            fake_count_data = nullptr;
-        }
-        if (nullptr != perf_processor)
-        {
-            delete perf_processor;
-            perf_processor = nullptr;
-        }
-        if (nullptr != lat_processor)
-        {
-            delete lat_processor;
-            lat_processor = nullptr;
-        }
-        if (nullptr != q_processor)
-        {
-            delete q_processor;
-            q_processor = nullptr;
-        }
-        if (nullptr != util_processor)
-        {
-            delete util_processor;
-            util_processor = nullptr;
-        }
-        if (nullptr != count_processor)
-        {
-            delete count_processor;
-            count_processor = nullptr;
-        }
-        if (nullptr != fake_node_meta_getter)
-        {
-            delete fake_node_meta_getter;
-            fake_node_meta_getter = nullptr;
-        }
-        if (nullptr != fake_global_meta_getter)
-        {
-            delete fake_global_meta_getter;
-            fake_global_meta_getter = nullptr;
-        }
-    }
     void
     SetUp() override
     {

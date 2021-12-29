@@ -1,6 +1,8 @@
 
 #include "src/data_structure/NodeData.cpp"
 #include "src/data_structure/NodeData.h"
+#include "src/data_structure/NodeInitializer.cpp"
+#include "src/data_structure/NodeInitializer.h"
 #include "src/data_structure/NodeManager.cpp"
 #include "src/data_structure/NodeManager.h"
 #include "src/lib/Hash.cpp"

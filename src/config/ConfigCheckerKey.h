@@ -79,9 +79,9 @@ CheckKeyTypo(ParagraphType type, const air::string_view* key_list, air::string_v
                 }
             }
         }
-        else if (ParagraphType::HISTOGRAM == type)
+        else if (ParagraphType::BUCKET == type)
         {
-            for (uint32_t i = 0; i < NUM_HISTOGRAM_KEY; i++)
+            for (uint32_t i = 0; i < NUM_BUCKET_KEY; i++)
             {
                 if (key == key_list[i])
                 {
@@ -116,7 +116,7 @@ CheckKeyTypoNode(const air::string_view* key_list, air::string_view sentence)
     bool is_queue_type {false};
     bool has_sampling_ratio {false};
     bool is_histogram_type {false};
-    bool has_histogram_type {false};
+    bool has_bucket_key {false};
 
     while (air::string_view::npos != cur_pos)
     {
@@ -129,9 +129,9 @@ CheckKeyTypoNode(const air::string_view* key_list, air::string_view sentence)
         {
             has_sampling_ratio = true;
         }
-        if (key == "Histogram")
+        if (key == "Bucket")
         {
-            has_histogram_type = true;
+            has_bucket_key = true;
         }
         if (key == "Type")
         {
@@ -175,14 +175,14 @@ CheckKeyTypoNode(const air::string_view* key_list, air::string_view sentence)
         throw std::logic_error("Only queue type can have SamplingRatio option");
     }
 
-    if (!is_histogram_type && has_histogram_type)
+    if (!is_histogram_type && has_bucket_key)
     {
-        throw std::logic_error("Only histogram type can have Histogram option");
+        throw std::logic_error("Only histogram type can have Bucket option");
     }
 
-    if (is_histogram_type && !has_histogram_type)
+    if (is_histogram_type && !has_bucket_key)
     {
-        throw std::logic_error("Histogram type must have Histogram option");
+        throw std::logic_error("Histogram type must have Bucket option");
     }
 
     return 0;

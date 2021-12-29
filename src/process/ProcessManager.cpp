@@ -26,6 +26,7 @@
 
 #include "src/config/ConfigInterface.h"
 #include "src/process/processor/CountProcessor.h"
+#include "src/process/processor/HistogramProcessor.h"
 #include "src/process/processor/LatencyProcessor.h"
 #include "src/process/processor/PerformanceProcessor.h"
 #include "src/process/processor/QueueProcessor.h"
@@ -53,23 +54,21 @@ process::ProcessManager::Init(void)
             case (air::ProcessorType::PERFORMANCE):
                 processor[i] = new PerformanceProcessor;
                 break;
-
             case (air::ProcessorType::LATENCY):
                 processor[i] = new LatencyProcessor;
                 break;
-
             case (air::ProcessorType::QUEUE):
                 processor[i] = new QueueProcessor;
                 break;
-
             case (air::ProcessorType::UTILIZATION):
                 processor[i] = new UtilizationProcessor;
                 break;
-
             case (air::ProcessorType::COUNT):
                 processor[i] = new CountProcessor;
                 break;
-
+            case (air::ProcessorType::HISTOGRAM):
+                processor[i] = new HistogramProcessor;
+                break;
             default:
                 break;
         }
@@ -166,23 +165,21 @@ process::ProcessManager::_AddNodeInfo(air::string_view& group_name_view,
         case (air::ProcessorType::PERFORMANCE):
             node_obj["type"] = {"performance"};
             break;
-
         case (air::ProcessorType::LATENCY):
             node_obj["type"] = {"latency"};
             break;
-
         case (air::ProcessorType::QUEUE):
             node_obj["type"] = {"queue"};
             break;
-
         case (air::ProcessorType::UTILIZATION):
             node_obj["type"] = {"utilization"};
             break;
-
         case (air::ProcessorType::COUNT):
             node_obj["type"] = {"count"};
             break;
-
+        case (air::ProcessorType::HISTOGRAM):
+            node_obj["type"] = {"histogram"};
+            break;
         default:
             node_obj["type"] = {"undefined"};
             break;

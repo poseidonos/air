@@ -44,18 +44,18 @@ TEST_F(ConfigParserTest, GetSentenceFromParagraph)
     EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::FILTER, 1).compare(
         "Filter: Range, Item: (AIR_0 ... AIR_10)"));
 
-    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::HISTOGRAM, 0).compare(
-        "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10"));
-    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::HISTOGRAM, 1).compare(
-        "Histogram: HTG_2, DataRange: [33, 66), BucketRange: 3"));
-    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::HISTOGRAM, 2).compare(
-        "Histogram: HTG_3, DataRange: [-100, 80), BucketRange: 20"));
-    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::HISTOGRAM, 3).compare(
-        "Histogram: HTG_4, DataRange: [2^0, 2^10), BucketRange: 2^"));
-    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::HISTOGRAM, 4).compare(
-        "Histogram: HTG_5, DataRange: (-4^6, -4^2], BucketRange: 2^"));
-    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::HISTOGRAM, 5).compare(
-        "Histogram: HTG_6, DataRange: (-10^3, 10^5), BucketRange: 10^"));
+    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::BUCKET, 0).compare(
+        "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10"));
+    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::BUCKET, 1).compare(
+        "Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)"));
+    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::BUCKET, 2).compare(
+        "Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3"));
+    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::BUCKET, 3).compare(
+        "Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 2^"));
+    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::BUCKET, 4).compare(
+        "Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 2^"));
+    EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::BUCKET, 5).compare(
+        "Bucket: BUCKET_6, Bounds: (-10^3, 10^5), Scale: 10^"));
 
     EXPECT_EQ(0, cfg->GetSentenceFromParagraph(config::ParagraphType::NODE, 1).compare(
         "Node: PERF_VOLUME, Type: PERFORMANCE, Build: True, Group: POS, Filter: Basic"));
@@ -85,13 +85,13 @@ TEST_F(ConfigParserTest, GetIndexFromParagraph)
     EXPECT_EQ(1, cfg->GetIndexFromParagraph(config::ParagraphType::FILTER, "Range"));
     EXPECT_EQ(-1, cfg->GetIndexFromParagraph(config::ParagraphType::FILTER, "Basiic"));
 
-    EXPECT_EQ(0, cfg->GetIndexFromParagraph(config::ParagraphType::HISTOGRAM, "HTG_1"));
-    EXPECT_EQ(1, cfg->GetIndexFromParagraph(config::ParagraphType::HISTOGRAM, "HTG_2"));
-    EXPECT_EQ(2, cfg->GetIndexFromParagraph(config::ParagraphType::HISTOGRAM, "HTG_3"));
-    EXPECT_EQ(3, cfg->GetIndexFromParagraph(config::ParagraphType::HISTOGRAM, "HTG_4"));
-    EXPECT_EQ(4, cfg->GetIndexFromParagraph(config::ParagraphType::HISTOGRAM, "HTG_5"));
-    EXPECT_EQ(5, cfg->GetIndexFromParagraph(config::ParagraphType::HISTOGRAM, "HTG_6"));
-    EXPECT_EQ(-1, cfg->GetIndexFromParagraph(config::ParagraphType::HISTOGRAM, "HTG_7"));
+    EXPECT_EQ(0, cfg->GetIndexFromParagraph(config::ParagraphType::BUCKET, "BUCKET_1"));
+    EXPECT_EQ(1, cfg->GetIndexFromParagraph(config::ParagraphType::BUCKET, "BUCKET_2"));
+    EXPECT_EQ(2, cfg->GetIndexFromParagraph(config::ParagraphType::BUCKET, "BUCKET_3"));
+    EXPECT_EQ(3, cfg->GetIndexFromParagraph(config::ParagraphType::BUCKET, "BUCKET_4"));
+    EXPECT_EQ(4, cfg->GetIndexFromParagraph(config::ParagraphType::BUCKET, "BUCKET_5"));
+    EXPECT_EQ(5, cfg->GetIndexFromParagraph(config::ParagraphType::BUCKET, "BUCKET_6"));
+    EXPECT_EQ(-1, cfg->GetIndexFromParagraph(config::ParagraphType::BUCKET, "BUCKET_7"));
 
     EXPECT_EQ(0, cfg->GetIndexFromParagraph(config::ParagraphType::NODE, "PERF_PSD"));
     EXPECT_EQ(1, cfg->GetIndexFromParagraph(config::ParagraphType::NODE, "PERF_VOLUME"));
@@ -137,13 +137,13 @@ TEST_F(ConfigParserTest, GetIntValueFromSentence)
     EXPECT_EQ(-1, cfg->GetIntValueFromSentence("Filter: F1, Item: (AIR_READ, AIR_WRITE)", "Item", "AIR_WRITEE"));
     EXPECT_EQ(0, cfg->GetIntValueFromSentence("Filter: F1, Item: (AIR_ONE)", "Item", "AIR_ONE"));
 
-    // HISTOGRAM
-    EXPECT_EQ(10, cfg->GetIntValueFromSentence("Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10", "BucketRange"));
-    EXPECT_EQ(3, cfg->GetIntValueFromSentence("Histogram: HTG_2, DataRange: [33, 66), BucketRange: 3", "BucketRange"));
-    EXPECT_EQ(20, cfg->GetIntValueFromSentence("Histogram: HTG_3, DataRange: [-100, 80), BucketRange: 20", "BucketRange"));
-    EXPECT_EQ(2, cfg->GetIntValueFromSentence("Histogram: HTG_4, DataRange: [2^0, 2^10), BucketRange: 2^", "BucketRange"));
-    EXPECT_EQ(2, cfg->GetIntValueFromSentence("Histogram: HTG_5, DataRange: (-4^6, 4^2], BucketRange: 2^", "BucketRange"));
-    EXPECT_EQ(10, cfg->GetIntValueFromSentence("Histogram: HTG_6, DataRange: (-10^3, 10^5), BucketRange: 10^", "BucketRange"));
+    // BUCKET
+    EXPECT_EQ(10, cfg->GetIntValueFromSentence("Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10", "Scale"));
+    EXPECT_EQ(3, cfg->GetIntValueFromSentence("Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)", "Scale"));
+    EXPECT_EQ(20, cfg->GetIntValueFromSentence("Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3", "Scale"));
+    EXPECT_EQ(2, cfg->GetIntValueFromSentence("Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 2^", "Scale"));
+    EXPECT_EQ(2, cfg->GetIntValueFromSentence("Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 2^", "Scale"));
+    EXPECT_EQ(10, cfg->GetIntValueFromSentence("Bucket: BUCKET_6, Bounds: (-10^3, 10^5), Scale: 10^", "Scale"));
 
     // NODE
     EXPECT_EQ(1, cfg->GetIntValueFromSentence("Node: Q_IOWORER, Type: QUEUE, Build: True, Filter: Basic, Run: Off, SamplingRatio: 10", "Build"));
@@ -183,8 +183,8 @@ TEST_F(ConfigParserTest, GetStrValueFromSentence)
     EXPECT_EQ(0, cfg->GetStrValueFromSentence("Filter: F2, Item: (AIR_12, AIR_34, AIR_39)", "Filter").compare("F2"));
     EXPECT_EQ(0, cfg->GetStrValueFromSentence("Filter: F3, Item: (AIR_ONE)", "Filter").compare("F3"));
 
-    // HISTOGRAM
-    EXPECT_EQ(0, cfg->GetStrValueFromSentence("Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10", "Histogram").compare("HTG_1"));
+    // BUCKET
+    EXPECT_EQ(0, cfg->GetStrValueFromSentence("Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10", "Bucket").compare("BUCKET_1"));
 
     // NODE
     EXPECT_EQ(0, cfg->GetStrValueFromSentence("Node:   Q_IOWORKER    , Type: QUEUE, Build: True, Run: Off, SamplingRatio: 10", "Node").compare("Q_IOWORKER"));
@@ -201,9 +201,9 @@ TEST_F(ConfigParserTest, GetSentenceCount)
 {
     EXPECT_EQ(1, cfg->GetSentenceCount(config::ParagraphType::DEFAULT));
     EXPECT_EQ(5, cfg->GetSentenceCount(config::ParagraphType::GROUP));
-    EXPECT_EQ(2, cfg->GetSentenceCount(config::ParagraphType::FILTER));
-    EXPECT_EQ(6, cfg->GetSentenceCount(config::ParagraphType::HISTOGRAM));
-    EXPECT_EQ(18, cfg->GetSentenceCount(config::ParagraphType::NODE));
+    EXPECT_EQ(3, cfg->GetSentenceCount(config::ParagraphType::FILTER));
+    EXPECT_EQ(6, cfg->GetSentenceCount(config::ParagraphType::BUCKET));
+    EXPECT_EQ(23, cfg->GetSentenceCount(config::ParagraphType::NODE));
 }
 
 TEST_F(ConfigParserTest, GetItemStrFromFilterSentence)
@@ -223,32 +223,32 @@ TEST_F(ConfigParserTest, GetItemSizeFromFilterSentence)
     EXPECT_EQ(1, cfg->GetItemSizeFromFilterSentence("Filter: F1, Item: (AIR_ONE)"));
 }
 
-TEST_F(ConfigParserTest, GetMinValueFromHistogramSentence)
+TEST_F(ConfigParserTest, GetLowerBoundFromBucketSentence)
 {
-    EXPECT_EQ(0, cfg->GetMinValueFromHistogramSentence("Histogram: HTG_1, DataRange:[0, 100), BucketRange: 10"));
-    EXPECT_EQ(33, cfg->GetMinValueFromHistogramSentence("Histogram: HTG_2, DataRange: [33, 66), BucketRange: 3"));
-    EXPECT_EQ(-100, cfg->GetMinValueFromHistogramSentence("Histogram: HTG_3, DataRange: [-100, 80), BucketRange: 20"));
-    EXPECT_EQ(1, cfg->GetMinValueFromHistogramSentence("Histogram: HTG_4, DataRange: [2^0, 2^10), BucketRange: 2^"));
-    EXPECT_EQ(-4096, cfg->GetMinValueFromHistogramSentence("Histogram: HTG_5, DataRange: (-4^6, -4^2], BucketRange: 2^"));
-    EXPECT_EQ(-1000, cfg->GetMinValueFromHistogramSentence("Histogram: HTG_6, BucketRange: 10^, DataRange: (-10^3, 10^5)"));
+    EXPECT_EQ(0, cfg->GetLowerBoundFromBucketSentence("Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10"));
+    EXPECT_EQ(33, cfg->GetLowerBoundFromBucketSentence("Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)"));
+    EXPECT_EQ(-100, cfg->GetLowerBoundFromBucketSentence("Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3"));
+    EXPECT_EQ(1, cfg->GetLowerBoundFromBucketSentence("Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 2^"));
+    EXPECT_EQ(-4096, cfg->GetLowerBoundFromBucketSentence("Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 2^"));
+    EXPECT_EQ(-1000, cfg->GetLowerBoundFromBucketSentence("Bucket: BUCKET_6, Bounds: (-10^3, 10^5), Scale: 10^"));
 }
 
-TEST_F(ConfigParserTest, GetMaxValueFromHistogramSentence)
+TEST_F(ConfigParserTest, GetUpperBoundFromBucketSentence)
 {
-    EXPECT_EQ(100, cfg->GetMaxValueFromHistogramSentence("Histogram: HTG_1, DataRange:[0, 100), BucketRange: 10"));
-    EXPECT_EQ(66, cfg->GetMaxValueFromHistogramSentence("Histogram: HTG_2, DataRange: [33, 66), BucketRange: 3"));
-    EXPECT_EQ(80, cfg->GetMaxValueFromHistogramSentence("Histogram: HTG_3, DataRange: [-100, 80), BucketRange: 20"));
-    EXPECT_EQ(1024, cfg->GetMaxValueFromHistogramSentence("Histogram: HTG_4, DataRange: [2^0, 2^10), BucketRange: 2^"));
-    EXPECT_EQ(-16, cfg->GetMaxValueFromHistogramSentence("Histogram: HTG_5, DataRange: (-4^6, -4^2], BucketRange: 2^"));
-    EXPECT_EQ(100000, cfg->GetMaxValueFromHistogramSentence("Histogram: HTG_6, BucketRange: 10^, DataRange: (-10^3, 10^5)"));
+    EXPECT_EQ(100, cfg->GetUpperBoundFromBucketSentence("Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10"));
+    EXPECT_EQ(66, cfg->GetUpperBoundFromBucketSentence("Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)"));
+    EXPECT_EQ(80, cfg->GetUpperBoundFromBucketSentence("Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3"));
+    EXPECT_EQ(1024, cfg->GetUpperBoundFromBucketSentence("Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 2^"));
+    EXPECT_EQ(-16, cfg->GetUpperBoundFromBucketSentence("Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 2^"));
+    EXPECT_EQ(100000, cfg->GetUpperBoundFromBucketSentence("Bucket: BUCKET_6, Bounds: (-10^3, 10^5), Scale: 10^"));
 }
 
-TEST_F(ConfigParserTest, GetRangeTypeFromHistogramSentence)
+TEST_F(ConfigParserTest, IsLinearTypeFromBucketSentence)
 {
-    EXPECT_EQ(true, cfg->IsLinearTypeFromHistogramSentence("Histogram: HTG_1, DataRange:[0, 100), BucketRange:10 "));
-    EXPECT_EQ(true, cfg->IsLinearTypeFromHistogramSentence("Histogram: HTG_2, DataRange: [33, 66), BucketRange:3"));
-    EXPECT_EQ(true, cfg->IsLinearTypeFromHistogramSentence("Histogram: HTG_3, DataRange: [-100, 80), BucketRange: 20"));
-    EXPECT_EQ(false, cfg->IsLinearTypeFromHistogramSentence("Histogram: HTG_4, DataRange: [2^0, 2^10), BucketRange: 2^"));
-    EXPECT_EQ(false, cfg->IsLinearTypeFromHistogramSentence("Histogram: HTG_5, DataRange: (-4^6, -4^2], BucketRange: 2^ "));
-    EXPECT_EQ(false, cfg->IsLinearTypeFromHistogramSentence("Histogram: HTG_6, BucketRange:10^, DataRange: (-10^3, 10^5)"));
+    EXPECT_EQ(true, cfg->IsLinearTypeFromBucketSentence("Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10"));
+    EXPECT_EQ(true, cfg->IsLinearTypeFromBucketSentence("Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)"));
+    EXPECT_EQ(true, cfg->IsLinearTypeFromBucketSentence("Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3"));
+    EXPECT_EQ(false, cfg->IsLinearTypeFromBucketSentence("Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 2^"));
+    EXPECT_EQ(false, cfg->IsLinearTypeFromBucketSentence("Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 2^"));
+    EXPECT_EQ(false, cfg->IsLinearTypeFromBucketSentence("Bucket: BUCKET_6, Bounds: (-10^3, 10^5), Scale: 10^"));
 }

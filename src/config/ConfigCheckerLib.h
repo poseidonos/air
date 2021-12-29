@@ -257,7 +257,7 @@ CheckSentenceFilterFormat(air::string_view sentence)
 }
 
 static constexpr int32_t
-CheckSentenceHistogramFormat(air::string_view sentence)
+CheckSentenceBucketFormat(air::string_view sentence)
 {
     return 0;
 }
@@ -294,11 +294,11 @@ CheckParagraphFormat(ParagraphType type, air::string_view paragraph)
                 throw std::logic_error("SentenceFilterFormat violation");
             }
         }
-        else if (ParagraphType::HISTOGRAM == type)
+        else if (ParagraphType::BUCKET == type)
         {
-            if (0 != CheckSentenceHistogramFormat(paragraph.substr(start_quote, end_quote - start_quote + 1)))
+            if (0 != CheckSentenceBucketFormat(paragraph.substr(start_quote, end_quote - start_quote + 1)))
             {
-                throw std::logic_error("SentenceHistogramFormat violation");
+                throw std::logic_error("SentenceBucketFormat violation");
             }
         }
         else

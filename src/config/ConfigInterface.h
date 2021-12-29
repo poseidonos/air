@@ -72,9 +72,9 @@ public:
         {
             key = "Filter";
         }
-        else if (ParagraphType::HISTOGRAM == type)
+        else if (ParagraphType::BUCKET == type)
         {
-            key = "Histogram";
+            key = "Bucket";
         }
         else
         {
@@ -110,9 +110,9 @@ public:
                 return -1;
             }
         }
-        else if (ParagraphType::HISTOGRAM == type)
+        else if (ParagraphType::BUCKET == type)
         {
-            if (key != "BucketRange")
+            if (key != "Scale")
             {
                 return -1;
             }
@@ -211,27 +211,27 @@ public:
     }
 
     static constexpr int64_t
-    GetMinValueWithHistogramName(air::string_view histogram_name)
+    GetLowerBoundWithBucketName(air::string_view bucket_name)
     {
-        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::HISTOGRAM, histogram_name)};
-        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::HISTOGRAM, index)};
-        return config_parser.GetMinValueFromHistogramSentence(sentence);
+        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::BUCKET, bucket_name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::BUCKET, index)};
+        return config_parser.GetLowerBoundFromBucketSentence(sentence);
     }
 
     static constexpr int64_t
-    GetMaxValueWithHistogramName(air::string_view histogram_name)
+    GetUpperBoundWithBucketName(air::string_view bucket_name)
     {
-        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::HISTOGRAM, histogram_name)};
-        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::HISTOGRAM, index)};
-        return config_parser.GetMaxValueFromHistogramSentence(sentence);
+        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::BUCKET, bucket_name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::BUCKET, index)};
+        return config_parser.GetUpperBoundFromBucketSentence(sentence);
     }
 
     static constexpr bool
-    IsLinearTypeWithHistogramName(air::string_view histogram_name)
+    IsLinearTypeWithBucketName(air::string_view bucket_name)
     {
-        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::HISTOGRAM, histogram_name)};
-        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::HISTOGRAM, index)};
-        return config_parser.IsLinearTypeFromHistogramSentence(sentence);
+        int32_t index {config_parser.GetIndexFromParagraph(ParagraphType::BUCKET, bucket_name)};
+        air::string_view sentence {config_parser.GetSentenceFromParagraph(ParagraphType::BUCKET, index)};
+        return config_parser.IsLinearTypeFromBucketSentence(sentence);
     }
 
 private:

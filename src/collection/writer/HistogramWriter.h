@@ -40,8 +40,75 @@ public:
     {
     }
     inline void
-    LogData(lib::Data* data, uint64_t usage) override
+    LogData(lib::Data* data, uint64_t u_value) override
     {
+        if (nullptr == data)
+        {
+            return;
+        }
+        lib::HistogramData* hist_data {static_cast<lib::HistogramData*>(data)};
+        int64_t value {static_cast<int64_t>(u_value)};
+
+        if (false == hist_data->access)
+        {
+            hist_data->period_min_value = value;
+            hist_data->period_max_value = value;
+        }
+        else
+        {
+            if (hist_data->period_min_value > value)
+            {
+                hist_data->period_min_value = value;
+            }
+            if (hist_data->period_max_value < value)
+            {
+                hist_data->period_max_value = value;
+            }
+        }
+
+        if (hist_data->bucket_lower_bound > value)
+        {
+            hist_data->period_underflow++;
+        }
+        else if (hist_data->bucket_upper_bound < value)
+        {
+            hist_data->period_overflow++;
+        }
+        else
+        {
+            uint64_t bucket_index {0};
+            switch (hist_data->bucket_type)
+            {
+            case lib::BucketType::LINEAR:
+                bucket_index = (value - hist_data->bucket_lower_bound) / hist_data->bucket_scale;
+                break;
+            case lib::BucketType::EXPONENTIAL:
+                bucket_index = hist_data->bucket_zero_index;
+                if (0 < value)
+                {
+                    while (value)
+                    {
+                        value /= hist_data->bucket_scale;
+                        bucket_index++;
+                    }
+                }
+                else if (0 > value)
+                {
+                    while (value)
+                    {
+                        value /= hist_data->bucket_scale;
+                        bucket_index--;
+                    }
+                }
+                break;
+            }
+            if (bucket_index < hist_data->bucket_size)
+            {
+                hist_data->period_bucket[bucket_index]++;
+            }
+        }
+
+        hist_data->access = true;
     }
     int
     SetSamplingRate(uint32_t rate) override

@@ -33,6 +33,7 @@
 
 #include "src/collection/CollectionManager.h"
 #include "src/collection/writer/CountWriter.h"
+#include "src/collection/writer/HistogramWriter.h"
 #include "src/collection/writer/LatencyWriter.h"
 #include "src/collection/writer/PerformanceWriter.h"
 #include "src/collection/writer/QueueWriter.h"
@@ -173,6 +174,17 @@ public:
         count_writer.LogData(_GetData(node_id, filter_index, node_index), value);
     }
 
+    template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
+        typename std::enable_if<air::ProcessorType::HISTOGRAM == node_type, air::ProcessorType>::type = node_type>
+    static void
+    LogData(uint64_t node_index, uint64_t value)
+    {
+        static_assert(-1 != node_id, "Invalid Node");
+        static_assert(-1 != filter_index, "Invalid Filter Item");
+
+        histogram_writer.LogData(_GetData(node_id, filter_index, node_index), value);
+    }
+
     static void
     LogData(uint32_t node_id, uint32_t filter_index, uint64_t node_index, uint64_t value)
     {
@@ -229,6 +241,7 @@ protected:
     static collection::QueueWriter queue_writer;
     static collection::UtilizationWriter util_writer;
     static collection::CountWriter count_writer;
+    static collection::HistogramWriter histogram_writer;
 };
 
 // AIR build : true && Node build : false

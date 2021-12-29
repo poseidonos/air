@@ -99,6 +99,16 @@ public:
         user_data[hash_idx] = air_data[hash_idx];
         air_data[hash_idx] = tmp_addr;
     }
+    virtual inline uint32_t
+    GetIndexSize(void)
+    {
+        return index_size;
+    }
+    virtual inline uint32_t
+    GetFilterSize(void)
+    {
+        return filter_size;
+    }
 
 private:
     air::ProcessorType ptype{air::ProcessorType::PROCESSORTYPE_NULL};

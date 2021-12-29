@@ -30,7 +30,7 @@
 
 #include "src/config/ConfigLib.h"
 #include "src/config/ConfigParser.h"
-#include "src/config/ConfigCheckerValueHistogram.h"
+#include "src/config/ConfigCheckerValueBucket.h"
 #include "src/lib/StringView.h"
 
 namespace config
@@ -53,12 +53,12 @@ public:
         size_t prev_comma {0};
         size_t post_comma {sentence.rfind(",", sentence.find(":", colon_pos + 1))};
 
-        int64_t histogram_bucket_range {0};
-        int64_t histogram_min_value {0};
-        int64_t histogram_max_value {0};
-        bool histogram_type_linear {false};
-        bool histogram_start_brace_has_equal {false};
-        bool histogram_end_brace_has_equal {false};
+        int64_t bucket_scale {0};
+        int64_t bucket_lower_bound {0};
+        int64_t bucket_upper_bound {0};
+        bool bucket_type_linear {false};
+        bool bucket_start_brace_has_equal {false};
+        bool bucket_end_brace_has_equal {false};
 
         while (colon_pos < sentence.size())
         {
@@ -92,12 +92,12 @@ public:
             {
                 result = _CheckFilterValue(key, value);
             }
-            else if (ParagraphType::HISTOGRAM == type)
+            else if (ParagraphType::BUCKET == type)
             {
-                result = ConfigCheckerValueHistogram::CheckHistogramValue(
-                    key, value, histogram_bucket_range, histogram_min_value,
-                    histogram_max_value, histogram_type_linear, histogram_start_brace_has_equal,
-                    histogram_end_brace_has_equal);
+                result = ConfigCheckerValueBucket::CheckBucketValue(
+                    key, value, bucket_scale, bucket_lower_bound,
+                    bucket_upper_bound, bucket_type_linear, bucket_start_brace_has_equal,
+                    bucket_end_brace_has_equal);
             }
             else if (ParagraphType::NODE == type)
             {
@@ -125,11 +125,11 @@ public:
             }
         }
 
-        if (ParagraphType::HISTOGRAM == type)
+        if (ParagraphType::BUCKET == type)
         {
-            return ConfigCheckerValueHistogram::CheckHistogramRangeRule(
-                histogram_bucket_range, histogram_min_value, histogram_max_value,
-                histogram_type_linear, histogram_start_brace_has_equal, histogram_end_brace_has_equal);
+            return ConfigCheckerValueBucket::CheckBucketSyntax(
+                bucket_scale, bucket_lower_bound, bucket_upper_bound,
+                bucket_type_linear, bucket_start_brace_has_equal, bucket_end_brace_has_equal);
         }
         return 0;
     }
@@ -179,7 +179,7 @@ private:
 
         if (false == has_same_value)
         {
-            throw std::logic_error("Can not find the value in (Group or Filter or Histogram)paragraph");
+            throw std::logic_error("Can not find the value in (Group or Filter or Bucket)paragraph");
         }
 
         return 0;
@@ -430,9 +430,9 @@ private:
         {
             return _CheckSameValueInParagraph("Filter", value, ParagraphType::FILTER);
         }
-        else if (key == "Histogram")
+        else if (key == "Bucket")
         {
-            return _CheckSameValueInParagraph("Histogram", value, ParagraphType::HISTOGRAM);
+            return _CheckSameValueInParagraph("Bucket", value, ParagraphType::BUCKET);
         }
         else if (key == "Type")
         {

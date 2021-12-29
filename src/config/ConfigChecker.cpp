@@ -31,7 +31,7 @@ constexpr air::string_view
 constexpr air::string_view
     config::ConfigChecker::filter_keys[NUM_FILTER_KEY];
 constexpr air::string_view
-    config::ConfigChecker::histogram_keys[NUM_HISTOGRAM_KEY];
+    config::ConfigChecker::bucket_keys[NUM_BUCKET_KEY];
 constexpr air::string_view
     config::ConfigChecker::node_keys[NUM_NODE_KEY];
 constexpr uint32_t config::ConfigChecker::num_mandatory_list[5];

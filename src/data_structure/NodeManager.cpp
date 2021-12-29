@@ -76,6 +76,7 @@ node::NodeManager::CreateNodeDataArray(uint32_t tid)
             case (air::ProcessorType::QUEUE):
             case (air::ProcessorType::UTILIZATION):
             case (air::ProcessorType::COUNT):
+            case (air::ProcessorType::HISTOGRAM):
                 new_node_data_array->node[i] =
                     new NodeData(type, node_meta_getter->IndexSize(i), node_meta_getter->FilterSize(i));
                 break;
@@ -83,6 +84,7 @@ node::NodeManager::CreateNodeDataArray(uint32_t tid)
                 new_node_data_array->node[i] = nullptr;
                 break;
         }
+        node_initializer.InitNodeData(i, type, new_node_data_array->node[i]);
     }
     nda_map.insert(std::make_pair(tid, new_node_data_array));
 }

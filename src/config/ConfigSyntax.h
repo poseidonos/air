@@ -99,6 +99,10 @@ public:
         static_assert(0 == syntax.CheckKeyRule(ParagraphType::FILTER), "[Filter] Key Violation!");
         static_assert(0 == syntax.CheckValueRule(ParagraphType::FILTER), "[Filter] Value Violation!");
 
+        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::BUCKET), "[Bucket] Paragraph Violation!");
+        static_assert(0 == syntax.CheckKeyRule(ParagraphType::BUCKET), "[Bucket] Key Violation!");
+        static_assert(0 == syntax.CheckValueRule(ParagraphType::BUCKET), "[Bucket] Value Violation!");
+
         static_assert(0 == syntax.CheckParagraphRule(ParagraphType::NODE), "[Node] Paragraph Violation!");
         static_assert(0 == syntax.CheckKeyRule(ParagraphType::NODE), "[Node] Key Violation!");
         static_assert(0 == syntax.CheckValueRule(ParagraphType::NODE), "[Node] Value Violation!");

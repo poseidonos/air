@@ -32,6 +32,7 @@
 
 #include "src/config/ConfigInterface.h"
 #include "src/data_structure/NodeData.h"
+#include "src/data_structure/NodeInitializer.h"
 #include "src/lib/Casting.h"
 #include "src/meta/GlobalMeta.h"
 #include "src/meta/NodeMeta.h"
@@ -75,7 +76,11 @@ public:
                 const uint32_t index_size = node_meta_getter->IndexSize(nid);
                 for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
                 {
-                    delete[] acc_lat_data[nid][hash_index];
+                    if (nullptr != acc_lat_data[nid][hash_index])
+                    {
+                        delete[] acc_lat_data[nid][hash_index];
+                        acc_lat_data[nid][hash_index] = nullptr;
+                    }
                 }
             }
         }
@@ -83,10 +88,18 @@ public:
         {
             if (air::ProcessorType::LATENCY == node_meta_getter->ProcessorType(nid))
             {
-                delete[] acc_lat_data[nid];
+                if (nullptr != acc_lat_data[nid])
+                {
+                    delete[] acc_lat_data[nid];
+                    acc_lat_data[nid] = nullptr;
+                }
             }
         }
-        delete[] acc_lat_data;
+        if (nullptr != acc_lat_data)
+        {
+            delete[] acc_lat_data;
+            acc_lat_data = nullptr;
+        }
     }
 
     virtual NodeDataArray* GetNodeDataArray(uint32_t tid);
@@ -112,12 +125,11 @@ public:
     }
 
 private:
-    meta::GlobalMetaGetter* global_meta_getter{nullptr};
-    meta::NodeMetaGetter* node_meta_getter{nullptr};
-    lib::AccLatencyData*** acc_lat_data{
-        nullptr,
-    };
-    const uint32_t MAX_NID_SIZE{cfg::GetSentenceCount(config::ParagraphType::NODE)};
+    meta::GlobalMetaGetter* global_meta_getter {nullptr};
+    meta::NodeMetaGetter* node_meta_getter {nullptr};
+    lib::AccLatencyData*** acc_lat_data {nullptr, };
+    NodeInitializer node_initializer;
+    const uint32_t MAX_NID_SIZE {cfg::GetSentenceCount(config::ParagraphType::NODE)};
 };
 
 } // namespace node

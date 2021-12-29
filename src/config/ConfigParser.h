@@ -217,7 +217,7 @@ public:
     static constexpr air::string_view
     GetStrValueFromSentence(air::string_view sentence, air::string_view key)
     {
-        if (key != "Group" && key != "Node" && key != "Filter" && key != "Type" && key != "Histogram")
+        if (key != "Group" && key != "Node" && key != "Filter" && key != "Type" && key != "Bucket")
         {
             return "";
         }
@@ -278,9 +278,9 @@ public:
         {
             key_name = "Filter";
         }
-        else if (ParagraphType::HISTOGRAM == type)
+        else if (ParagraphType::BUCKET == type)
         {
-            key_name = "Histogram";
+            key_name = "Bucket";
         }
         else if (ParagraphType::NODE == type)
         {
@@ -331,31 +331,31 @@ public:
     }
 
     static constexpr int64_t
-    GetMinValueFromHistogramSentence(air::string_view sentence)
+    GetLowerBoundFromBucketSentence(air::string_view sentence)
     {
-        air::string_view range_value {_GetDataRangeValueFromHistogramSentence(sentence)};
-        air::string_view min_value {range_value.substr(1, range_value.find(",") - 1)};
-        min_value = Strip(min_value);
-        int64_t result {StolWithExponent(min_value)};
+        air::string_view bounds_value {_GetBoundsFromBucketSentence(sentence)};
+        air::string_view lower_bound {bounds_value.substr(1, bounds_value.find(",") - 1)};
+        lower_bound = Strip(lower_bound);
+        int64_t result {StolWithExponent(lower_bound)};
         return result;
     }
 
     static constexpr int64_t
-    GetMaxValueFromHistogramSentence(air::string_view sentence)
+    GetUpperBoundFromBucketSentence(air::string_view sentence)
     {
-        air::string_view range_value {_GetDataRangeValueFromHistogramSentence(sentence)};
-        air::string_view max_value {range_value.substr(range_value.find(",") + 1,
-            range_value.size() - range_value.find(",") - 2)};
-        max_value = Strip(max_value);
-        int64_t result {StolWithExponent(max_value)};
+        air::string_view bounds_value {_GetBoundsFromBucketSentence(sentence)};
+        air::string_view upper_bound {bounds_value.substr(bounds_value.find(",") + 1,
+            bounds_value.size() - bounds_value.find(",") - 2)};
+        upper_bound = Strip(upper_bound);
+        int64_t result {StolWithExponent(upper_bound)};
         return result;
     }
 
     static constexpr bool
-    IsLinearTypeFromHistogramSentence(air::string_view sentence)
+    IsLinearTypeFromBucketSentence(air::string_view sentence)
     {
-        air::string_view bucket_value {_GetBucketRangeValueFromHistogramSentence(sentence)};
-        if (air::string_view::npos == bucket_value.find("^"))
+        air::string_view scale_value {_GetScaleFromBucketSentence(sentence)};
+        if (air::string_view::npos == scale_value.find("^"))
         {
             return true;
         }
@@ -453,27 +453,26 @@ private:
     }
 
     static constexpr air::string_view
-    _GetDataRangeValueFromHistogramSentence(air::string_view sentence)
+    _GetBoundsFromBucketSentence(air::string_view sentence)
     {
-        size_t data_range_value_start_pos {sentence.find(":", sentence.find("DataRange")) + 1};
-        size_t data_range_value_end_pos {sentence.find(",", sentence.find(",", data_range_value_start_pos) + 1)};
-        air::string_view data_range_value {sentence.substr(data_range_value_start_pos,
-            data_range_value_end_pos - data_range_value_start_pos)};
-        return Strip(data_range_value);
+        size_t bounds_start_pos {sentence.find(":", sentence.find("Bounds")) + 1};
+        size_t bounds_end_pos {sentence.find(",", sentence.find(",", bounds_start_pos) + 1)};
+        air::string_view bounds_value {sentence.substr(bounds_start_pos, bounds_end_pos - bounds_start_pos)};
+        return Strip(bounds_value);
     }
 
     static constexpr air::string_view
-    _GetBucketRangeValueFromHistogramSentence(air::string_view sentence)
+    _GetScaleFromBucketSentence(air::string_view sentence)
     {
-        size_t bucket_range_value_start_pos {sentence.find(":", sentence.find("BucketRange")) + 1};
-        size_t bucket_range_value_end_pos {sentence.size()};
-        if (air::string_view::npos != sentence.find(",", bucket_range_value_start_pos))
+        size_t scale_start_pos {sentence.find(":", sentence.find("Scale")) + 1};
+        size_t scale_end_pos {sentence.size()};
+        if (air::string_view::npos != sentence.find(",", scale_start_pos))
         {
-            bucket_range_value_end_pos = sentence.find(",", bucket_range_value_start_pos);
+            scale_end_pos = sentence.find(",", scale_start_pos);
         }
-        air::string_view bucket_range_value {sentence.substr(bucket_range_value_start_pos,
-            bucket_range_value_end_pos - bucket_range_value_start_pos)};
-        return Strip(bucket_range_value);
+        air::string_view scale_value {sentence.substr(scale_start_pos,
+            scale_end_pos - scale_start_pos)};
+        return Strip(scale_value);
     }
 };
 

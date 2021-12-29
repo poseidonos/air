@@ -38,7 +38,7 @@ process::Processor::StreamData(air::string_view& node_name_view, uint32_t tid,
     {
         return;
     }
-    time = new_time;
+    lap_time = new_time;
 
     lib::Data* air_data{nullptr};
     lib::AccData* acc_data{nullptr};
@@ -53,8 +53,8 @@ process::Processor::StreamData(air::string_view& node_name_view, uint32_t tid,
             {
                 hash_value = node_data->GetUserHashValue(hash_index);
                 _ProcessData(air_data, acc_data);
-                _JsonifyData(air_data, acc_data,
-                    node_name_view, tid, tname, hash_value, filter_index);
+                _JsonifyData({air_data, acc_data,
+                    node_name_view, tid, tname, hash_value, filter_index});
                 _InitData(air_data, acc_data);
             }
         }
@@ -75,7 +75,7 @@ process::Processor::StreamData(air::string_view& node_name_view,
     if (0 != data->sample_count || 0 != data->total_sample_count)
     {
         _ProcessData(nullptr, data);
-        _JsonifyData(nullptr, data, node_name_view, 0, "", hash_value, filter_index);
+        _JsonifyData({nullptr, data, node_name_view, 0, "", hash_value, filter_index});
         _InitData(nullptr, data);
     }
 }

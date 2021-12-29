@@ -42,7 +42,7 @@ namespace config
 static constexpr uint32_t NUM_DEFAULT_KEY {6};
 static constexpr uint32_t NUM_GROUP_KEY {5};
 static constexpr uint32_t NUM_FILTER_KEY {2};
-static constexpr uint32_t NUM_HISTOGRAM_KEY {3};
+static constexpr uint32_t NUM_BUCKET_KEY {3};
 static constexpr uint32_t NUM_NODE_KEY {9};
 
 enum class ParagraphType : uint32_t
@@ -50,7 +50,7 @@ enum class ParagraphType : uint32_t
     DEFAULT = 0,
     GROUP,
     FILTER,
-    HISTOGRAM,
+    BUCKET,
     NODE,
 
     COUNT,

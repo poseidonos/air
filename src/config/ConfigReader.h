@@ -74,14 +74,14 @@ static constexpr air::string_view paragraphs[dtype(ParagraphType::COUNT)] {
     ConfigReader::GetStrArrFromRawData("[DEFAULT]", "[/DEFAULT]"),
     ConfigReader::GetStrArrFromRawData("[GROUP]", "[/GROUP]"),
     ConfigReader::GetStrArrFromRawData("[FILTER]", "[/FILTER]"),
-    ConfigReader::GetStrArrFromRawData("[HISTOGRAM]", "[/HISTOGRAM]"),
+    ConfigReader::GetStrArrFromRawData("[BUCKET]", "[/BUCKET]"),
     ConfigReader::GetStrArrFromRawData("[NODE]", "[/NODE]")};
 
 static constexpr uint32_t sentences_count[dtype(ParagraphType::COUNT)] {
     ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::DEFAULT)]),
     ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::GROUP)]),
     ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::FILTER)]),
-    ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::HISTOGRAM)]),
+    ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::BUCKET)]),
     ConfigReader::GetStrArrSize(paragraphs[dtype(ParagraphType::NODE)])};
 
 } // namespace config

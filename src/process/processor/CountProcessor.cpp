@@ -34,8 +34,8 @@ void
 process::CountProcessor::_ProcessData(lib::Data* air_data,
     lib::AccData* acc_data)
 {
-    lib::CountData* air_count_data = static_cast<lib::CountData*>(air_data);
-    lib::AccCountData* acc_count_data = static_cast<lib::AccCountData*>(acc_data);
+    lib::CountData* air_count_data {static_cast<lib::CountData*>(air_data)};
+    lib::AccCountData* acc_count_data {static_cast<lib::AccCountData*>(acc_data)};
 
     if (air_count_data->count_positive > air_count_data->count_negative)
     {
@@ -70,23 +70,22 @@ process::CountProcessor::_ProcessData(lib::Data* air_data,
 }
 
 void
-process::CountProcessor::_JsonifyData(lib::Data* air_data, lib::AccData* acc_data,
-    air::string_view& node_name_view, uint32_t tid, const char* tname,
-    uint64_t hash_value, uint32_t filter_index)
+process::CountProcessor::_JsonifyData(struct JsonifyData data)
 {
-    lib::CountData* air_count_data = static_cast<lib::CountData*>(air_data);
+    lib::CountData* air_count_data {static_cast<lib::CountData*>(data.air_data)};
     std::string node_name;
-    node_name.assign(node_name_view.data(), node_name_view.size());
+    node_name.assign(data.node_name_view.data(), data.node_name_view.size());
     auto& node = air::json(node_name);
-    lib::AccCountData* acc_count_data = static_cast<lib::AccCountData*>(acc_data);
+    lib::AccCountData* acc_count_data {static_cast<lib::AccCountData*>(data.acc_data)};
 
-    auto& node_obj = air::json(node_name + "_" + std::to_string(tid) + "_count_" + std::to_string(hash_value) + "_" + std::to_string(filter_index));
+    auto& node_obj = air::json(node_name + "_" + std::to_string(data.tid) + "_count_"
+        + std::to_string(data.hash_value) + "_" + std::to_string(data.filter_index));
 
-    std::string filter_item = cfg::GetItemStrWithNodeName(node_name_view, filter_index);
+    std::string filter_item {cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index)};
 
-    node_obj["target_id"] = {tid};
-    node_obj["target_name"] = {tname};
-    node_obj["index"] = {hash_value};
+    node_obj["target_id"] = {data.tid};
+    node_obj["target_name"] = {data.tname};
+    node_obj["index"] = {data.hash_value};
     node_obj["filter"] = {filter_item};
 
     if (0 == air_count_data->negative)
@@ -122,8 +121,8 @@ void
 process::CountProcessor::_InitData(lib::Data* air_data,
     lib::AccData* acc_data)
 {
-    lib::AccCountData* acc_count_data = static_cast<lib::AccCountData*>(acc_data);
-    lib::CountData* air_count_data = static_cast<lib::CountData*>(air_data);
+    lib::AccCountData* acc_count_data {static_cast<lib::AccCountData*>(acc_data)};
+    lib::CountData* air_count_data {static_cast<lib::CountData*>(air_data)};
 
     air_count_data->access = 0;
     air_count_data->count_positive = 0;

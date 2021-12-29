@@ -111,14 +111,15 @@ TEST_F(ConfigCheckerTest, CheckParagraphRule_FilterType)
     EXPECT_ANY_THROW(cfg_checker->CheckParagraphRule(config::ParagraphType::FILTER, filter_paragraph_error9));
 }
 
-TEST_F(ConfigCheckerTest, CheckParagraphRule_HistogramType)
+TEST_F(ConfigCheckerTest, CheckParagraphRule_BucketType)
 {
-    constexpr air::string_view histogram_paragraph1 = R"HISTOGRAM(
-        "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10"
-        "Histogram: HTG_2, DataRange: [33, 66), BucketRange: 3"
-        )HISTOGRAM";
+    constexpr air::string_view bucket_paragraph = R"BUCKET(
+        "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10"
+        "Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)"
+        "Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3"
+        )BUCKET";
 
-    EXPECT_EQ(0, cfg_checker->CheckParagraphRule(config::ParagraphType::HISTOGRAM, histogram_paragraph1));
+    EXPECT_EQ(0, cfg_checker->CheckParagraphRule(config::ParagraphType::BUCKET, bucket_paragraph));
 }
 
 TEST_F(ConfigCheckerTest, CheckParagraphRule_NodeType)
@@ -229,11 +230,11 @@ TEST_F(ConfigCheckerTest, NameDuplicatedViolation)
     )FILTER");
     EXPECT_ANY_THROW(cfg_checker->CheckParagraphRule(config::ParagraphType::FILTER, filter_key_duplicated));
 
-    constexpr air::string_view histogram_key_duplicated(R"HISTOGRAM(
-    "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10"
-    "DataRange: [33, 66), BucketRange: 3, Histogram: HTG_1"
-    )HISTOGRAM");
-    EXPECT_ANY_THROW(cfg_checker->CheckParagraphRule(config::ParagraphType::HISTOGRAM, histogram_key_duplicated));
+    constexpr air::string_view bucket_key_duplicated(R"BUCKET(
+    "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10"
+    "Bounds: [33, 66), Scale: 3, Bucket: BUCKET_1"
+    )BUCKET");
+    EXPECT_ANY_THROW(cfg_checker->CheckParagraphRule(config::ParagraphType::BUCKET, bucket_key_duplicated));
 
     constexpr air::string_view node_key_duplicated = R"NODE(
     "Node: Q_SUBMIT, Type:Queue, Build:True"
@@ -270,11 +271,11 @@ TEST_F(ConfigCheckerTest, CheckKeyRule_FilterType)
     EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::FILTER, "Filter: F1, Item: (F1_0 ... F1_1)"));
 }
 
-TEST_F(ConfigCheckerTest, CheckKeyRule_HistogramType)
+TEST_F(ConfigCheckerTest, CheckKeyRule_BucketType)
 {
-    EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10"));
-    EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM, "Histogram : HTG_2 ,DataRange: [0, 100) ,BucketRange: 10 "));
-    EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM, "Histogram : HTG_3 ,DataRange :(0, 100) ,BucketRange : 4"));
+    EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10"));
+    EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET, "Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)"));
+    EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET, "Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3"));
 }
 
 TEST_F(ConfigCheckerTest, CheckKeyRule_NodeType)
@@ -286,7 +287,7 @@ TEST_F(ConfigCheckerTest, CheckKeyRule_NodeType)
     EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::NODE, "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, Group: UNGROUPED, Filter: Basic"));
     EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::NODE, "Node: PERF_CP, Type: PERFORMANCE, Filter: Basic, Build: True, Group: UNGROUPED"));
     EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::NODE, "Filter: Basic, Node: PERF_CP, Type: PERFORMANCE, Group: UNGROUPED"));
-    EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::NODE, "Node: HIST_PSD, Type : HISTOGRAM, Filter: Basic,  Group: POS, Histogram: HTG_6"));
+    EXPECT_EQ(0, cfg_checker->CheckKeyRule(config::ParagraphType::NODE, "Node: HIST_PSD, Type : HISTOGRAM, Filter: Basic,  Group: POS, Bucket: BUCKET_6"));
 }
 
 TEST_F(ConfigCheckerTest, KeyTypoViolation_DefaultType)
@@ -313,11 +314,11 @@ TEST_F(ConfigCheckerTest, KeyTypoViolation_FilterType)
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::FILTER, "Filter: F1, Itemm: (AIR_BASE)"));
 }
 
-TEST_F(ConfigCheckerTest, KeyTypoViolation_HistogramType)
+TEST_F(ConfigCheckerTest, KeyTypoViolation_BucketType)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM, "Histogramf: HTG_1, DataRange: [0, 100), BucketRange: 10"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRnge: [0, 100), BucketRange: 10"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: [0, 100), BucktRange: 10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET, "Buckett: BUCKET_1, Bounds: [0, 100), Scale: 10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bound: [0, 100), Scale: 10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: [0, 100), Scal: 10"));
 }
 
 TEST_F(ConfigCheckerTest, KeyTypoViolation_NodeType)
@@ -331,7 +332,7 @@ TEST_F(ConfigCheckerTest, KeyTypoViolation_NodeType)
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE, "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, Group: POS_Journal, SR: 100"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE, "Node: PERF_CP, Type: PERFORMANCE, SamplingRatio: 10"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE, "Node: LAT_TEST, Type: LATENCY, SamplingRatio : 1000"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE, "Node: HIST_PSD, Type : HISTOGRAM, Filter: Basic,  Group: POS"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE, "Node: HIST_PSD, Type : HISTOGRAM, Filter: Basic,  Group: POS, Bucke: BUCKET_6"));
 }
 
 TEST_F(ConfigCheckerTest, KeyMandatoryViolation_DefaultType)
@@ -355,11 +356,11 @@ TEST_F(ConfigCheckerTest, KeyMandatoryViolation_FilterType)
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::FILTER, "Item: (AIR_0)"));
 }
 
-TEST_F(ConfigCheckerTest, KeyMandatoryViolation_HistogramType)
+TEST_F(ConfigCheckerTest, KeyMandatoryViolation_BucketType)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM, "DataRange: [0, 100), BucketRange: 10"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, BucketRange: 10"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: [0, 100)"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET, "Bounds: [0, 100), Scale: 10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Scale: 10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: [0, 100)"));
 }
 
 TEST_F(ConfigCheckerTest, KeyMandatoryViolation_NodeType)
@@ -405,14 +406,14 @@ TEST_F(ConfigCheckerTest, KeyDuplicationViolation_FilterType)
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::FILTER, "Filter: F1, Item: (AIR_0), Item: (AIR_2)"));
 }
 
-TEST_F(ConfigCheckerTest, KeyDuplicationViolation_HistogramType)
+TEST_F(ConfigCheckerTest, KeyDuplicationViolation_BucketType)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM,
-        "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10, Histogram: HTG_2"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM,
-        "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10, DataRange: [4^0, 4^18)"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::HISTOGRAM,
-        "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10, BucketRange: 100"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET,
+        "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10, Bucket: BUCKET_2"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET,
+        "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10, Bounds: [0, 140)"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::BUCKET,
+        "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10, Scale: 100"));
 }
 
 TEST_F(ConfigCheckerTest, KeyDuplicationViolation_NodeType)
@@ -430,7 +431,7 @@ TEST_F(ConfigCheckerTest, KeyDuplicationViolation_NodeType)
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
         "Node: LAT_CP, Type: LATENCY, Build: True, Run: On, Group: POS_Journal, Group: POS_Journal"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
-        "Node: HIST_PSD, Type : HISTOGRAM, Filter: Basic,  Group: POS, Histogram: HTG_6, Histogram: HTG_7"));
+        "Node: HIST_PSD, Type : HISTOGRAM, Filter: Basic,  Group: POS, Bucket: BUCKET_2, Bucket: BUCKET_4"));
 }
 
 TEST_F(ConfigCheckerTest, CheckValueRulePass)
@@ -441,11 +442,12 @@ TEST_F(ConfigCheckerTest, CheckValueRulePass)
     EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::GROUP, "Group: POS_RSC"));
     EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::FILTER, "Filter: F1, Item: (BASE_0 , BASE1)"));
     EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::FILTER, "Filter: F2, Item: (BASE_0 ... BASE_3)"));
-    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10"));
-    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_3, DataRange: [-100, 80), BucketRange: 20"));
-    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [10^0, 10^3), BucketRange: 10^"));
-    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_5, DataRange: (-4^3, 4^2), BucketRange: 4^"));
-    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_6, DataRange: (-10^1, 10^3), BucketRange: 10^"));
+    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10"));
+    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)"));
+    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3"));
+    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 2^"));
+    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 2^"));
+    EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_6, Bounds: (-10^3, 10^5), Scale: 10^"));
     EXPECT_EQ(0, cfg_checker->CheckValueRule(config::ParagraphType::NODE, "Node: LAT_CP, Type: LATENCY, Build: True, Run: On, Group: POS, Filter: Basic"));
 }
 
@@ -527,79 +529,79 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_FilterType)
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::FILTER, "Filter: F6, Item: (F6_0, F6_1 F6_2, )"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_HistogramType_BucketRangeMissing)
+TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_ScaleMissing)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: [0, 100), BucketRange: "));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: (-100, 100), BucketRange: "));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: [0, 100), Scale: "));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: (-100, 100), Scale: "));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_HistogramType_InvalidBucketRange)
+TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_InvalidScale)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: [0, 100), BucketRange: -10"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 10.0"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [2^0, 2^10), BucketRange: 3^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [8, 16), BucketRange: -2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_5, DataRange: (-4^6, -4^2], BucketRange: 16^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: [0, 100), Scale: -10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10.0"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 3^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [8, 16), Scale: -2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 16^"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_HistogramType_BucketSizeOverflow)
+TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_BucketSizeOverflow)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: [0, 100), BucketRange: 2"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: (-2^9, 2^9), BucketRange: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 2"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: (-2^9, 2^9), Scale: 2^"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_HistogramType_BucketSizeUnderflow)
+TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_BucketSizeUnderflow)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [8, 4), BucketRange: 2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [8, 8), BucketRange: 2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: (-9, -27], BucketRange: 3^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [-10, -22), BucketRange: 2"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [8, 4), Scale: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [8, 8), Scale: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: (-9, -27], Scale: 3^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [-10, -22), Scale: 2"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_HistogramType_MissingDataRange)
+TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_MissingBounds)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: , BucketRange: 10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: , Scale: 10"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_HistogramType_MissingBrace)
+TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_MissingBrace)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: [0, 100, BucketRange: 10"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: 0, 100), BucketRange: 10"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_1, DataRange: 0, 100, BucketRange: 10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: [0, 100, Scale: 10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: 0, 100), Scale: 10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: 0, 100, Scale: 10"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_HistogramType_MissingComma)
+TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_MissingComma)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [2^0 2^10), BucketRange: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [2^0 2^10), Scale: 2^"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_HistogramType_InvalidBrace)
+TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_InvalidBrace)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: (2^0, 2^10), BucketRange: 2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [2^0, 2^10], BucketRange: 2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: (2^0, 2^10], BucketRange: 2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_5, DataRange: (-4^6, -4^2), BucketRange: 2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_5, DataRange: [-4^6, -4^2], BucketRange: 2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_5, DataRange: [-4^6, -4^2), BucketRange: 2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_6, DataRange: [-10^3, 10^5), BucketRange: 10^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_6, DataRange: (-10^3, 10^5], BucketRange: 10^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_6, DataRange: [-10^3, 10^5], BucketRange: 10^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: (2^0, 2^10), Scale: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [2^0, 2^10], Scale: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: (2^0, 2^10], Scale: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_5, Bounds: (-4^6, -4^2), Scale: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_5, Bounds: [-4^6, -4^2], Scale: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_5, Bounds: [-4^6, -4^2), Scale: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_6, Bounds: [-10^3, 10^5), Scale: 10^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_6, Bounds: (-10^3, 10^5], Scale: 10^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_6, Bounds: [-10^3, 10^5], Scale: 10^"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_HistogramType_InvalidDataRange)
+TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_InvalidBounds)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [3, 2^10), BucketRange: 2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [4, 1023), BucketRange: 2^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [4, 1025), BucketRange: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [3, 2^10), Scale: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [4, 1023), Scale: 2^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [4, 1025), Scale: 2^"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_HistogramType_DataRangeOverflow)
+TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_BoundsOverflow)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [10^12, 10^19), BucketRange: 10^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: (-10^19, -10^3], BucketRange: 10^"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [0, 10^19), BucketRange: 100000000000000000"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::HISTOGRAM, "Histogram: HTG_4, DataRange: [-10^19, 0), BucketRange: 100000000000000000"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [10^12, 10^19), Scale: 10^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: (-10^19, -10^3], Scale: 10^"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [0, 10^19), Scale: 100000000000000000"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET, "Bucket: BUCKET_4, Bounds: [-10^19, 0), Scale: 100000000000000000"));
 }
 
 TEST_F(ConfigCheckerTest, ValueVaildityViolation_NodeType)
@@ -619,5 +621,5 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_NodeType)
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
         "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, SamplingRatio:1000, Group: POS_JOURNAL, Filter: Basiccc"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
-        "Node: HIST_PSD, Type : HISTOGRAM, Filter: Basic,  Group: POS, Histogram: HTG_DOES_NOT_EXIST"));
+        "Node: HIST_PSD, Type : HISTOGRAM, Filter: Basic,  Group: POS, Bucket: BUCKET_NOT_EXIST"));
 }

@@ -48,10 +48,10 @@ process::TimingDistributor::SetTiming(
                 {
                     for (uint32_t filter_index = 0; filter_index < filter_size - 1; filter_index++)
                     {
-                        lib::LatencyData* from = static_cast<lib::LatencyData*>(
-                            kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index));
                         lib::LatencyData* to = static_cast<lib::LatencyData*>(
                             kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index + 1));
+                        lib::LatencyData* from = static_cast<lib::LatencyData*>(
+                            kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index));
 
                         uint64_t key{0};
                         int32_t value{0};

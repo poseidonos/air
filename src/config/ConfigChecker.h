@@ -72,12 +72,12 @@ public:
                 throw std::logic_error("Filter value duplicated");
             }
         }
-        else if (ParagraphType::HISTOGRAM == type)
+        else if (ParagraphType::BUCKET == type)
         {
-            air::string_view key {"Histogram"};
+            air::string_view key {"Bucket"};
             if (0 > CheckValueDuplication(key, paragraph))
             {
-                throw std::logic_error("Histogram value duplicated");
+                throw std::logic_error("Bucket value duplicated");
             }
         }
         else if (ParagraphType::NODE == type)
@@ -134,15 +134,15 @@ public:
                 throw std::logic_error("Filter mandatory key missing");
             }
         }
-        else if (ParagraphType::HISTOGRAM == type)
+        else if (ParagraphType::BUCKET == type)
         {
-            if (0 > CheckKeyTypo(type, histogram_keys, sentence))
+            if (0 > CheckKeyTypo(type, bucket_keys, sentence))
             {
-                throw std::logic_error("Histogram key typo");
+                throw std::logic_error("Bucket key typo");
             }
-            if (0 > CheckMandatoryKey(histogram_keys, num_mandatory, sentence))
+            if (0 > CheckMandatoryKey(bucket_keys, num_mandatory, sentence))
             {
-                throw std::logic_error("Histogram mandatory key missing");
+                throw std::logic_error("Bucket mandatory key missing");
             }
         }
         else if (ParagraphType::NODE == type)
@@ -187,10 +187,10 @@ private:
         "Group", "NodeBuild", "NodeRun", "NodeSamplingRatio", "NodeIndexSize"};
     static constexpr air::string_view filter_keys[NUM_FILTER_KEY] {
         "Filter", "Item"};
-    static constexpr air::string_view histogram_keys[NUM_HISTOGRAM_KEY] {
-        "Histogram", "DataRange", "BucketRange"};
+    static constexpr air::string_view bucket_keys[NUM_BUCKET_KEY] {
+        "Bucket", "Bounds", "Scale"};
     static constexpr air::string_view node_keys[NUM_NODE_KEY] {
-        "Node", "Type", "Group", "Filter", "Build", "Run", "SamplingRatio", "IndexSize", "Histogram"};
+        "Node", "Type", "Group", "Filter", "Build", "Run", "SamplingRatio", "IndexSize", "Bucket"};
 
     static constexpr uint32_t num_mandatory_list[5] {6, 1, 2, 3, 4};
 };

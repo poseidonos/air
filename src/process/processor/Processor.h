@@ -46,13 +46,21 @@ public:
         uint64_t hash_value, uint32_t filter_index);
 
 protected:
-    double time{1.0f};
+    double lap_time{1.0f};
+    struct JsonifyData
+    {
+        lib::Data* air_data;
+        lib::AccData* acc_data;
+        air::string_view node_name_view;
+        uint32_t tid;
+        const char* tname;
+        uint64_t hash_value;
+        uint32_t filter_index;
+    };
 
 private:
     virtual void _ProcessData(lib::Data* air_data, lib::AccData* acc_data) = 0;
-    virtual void _JsonifyData(lib::Data* air_data, lib::AccData* acc_data,
-        air::string_view& node_name_view, uint32_t tid, const char* tname,
-        uint64_t hash_value, uint32_t filter_index) = 0;
+    virtual void _JsonifyData(struct JsonifyData data) = 0;
     virtual void _InitData(lib::Data* air_data, lib::AccData* acc_data) = 0;
 };
 
