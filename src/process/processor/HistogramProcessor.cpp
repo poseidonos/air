@@ -140,13 +140,22 @@ process::HistogramProcessor::_ProcessData(lib::Data* air_data, lib::AccData* acc
         acc_hist_data->cumulation_bucket[bucket_index]
             += hist_data->period_bucket[bucket_index];
     }
-    if (acc_hist_data->cumulation_min_value > hist_data->period_min_value)
+    if (acc_hist_data->is_first)
     {
         acc_hist_data->cumulation_min_value = hist_data->period_min_value;
-    }
-    if (acc_hist_data->cumulation_max_value < hist_data->period_max_value)
-    {
         acc_hist_data->cumulation_max_value = hist_data->period_max_value;
+        acc_hist_data->is_first = false;
+    }
+    else
+    {
+        if (acc_hist_data->cumulation_min_value > hist_data->period_min_value)
+        {
+            acc_hist_data->cumulation_min_value = hist_data->period_min_value;
+        }
+        if (acc_hist_data->cumulation_max_value < hist_data->period_max_value)
+        {
+            acc_hist_data->cumulation_max_value = hist_data->period_max_value;
+        }
     }
 
     total_sum = 0;
@@ -281,5 +290,7 @@ process::HistogramProcessor::_InitData(lib::Data* air_data, lib::AccData* acc_da
             acc_hist_data->cumulation_bucket[bucket_index] = 0;
         }
         time(&(acc_hist_data->since));
+        acc_hist_data->is_first = true;
+        acc_hist_data->need_erase = false;
     }
 }

@@ -401,6 +401,10 @@ air::Viewer::_DrawNode(ANode& node, std::string name, JSONdoc& doc)
     {
         node_type = NodeType::COUNT;
     }
+    else if (std::string::npos != str_node_type.find("\"histogram\""))
+    {
+        node_type = NodeType::HISTOGRAM;
+    }
 
     sum_iops = 0;
     sum_bw = 0;
@@ -505,6 +509,11 @@ air::Viewer::_DrawObj(JSONdoc& doc, NodeType type)
         case NodeType::COUNT:
         {
             _DrawCount(doc, remain_col);
+            break;
+        }
+        case NodeType::HISTOGRAM:
+        {
+            _DrawHistogram(doc, remain_col);
             break;
         }
         default:
@@ -906,6 +915,304 @@ air::Viewer::_DrawCount(JSONdoc& doc, uint32_t remain_col)
         str += "INV    ";
     }
     str += ")";
+
+    std::cout << str.substr(0, remain_col);
+}
+
+void
+air::Viewer::_DrawHistogram(JSONdoc& doc, uint32_t remain_col)
+{
+    curr_row++;
+    if (ws_row <= curr_row)
+    {
+        return;
+    }
+    std::cout << ", bucket_type:" << doc["bucket_type"] << std::endl;
+    std::stringstream stream;
+    uint32_t bucket_size;
+    stream.str("");
+    stream << doc["bucket_size"];
+    bucket_size = std::stoul(stream.str());
+    _DrawHistogramUnit(doc, ws_col);
+    _DrawHistogramPeriod(doc["period"], ws_col, bucket_size);
+    _DrawHistogramCumulation(doc["cumulation"], ws_col, bucket_size);
+}
+
+void
+air::Viewer::_DrawHistogramUnit(JSONdoc& doc, uint32_t remain_col)
+{
+    curr_row++;
+    if (ws_row <= curr_row)
+    {
+        return;
+    }
+    std::string str {"        Unit    value:(minimum/average/maximum) count:(underflow "};
+    std::stringstream stream;
+    uint64_t bucket_size;
+    int64_t bucket_lower_bound;
+    int64_t bucket_upper_bound;
+    int64_t bucket_scale;
+    int32_t bucket_zero_index;
+
+    stream.str("");
+    stream << doc["bucket_size"];
+    bucket_size = std::stoull(stream.str());
+    stream.str("");
+    stream << doc["bucket_lower_bound"];
+    bucket_lower_bound = std::stoll(stream.str());
+    stream.str("");
+    stream << doc["bucket_upper_bound"];
+    bucket_upper_bound = std::stoll(stream.str());
+    stream.str("");
+    stream << doc["bucket_scale"];
+    bucket_scale = std::stoll(stream.str());
+    stream.str("");
+    stream << doc["bucket_zero_index"];
+    bucket_zero_index = std::stoi(stream.str());
+
+    stream.str("");
+    stream << doc["bucket_type"];
+    if(0 == stream.str().compare("\"linear\""))
+    {
+        for (uint64_t bucket_index {0}; bucket_index <= bucket_size; bucket_index++)
+        {
+            int64_t bucket_boundary {bucket_lower_bound + (int64_t)bucket_index * bucket_scale};
+            str += NumberToStrSIFmt(bucket_boundary, " ");
+        }
+    }
+    else
+    {
+        if (0 < bucket_lower_bound)
+        {
+            for (uint64_t bucket_index {0}; bucket_index <= bucket_size; bucket_index++)
+            {
+                int64_t bucket_boundary {1};
+                int32_t exponent {(int32_t)bucket_index - bucket_zero_index - 1};
+                while (exponent)
+                {
+                    bucket_boundary *= bucket_scale;
+                    exponent--;
+                }
+                str += NumberToStrSIFmt(bucket_boundary, " ");
+            }
+        }
+        else if (0 > bucket_upper_bound)
+        {
+            for (uint64_t bucket_index {0}; bucket_index <= bucket_size; bucket_index++)
+            {
+                int64_t bucket_boundary {1};
+                int32_t exponent {bucket_zero_index - (int32_t)bucket_index};
+                while (exponent)
+                {
+                    bucket_boundary *= bucket_scale;
+                    exponent--;
+                }
+                bucket_boundary *= -1;
+                str += NumberToStrSIFmt(bucket_boundary, " ");
+            }
+        }
+        else
+        {
+            for (uint64_t bucket_index {0}; bucket_index < bucket_size; bucket_index++)
+            {
+                int64_t bucket_boundary {1};
+                if (bucket_zero_index > (int32_t)bucket_index)
+                {
+                    int32_t exponent {bucket_zero_index - (int32_t)bucket_index};
+                    while (exponent)
+                    {
+                        bucket_boundary *= bucket_scale;
+                        exponent--;
+                    }
+                    bucket_boundary *= -1;
+                    str += NumberToStrSIFmt(bucket_boundary, " ");
+                }
+                else if (bucket_zero_index < (int32_t)bucket_index)
+                {
+                    int32_t exponent {(int32_t)bucket_index - bucket_zero_index};
+                    while (exponent)
+                    {
+                        bucket_boundary *= bucket_scale;
+                        exponent--;
+                    }
+                    str += NumberToStrSIFmt(bucket_boundary, " ");
+                }
+                else
+                {
+                    str += "-1  0   1       ";
+                }
+            }
+        }
+    }
+
+    str += "overflow)";
+
+    std::cout << str.substr(0, remain_col) << std::endl;
+}
+
+void
+air::Viewer::_DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col, uint32_t bucket_size)
+{
+    curr_row++;
+    if (ws_row <= curr_row)
+    {
+        return;
+    }
+    std::string str {"        Period         "};
+    std::stringstream stream;
+    int64_t number_int64;
+    uint64_t number_uint64;
+
+    stream.str("");
+    stream << doc["minimum_value"];
+    try
+    {
+        number_int64 = std::stoll(stream.str());
+        str += NumberToStrSIFmt(number_int64, " ");
+    }
+    catch(...)
+    {
+        str += "     INV";
+    }
+
+    stream.str("");
+    stream << doc["average_value"];
+    try
+    {
+        number_int64 = std::stoll(stream.str());
+        str += NumberToStrSIFmt(number_int64, " ");
+    }
+    catch(...)
+    {
+        str += "     INV";
+    }
+
+    stream.str("");
+    stream << doc["maximum_value"];
+    try
+    {
+        number_int64 = std::stoll(stream.str());
+        str += NumberToStrSIFmt(number_int64, " ");
+    }
+    catch(...)
+    {
+        str += "     INV";
+    }
+
+    str += "        ";
+    stream.str("");
+    stream << doc["underflow_count"];
+    try
+    {
+        number_uint64 = std::stoull(stream.str());
+        str += NumberToStrSIFmt(number_uint64, " ");
+    }
+    catch(...)
+    {
+        str += "     INV";
+    }
+
+    str += "   |";
+    JSONdoc& buckets {doc["buckets"]};
+    for (uint32_t bucket_index {0}; bucket_index < bucket_size; bucket_index++)
+    {
+        uint64_t count {*static_cast<uint64_t*>(buckets.GetValue(std::to_string(bucket_index)))};
+        str += NumberToStrSIFmt(count, "|", 7);
+    }
+
+    str += "      ";
+    stream.str("");
+    stream << doc["overflow_count"];
+    try
+    {
+        number_uint64 = std::stoull(stream.str());
+        str += NumberToStrSIFmt(number_uint64, " ");
+    }
+    catch(...)
+    {
+        str += "     INV";
+    }
+
+    std::cout << str.substr(0, remain_col) << std::endl;
+}
+
+void
+air::Viewer::_DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col, uint32_t bucket_size)
+{
+    std::string str {"        Cumulation     "};
+    std::stringstream stream;
+    int64_t number_int64;
+    uint64_t number_uint64;
+
+    stream.str("");
+    stream << doc["minimum_value"];
+    try
+    {
+        number_int64 = std::stoll(stream.str());
+        str += NumberToStrSIFmt(number_int64, " ");
+    }
+    catch(...)
+    {
+        str += "     INV";
+    }
+
+    stream.str("");
+    stream << doc["average_value"];
+    try
+    {
+        number_int64 = std::stoll(stream.str());
+        str += NumberToStrSIFmt(number_int64, " ");
+    }
+    catch(...)
+    {
+        str += "     INV";
+    }
+
+    stream.str("");
+    stream << doc["maximum_value"];
+    try
+    {
+        number_int64 = std::stoll(stream.str());
+        str += NumberToStrSIFmt(number_int64, " ");
+    }
+    catch(...)
+    {
+        str += "     INV";
+    }
+
+    str += "        ";
+    stream.str("");
+    stream << doc["underflow_count"];
+    try
+    {
+        number_uint64 = std::stoull(stream.str());
+        str += NumberToStrSIFmt(number_uint64, " ");
+    }
+    catch(...)
+    {
+        str += "     INV";
+    }
+
+    str += "   |";
+    JSONdoc& buckets {doc["buckets"]};
+    for (uint32_t bucket_index {0}; bucket_index < bucket_size; bucket_index++)
+    {
+        uint64_t count {*static_cast<uint64_t*>(buckets.GetValue(std::to_string(bucket_index)))};
+        str += NumberToStrSIFmt(count, "|", 7);
+    }
+
+    str += "      ";
+    stream.str("");
+    stream << doc["overflow_count"];
+    try
+    {
+        number_uint64 = std::stoull(stream.str());
+        str += NumberToStrSIFmt(number_uint64, " ");
+    }
+    catch(...)
+    {
+        str += "     INV";
+    }
 
     std::cout << str.substr(0, remain_col);
 }

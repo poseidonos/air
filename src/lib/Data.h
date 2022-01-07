@@ -211,6 +211,7 @@ struct AccHistogramData : public AccData
     int64_t cumulation_max_value {0};
     int64_t cumulation_avg_value {0};
     time_t since {0};
+    bool is_first {true};
 };
 
 } // namespace lib

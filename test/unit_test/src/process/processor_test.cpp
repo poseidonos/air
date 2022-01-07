@@ -206,6 +206,7 @@ TEST_F(ProcessorTest, HitogramProcessData_Case1)
     h_data->period_bucket[1] = 20;
     h_data->period_bucket[2] = 20;
 
+    h_acc->is_first = false;
     h_acc->cumulation_underflow = 10;
     h_acc->cumulation_overflow = 4234;
     h_acc->cumulation_min_value = -345;

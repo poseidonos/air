@@ -41,6 +41,7 @@ enum class NodeType : int
     QUEUE,
     UTILIZATION,
     COUNT,
+    HISTOGRAM,
 };
 
 class Viewer
@@ -66,6 +67,10 @@ private:
     void _DrawQueue(JSONdoc& doc, uint32_t remain_col);
     void _DrawUtilization(JSONdoc& doc, uint32_t remain_col);
     void _DrawCount(JSONdoc& doc, uint32_t remain_col);
+    void _DrawHistogram(JSONdoc& doc, uint32_t remain_col);
+    void _DrawHistogramUnit(JSONdoc& doc, uint32_t remain_col);
+    void _DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col, uint32_t bucket_size);
+    void _DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col, uint32_t bucket_size);
 
     std::string filename{""};
     int file_size{0};

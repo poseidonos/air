@@ -1,5 +1,6 @@
 if(BUILD_ST)
     message(STATUS "build system test")
+    add_subdirectory(api_histogram)
     add_subdirectory(c_interface)
     add_subdirectory(io_mock)
     add_subdirectory(many_log)

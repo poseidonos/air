@@ -279,6 +279,34 @@ public:
         return os;
     }
 
+    JSONtype
+    GetType(std::string key) const
+    {
+        auto it = map.find(key);
+        if (it != map.end())
+        {
+            return it->second.type;
+        }
+        else
+        {
+            return JSONtype::UNDEFINED;
+        }
+    }
+
+    void*
+    GetValue(std::string key) const
+    {
+        auto it = map.find(key);
+        if (it != map.end())
+        {
+            return it->second.data;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+
     bool
     HasKey(std::string key) const
     {

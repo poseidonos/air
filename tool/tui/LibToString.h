@@ -35,7 +35,7 @@ namespace air
 
 template<typename T>
 std::string
-NumberToStrSIFmt(T value, std::string suffix = "")
+NumberToStrSIFmt(T value, std::string suffix = "", uint32_t padding = 0)
 {
     static_assert(
         std::is_same<uint64_t, T>::value ||
@@ -88,17 +88,30 @@ NumberToStrSIFmt(T value, std::string suffix = "")
         overflow = true;
     }
 
+    int32_t padding_count {0};
     if (overflow)
     {
         stream << "NaN";
     }
-    else if (0 != suffix.compare(""))
+    else
     {
-        stream << suffix;
-        max_size += suffix.size();
-    }
+        if (stream.str().size() < padding)
+        {
+            padding_count = padding - stream.str().size();
+            while (0 < padding_count)
+            {
+                stream << " ";
+                padding_count--;
+            }
+        }
 
-    int32_t padding_count = max_size - stream.str().size();
+        if (0 != suffix.compare(""))
+        {
+            stream << suffix;
+            max_size += suffix.size();
+        }
+    }
+    padding_count = max_size - stream.str().size();
     while (0 < padding_count)
     {
         stream << " ";

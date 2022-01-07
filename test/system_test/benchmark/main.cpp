@@ -111,4 +111,24 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Count)(benchmark::State& state)
 BENCHMARK_REGISTER_F(AirAPI, Type_Count)->MinTime(10)->ThreadRange(1, 8)->Repetitions(3);
 
 
+BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Best)(benchmark::State& state)
+{
+    for (auto _ : state)
+    {
+        airlog("HIST_SAMPLE_3", "AIR_0", 0, 10);
+    }
+}
+BENCHMARK_REGISTER_F(AirAPI, Type_Histogram_Best)->MinTime(10)->ThreadRange(1, 8)->Repetitions(3);
+
+
+BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Worst)(benchmark::State& state)
+{
+    for (auto _ : state)
+    {
+        airlog("HIST_SAMPLE_6", "AIR_0", 0, 99999);
+    }
+}
+BENCHMARK_REGISTER_F(AirAPI, Type_Histogram_Worst)->MinTime(10)->ThreadRange(1, 8)->Repetitions(3);
+
+
 BENCHMARK_MAIN();
