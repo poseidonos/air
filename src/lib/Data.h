@@ -36,8 +36,8 @@ namespace lib
 {
 const uint32_t IDLE_THRESHOLD {5};
 const uint32_t MAX_PACKET_CNT_SIZE {10};
-const uint32_t TIMELAG_SIZE {50};
-const int32_t LAT_TOKEN_SIZE {100};
+const uint32_t TIMELAG_SIZE {100};
+const int32_t LAT_TOKEN_SIZE {1000};
 
 struct Data
 {
