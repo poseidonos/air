@@ -22,58 +22,59 @@
  *   SOFTWARE.
  */
 
-#ifndef AIR_TRANSFER_TASK_H
-#define AIR_TRANSFER_TASK_H
-
-#include <deque>
-#include <functional>
-#include <future>
-#include <list>
-#include <mutex>
-#include <string>
-
 #include "src/lib/json/Json.h"
 
-namespace transfer
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
+#include <fstream>
+#include <iostream>
+
+TEST(JsonprintTest, DirectCall)
 {
-using task_unit = std::function<int(const air::JSONdoc&)>;
-using node_list = std::initializer_list<std::string>;
+    int32_t value {7};
+    air::PrintValue(std::cout, air::JSONtype::INT32, &value) << std::endl;
+}
 
-class Task
+TEST(JsonprintTest, Exception)
 {
-public:
-    static Task&
-    Get(void)
-    {
-        static Task* task = new Task {};
-        return *task;
-    }
-    Task(Task const&) = delete;
-    Task(Task&&) = delete;
-    Task& operator=(Task const&) = delete;
-    Task& operator=(Task&&) = delete;
-    ~Task(void);
+    EXPECT_ANY_THROW(air::PrintValue(std::cout, air::JSONtype::LONG, nullptr));
+}
 
-    void Register(node_list nodes, task_unit function);
-    int NotifyAll(air::JSONdoc&& json_data);
+TEST(JsonprintTest, ObjectStream)
+{
+    auto& obj = air::json("obj");
 
-private:
-    void _Outbox2List(void);
-    void _WaitJobDone(void);
-    void _EraseFinishedJob(void);
+    obj["signed number"] = {-100};
+    obj["unsigned number"] = {100U};
+    obj["double"] = {333.333};
+    obj["string"] = {"string value"};
+    obj["null"] = {nullptr};
 
-    struct TaskInfo
-    {
-        task_unit function;
-        std::deque<std::string> nodes;
-        std::future<int> async_task;
-    };
+    std::cout << obj << std::endl;
 
-    static std::mutex mutex_outbox;
-    static std::list<TaskInfo> task_outbox;
-    static std::list<TaskInfo> task_list;
-};
+    air::json_clear();
+}
 
-} // namespace transfer
+TEST(JsonprintTest, ExportTextFile)
+{
+    auto& obj = air::json("obj");
 
-#endif // AIR_TRANSFER_TASK_H
+    obj["num1"] = {1, 2, 3};
+    obj["null"] = {nullptr};
+
+    std::ofstream write_file;
+    write_file.open("JsonprintTest_ExportTextFile.txt");
+    write_file << obj << std::endl;
+    write_file.close();
+
+    air::json_clear();
+
+    std::ifstream read_file;
+    read_file.open("JsonprintTest_ExportTextFile.txt");
+    std::string read_line;
+    std::getline(read_file, read_line);
+    read_file.close();
+
+    EXPECT_EQ(0, read_line.compare("{\"null\": null, \"num1\": [1, 2, 3]}"));
+}

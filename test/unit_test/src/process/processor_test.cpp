@@ -394,7 +394,7 @@ TEST_F(ProcessorTest, HitogramProcessData_Case6)
 
     h_acc->cumulation_bucket[8] = 10;
 
-    air::string_view node_name {"HIST_TEST_5"};
+    air::string_view node_name {"HIST_TEST_6"};
     histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data, air::ProcessorType::HISTOGRAM, 1, 32, 32);
 
     EXPECT_EQ(0, h_data->period_avg_value); // because it's initialized

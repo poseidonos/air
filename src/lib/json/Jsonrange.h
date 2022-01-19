@@ -68,10 +68,17 @@ public:
 
     RangeValue operator*(void)const
     {
-        void* vp = (*it).second.data;
-        JSONdoc& doc = *((JSONdoc*)vp);
-        auto doc_it = doc.map.begin();
-        return RangeValue{(*it).first, doc_it->second.type, doc_it->second.data};
+        if (JSONtype::OBJECT == it->second.type)
+        {
+            void* vp = (*it).second.data;
+            JSONdoc& doc = *((JSONdoc*)vp);
+            auto doc_it = doc.map.begin();
+            return RangeValue{(*it).first, doc_it->second.type, doc_it->second.data};
+        }
+        else
+        {
+            return RangeValue{(*it).first, it->second.type, it->second.data};
+        }
     }
 
 private:

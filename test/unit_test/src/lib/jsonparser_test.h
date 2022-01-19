@@ -24,8 +24,6 @@
 
 #include "src/lib/json/Json.h"
 
-#include <gmock/gmock.h>
-
 class JSONparserTest : public air::JSONparser
 {
 public:
@@ -41,24 +39,5 @@ public:
         std::string value)
     {
         _AddJsonArray(doc, doc_name, value_count, type, key, value);
-    }
-};
-
-class JsonTest : public ::testing::Test
-{
-protected:
-    JsonTest()
-    {
-    }
-    ~JsonTest() override
-    {
-    }
-    void
-    SetUp() override
-    {
-    }
-    void
-    TearDown() override
-    {
     }
 };

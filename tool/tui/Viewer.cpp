@@ -928,14 +928,9 @@ air::Viewer::_DrawHistogram(JSONdoc& doc, uint32_t remain_col)
         return;
     }
     std::cout << ", bucket_type:" << doc["bucket_type"] << std::endl;
-    std::stringstream stream;
-    uint32_t bucket_size;
-    stream.str("");
-    stream << doc["bucket_size"];
-    bucket_size = std::stoul(stream.str());
     _DrawHistogramUnit(doc, ws_col);
-    _DrawHistogramPeriod(doc["period"], ws_col, bucket_size);
-    _DrawHistogramCumulation(doc["cumulation"], ws_col, bucket_size);
+    _DrawHistogramPeriod(doc["period"], ws_col);
+    _DrawHistogramCumulation(doc["cumulation"], ws_col);
 }
 
 void
@@ -1051,7 +1046,7 @@ air::Viewer::_DrawHistogramUnit(JSONdoc& doc, uint32_t remain_col)
 }
 
 void
-air::Viewer::_DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col, uint32_t bucket_size)
+air::Viewer::_DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col)
 {
     curr_row++;
     if (ws_row <= curr_row)
@@ -1114,9 +1109,9 @@ air::Viewer::_DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col, uint32_t bu
 
     str += "   |";
     JSONdoc& buckets {doc["buckets"]};
-    for (uint32_t bucket_index {0}; bucket_index < bucket_size; bucket_index++)
+    for (auto bucket : air::range(buckets))
     {
-        uint64_t count {*static_cast<uint64_t*>(buckets.GetValue(std::to_string(bucket_index)))};
+        uint64_t count {*static_cast<uint64_t*>(bucket.value)};
         str += NumberToStrSIFmt(count, "|", 7);
     }
 
@@ -1137,7 +1132,7 @@ air::Viewer::_DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col, uint32_t bu
 }
 
 void
-air::Viewer::_DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col, uint32_t bucket_size)
+air::Viewer::_DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col)
 {
     std::string str {"        Cumulation     "};
     std::stringstream stream;
@@ -1195,9 +1190,9 @@ air::Viewer::_DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col, uint32_
 
     str += "   |";
     JSONdoc& buckets {doc["buckets"]};
-    for (uint32_t bucket_index {0}; bucket_index < bucket_size; bucket_index++)
+    for (auto bucket : air::range(buckets))
     {
-        uint64_t count {*static_cast<uint64_t*>(buckets.GetValue(std::to_string(bucket_index)))};
+        uint64_t count {*static_cast<uint64_t*>(bucket.value)};
         str += NumberToStrSIFmt(count, "|", 7);
     }
 

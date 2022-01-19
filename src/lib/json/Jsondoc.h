@@ -90,9 +90,15 @@ public:
 
             type = cpp_type(std::type_index(typeid(*dt)));
 
+            std::string map_key_str {""};
+            if (10 > map_key)
+            {
+                map_key_str = "0";
+            }
+            map_key_str += std::to_string(map_key);
             if (JSONtype::NULLVAL == type)
             {
-                map.insert({std::to_string(map_key), {nullptr, type}});
+                map.insert({map_key_str, {nullptr, type}});
                 delete dt;
             }
             else if (JSONtype::UNDEFINED == type)
@@ -102,7 +108,7 @@ public:
             }
             else
             {
-                map.insert({std::to_string(map_key), {dt, type}});
+                map.insert({map_key_str, {dt, type}});
             }
 
             ++it;
@@ -133,7 +139,13 @@ public:
             {
                 type = JSONtype::CHARP;
                 std::string* str_value = new std::string {*it};
-                map.insert({std::to_string(map_key), {str_value, JSONtype::CHARP}});
+                std::string map_key_str {""};
+                if (10 > map_key)
+                {
+                    map_key_str = "0";
+                }
+                map_key_str += std::to_string(map_key);
+                map.insert({map_key_str, {str_value, JSONtype::CHARP}});
             }
             ++it;
             map_key++;
@@ -170,7 +182,13 @@ public:
                 doc->type = (*it).type; // JSONtype::OBJECT;
                 doc->map = (*it).map;
                 doc->ownership = false;
-                map.insert({std::to_string(map_key), {doc, JSONtype::OBJECT}});
+                std::string map_key_str {""};
+                if (10 > map_key)
+                {
+                    map_key_str = "0";
+                }
+                map_key_str += std::to_string(map_key);
+                map.insert({map_key_str, {doc, JSONtype::OBJECT}});
                 ++it;
                 map_key++;
             }
@@ -280,11 +298,21 @@ public:
     }
 
     JSONtype
-    GetType(std::string key) const
+    GetType(std::string key = "") const
     {
+        if (0 == key.compare(""))
+        {
+            return type;
+        }
+
         auto it = map.find(key);
         if (it != map.end())
         {
+            if (JSONtype::OBJECT == it->second.type)
+            {
+                JSONdoc* doc = static_cast<JSONdoc*>(it->second.data);
+                return doc->type;
+            }
             return it->second.type;
         }
         else
@@ -438,6 +466,7 @@ public:
     {
         return ownership;
     }
+
     void
     SetType(JSONtype new_type)
     {

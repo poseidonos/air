@@ -33,6 +33,20 @@ std::mutex transfer::Task::mutex_outbox;
 std::list<transfer::Task::TaskInfo> transfer::Task::task_outbox;
 std::list<transfer::Task::TaskInfo> transfer::Task::task_list;
 
+transfer::Task::~Task(void)
+{
+    for (auto& task_info : task_list)
+    {
+        task_info.nodes.clear();
+    }
+    task_list.clear();
+    for (auto& task_info : task_outbox)
+    {
+        task_info.nodes.clear();
+    }
+    task_outbox.clear();
+}
+
 void
 transfer::Task::Register(node_list nodes, task_unit function)
 {
