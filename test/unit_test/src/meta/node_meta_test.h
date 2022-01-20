@@ -4,14 +4,14 @@
 class NodeMetaTest : public ::testing::Test
 {
 public:
-    meta::NodeMeta* node_meta{nullptr};
-    meta::NodeMetaGetter* node_meta_getter{nullptr};
+    meta::NodeMeta* node_meta {nullptr};
+    meta::NodeMetaGetter* node_meta_getter {nullptr};
 
 protected:
     NodeMetaTest()
     {
-        node_meta = new meta::NodeMeta{};
-        node_meta_getter = new meta::NodeMetaGetter{node_meta};
+        node_meta = new meta::NodeMeta {};
+        node_meta_getter = new meta::NodeMetaGetter {node_meta};
     }
     ~NodeMetaTest() override
     {

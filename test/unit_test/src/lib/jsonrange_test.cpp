@@ -22,13 +22,13 @@
  *   SOFTWARE.
  */
 
-#include "src/lib/json/Json.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <iostream>
 #include <sstream>
+
+#include "src/lib/json/Json.h"
 
 TEST(JsonrangeTest, Object)
 {

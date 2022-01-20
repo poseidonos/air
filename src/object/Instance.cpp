@@ -45,8 +45,8 @@ air::InstanceManager::InstanceManager(void)
 
     node_manager = new node::NodeManager {global_meta_getter, node_meta_getter};
 
-    process_manager = new process::ProcessManager {global_meta_getter,
-        node_meta_getter, node_manager};
+    process_manager = new process::ProcessManager {
+        global_meta_getter, node_meta_getter, node_manager};
     process_cor_handler = new process::ProcessCoRHandler {process_manager};
     preprocessor = new process::Preprocessor {node_meta_getter, node_manager};
     preprocess_cor_handler = new process::PreprocessCoRHandler {preprocessor};
@@ -63,7 +63,8 @@ air::InstanceManager::InstanceManager(void)
     collection_manager = new collection::CollectionManager {
         global_meta_getter, node_meta_getter, node_manager, collection_subject};
     collection_observer = new collection::Observer {collection_manager};
-    collection_cor_handler = new collection::CollectionCoRHandler {collection_observer};
+    collection_cor_handler =
+        new collection::CollectionCoRHandler {collection_observer};
     switch_gear = new collection::SwitchGear {node_meta_getter, node_manager};
     switch_gear_cor_handler = new collection::SwitchGearCoRHandler {switch_gear};
 
@@ -338,32 +339,31 @@ air::InstanceManager::Initialize(uint32_t cpu_num)
     // Step 2. Subject Referencing Observer
     in_subject->Attach(policy_observer, to_dtype(pi::InSubject::TO_POLICY));
     in_subject->Attach(out_observer, to_dtype(pi::InSubject::TO_OUTPUT));
-    policy_subject->Attach(collection_observer,
-        to_dtype(pi::PolicySubject::TO_COLLECTION));
+    policy_subject->Attach(
+        collection_observer, to_dtype(pi::PolicySubject::TO_COLLECTION));
     policy_subject->Attach(out_observer, to_dtype(pi::PolicySubject::TO_OUTPUT));
-    collection_subject->Attach(out_observer,
-        to_dtype(pi::CollectionSubject::TO_OUTPUT));
+    collection_subject->Attach(
+        out_observer, to_dtype(pi::CollectionSubject::TO_OUTPUT));
 
     // Step 3. ChainManager Referencing CoRHandler
     chain_manager->AttachChain(in_cor_handler, to_dtype(pi::ChainHandler::INPUT));
-    chain_manager->AttachChain(policy_cor_handler,
-        to_dtype(pi::ChainHandler::POLICY));
-    chain_manager->AttachChain(collection_cor_handler,
-        to_dtype(pi::ChainHandler::COLLECTION));
-    chain_manager->AttachChain(out_cor_handler,
-        to_dtype(pi::ChainHandler::OUTPUT));
-    chain_manager->AttachChain(process_cor_handler,
-        to_dtype(pi::ChainHandler::PROCESS));
-    chain_manager->AttachChain(stream_cor_handler,
-        to_dtype(pi::ChainHandler::STREAM));
-    chain_manager->AttachChain(switch_gear_cor_handler,
-        to_dtype(pi::ChainHandler::SWITCHGEAR));
-    chain_manager->AttachChain(preprocess_cor_handler,
-        to_dtype(pi::ChainHandler::PREPROCESS));
-    chain_manager->AttachChain(detect_cor_handler,
-        to_dtype(pi::ChainHandler::DETECT));
-    chain_manager->AttachChain(transfer_cor_handler,
-        to_dtype(pi::ChainHandler::TRANSFER));
+    chain_manager->AttachChain(
+        policy_cor_handler, to_dtype(pi::ChainHandler::POLICY));
+    chain_manager->AttachChain(
+        collection_cor_handler, to_dtype(pi::ChainHandler::COLLECTION));
+    chain_manager->AttachChain(out_cor_handler, to_dtype(pi::ChainHandler::OUTPUT));
+    chain_manager->AttachChain(
+        process_cor_handler, to_dtype(pi::ChainHandler::PROCESS));
+    chain_manager->AttachChain(
+        stream_cor_handler, to_dtype(pi::ChainHandler::STREAM));
+    chain_manager->AttachChain(
+        switch_gear_cor_handler, to_dtype(pi::ChainHandler::SWITCHGEAR));
+    chain_manager->AttachChain(
+        preprocess_cor_handler, to_dtype(pi::ChainHandler::PREPROCESS));
+    chain_manager->AttachChain(
+        detect_cor_handler, to_dtype(pi::ChainHandler::DETECT));
+    chain_manager->AttachChain(
+        transfer_cor_handler, to_dtype(pi::ChainHandler::TRANSFER));
 
     // Step 4. NodeManager Initializing (using Config)
     node_manager->Init();

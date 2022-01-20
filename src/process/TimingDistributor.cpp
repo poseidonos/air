@@ -28,8 +28,7 @@
 
 void
 process::TimingDistributor::SetTiming(
-    meta::NodeMetaGetter* node_meta_getter,
-    node::NodeManager* node_manager)
+    meta::NodeMetaGetter* node_meta_getter, node::NodeManager* node_manager)
 {
     std::map<uint64_t, int32_t> timing_map;
     timing_map.clear();
@@ -41,20 +40,22 @@ process::TimingDistributor::SetTiming(
             uint32_t index_size = node_meta_getter->IndexSize(nid);
             uint32_t filter_size = node_meta_getter->FilterSize(nid);
 
-            if (node_meta_getter->ProcessorType(nid) ==
-                air::ProcessorType::LATENCY)
+            if (node_meta_getter->ProcessorType(nid) == air::ProcessorType::LATENCY)
             {
                 for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
                 {
-                    for (uint32_t filter_index = 0; filter_index < filter_size - 1; filter_index++)
+                    for (uint32_t filter_index = 0; filter_index < filter_size - 1;
+                         filter_index++)
                     {
                         lib::LatencyData* to = static_cast<lib::LatencyData*>(
-                            kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index + 1));
+                            kv.second->node[nid]->GetUserDataByHashIndex(
+                                hash_index, filter_index + 1));
                         lib::LatencyData* from = static_cast<lib::LatencyData*>(
-                            kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index));
+                            kv.second->node[nid]->GetUserDataByHashIndex(
+                                hash_index, filter_index));
 
-                        uint64_t key{0};
-                        int32_t value{0};
+                        uint64_t key {0};
+                        int32_t value {0};
                         key = ((uint64_t)nid << 48) + ((uint64_t)hash_index << 32) +
                             ((uint64_t)filter_index);
                         value = dist(rand_engine);
@@ -74,8 +75,8 @@ process::TimingDistributor::SetTiming(
 }
 
 void
-process::TimingDistributor::_ResetTiming(lib::LatencyData* curr_data,
-    lib::LatencyData* next_data, int32_t time_value)
+process::TimingDistributor::_ResetTiming(
+    lib::LatencyData* curr_data, lib::LatencyData* next_data, int32_t time_value)
 {
     curr_data->start_deadline = time_value;
     curr_data->start_v.clear();

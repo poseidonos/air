@@ -41,9 +41,11 @@ collection::SwitchGear::Run(void)
                 }
                 for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
                 {
-                    for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
+                    for (uint32_t filter_index = 0; filter_index < filter_size;
+                         filter_index++)
                     {
-                        _CheckDeadline(kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index));
+                        _CheckDeadline(kv.second->node[nid]->GetUserDataByHashIndex(
+                            hash_index, filter_index));
                     }
                 }
             }

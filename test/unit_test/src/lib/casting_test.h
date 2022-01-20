@@ -22,9 +22,9 @@
  *   SOFTWARE.
  */
 
-#include "src/lib/Casting.h"
-
 #include <gmock/gmock.h>
+
+#include "src/lib/Casting.h"
 
 class CastingTest : public ::testing::Test
 {

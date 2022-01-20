@@ -59,24 +59,25 @@ public:
     }
 
 private:
-    int _CheckEnableNodeRule(uint32_t type1, uint32_t type2, uint32_t value1,
-        uint32_t value2);
-    int _CheckInitNodeRule(uint32_t type1, uint32_t type2, uint32_t value1,
-        uint32_t value2);
-    int _CheckSetSamplingRatioRule(uint32_t type1, uint32_t type2,
-        uint32_t value1, uint32_t value2);
-    int _CheckStreamInterval(uint32_t type1, uint32_t type2, uint32_t value1,
-        uint32_t value2);
-    bool _SetEnableNodeRule(uint32_t type1, uint32_t type2, uint32_t value1,
-        uint32_t value2);
+    int _CheckEnableNodeRule(
+        uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
+    int _CheckInitNodeRule(
+        uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
+    int _CheckSetSamplingRatioRule(
+        uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
+    int _CheckStreamInterval(
+        uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
+    bool _SetEnableNodeRule(
+        uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
     // bool SetInitNodeRule(uint32_t type1, uint32_t type2,
     //                     uint32_t value1, uint32_t value2);
-    bool _SetSamplingRatioRule(uint32_t type1, uint32_t type2, uint32_t value1,
-        uint32_t value2);
+    bool _SetSamplingRatioRule(
+        uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
 
-    meta::NodeMeta* node_meta{nullptr};
-    meta::GlobalMeta* global_meta{nullptr};
-    const uint32_t MAX_NID_SIZE{cfg::GetSentenceCount(config::ParagraphType::NODE)};
+    meta::NodeMeta* node_meta {nullptr};
+    meta::GlobalMeta* global_meta {nullptr};
+    const uint32_t MAX_NID_SIZE {
+        cfg::GetSentenceCount(config::ParagraphType::NODE)};
 };
 
 } // namespace policy

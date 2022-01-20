@@ -22,13 +22,12 @@
  *   SOFTWARE.
  */
 
-#include "src/meta/GlobalMeta.h"
-
 #include <gmock/gmock.h>
+
+#include "src/meta/GlobalMeta.h"
 
 namespace meta
 {
-
 class MockGlobalMetaGetter : public GlobalMetaGetter
 {
 public:

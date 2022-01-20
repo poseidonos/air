@@ -22,12 +22,12 @@
  *   SOFTWARE.
  */
 
-#include "src/lib/StringView.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <iostream>
+
+#include "src/lib/StringView.h"
 
 TEST(StringView, Size)
 {
@@ -90,7 +90,9 @@ TEST(StringView, ToString)
 
 TEST(StringView, ParsingCase1)
 {
-    air::string_view sentence = "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32";
+    air::string_view sentence =
+        "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:On, "
+        "NodeSamplingRatio: 1000, NodeIndexSize:32";
     size_t start_pos = sentence.find("AirBuild");
     EXPECT_FALSE(air::string_view::npos == start_pos);
 
@@ -99,6 +101,7 @@ TEST(StringView, ParsingCase1)
     EXPECT_TRUE(key_value == "AirBuild  : True");
 
     size_t colon_pos = key_value.find(":");
-    air::string_view value = key_value.substr(colon_pos + 1, key_value.size() - colon_pos);
+    air::string_view value =
+        key_value.substr(colon_pos + 1, key_value.size() - colon_pos);
     EXPECT_TRUE(value == " True");
 }

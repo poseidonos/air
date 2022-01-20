@@ -4,13 +4,14 @@
 
 ### 1.1. Objectives
 
-**The Analytics In Real-time (AIR)** provides a set of APIs for profiling performance, latency, resource, and so on. It achieves run-time manipulation by designing all of the modules into event-driven and operating in a single dynamic chain, which optimizes collected data processing and minimizes profiling overhead. The AIR currently supports:
+**The Analytics In Real-time (AIR)** provides a set of APIs for profiling performance, latency, histogram, and so on. It achieves run-time manipulation by designing all of the modules into event-driven and operating in a single dynamic chain, which optimizes collected data processing and minimizes profiling overhead. The AIR currently supports:
 
 - Performance Profiling
 - Latency Profiling
 - Queue Profiling
 - Count Profiling
 - Utilization Profiling
+- Histogram Profiling
 
 ### 1.2. Terminology & Acronyms
 
@@ -34,18 +35,13 @@ Before build the AIR, configuration setting should be the first.
 
 - **Set Configuration**
 
-```
-# From AIR root directory
-$ cd config
-$ vim air.cfg
-```
-
 |         | Mandatory                                                    | Optaional                                            |
 | :------ | :----------------------------------------------------------- | :--------------------------------------------------- |
 | DEFAULT | StreamingInterval, AirBuild, NodeBuild, NodeRun, NodeSamplingRatio, NodeIndexSize | -                                                    |
 | GROUP   | Group                                                        | NodeBuild, NodeRun, NodeSamplingRatio, NodeIndexSize |
 | FILTER  | Filter, Item                                                 | -                                                    |
-| NODE    | Node, Filter, Type, Group                                    | Build, Run, SamplingRatio, IndexSize                 |
+| BUCKET  | Bucket, Bounds, Scale                                        | -                                                    |
+| NODE    | Node, Filter, Type, Group, Bucket(Histogram)                 | Build, Run, SamplingRatio, IndexSize                 |
 
 ```
 R"AIR(
@@ -69,7 +65,7 @@ User could change or add/remove sentences.
   : False value means all AIR API do nothing and all the other options below is useless.
   So that target application might be built without AIR library at compile-time(depending on optimization).
   User can not control this option at run-time.
-  
+
   * StreamingInterval     {Mandatory key, Valid value: 1~99 (seconds)}
   : AIR internally collects raw sampled data and calculates it to make statistics result.
   StreamingInterval key means periodic base time for calculating & saving the result.
@@ -81,7 +77,7 @@ User could change or add/remove sentences.
   : False value means airlog(...) API do nothing but other AIR business logic works.
   If a sentence has not this option in GROUP and NODE paragraph, that follows DEFAULT paragraph's rule.
   User can not control this option at run-time.
-  
+
   * NodeRun               {Mandatory, Valid value: On/Off}
   : Off value means airlog(...) API stop logging. On value means airlog(...) API keep logging.
   If a sentence has not this option in GROUP and NODE paragraph, that follows DEFAULT paragraph's rule.
@@ -91,7 +87,7 @@ User could change or add/remove sentences.
   : Queue type of NODE sentences may effect this sampling rule. For example, when this value is set to 1000,
   airlog(...) API actually collect raw data once a thousand.
   User can control this option by air_cli, air_tui at run-time.
-  
+
   * NodeIndexSize         {Mandatory, Valid value: 1~999}
   : NodeIndex could be used to profiling numerical separation for the same NODE sentence.
   For example, when NodeIndexSize value is set to 10, user can distinguish 10 maximum different(hashed)
@@ -101,7 +97,7 @@ User could change or add/remove sentences.
 
 [DEFAULT]
     "AirBuild: True, StreamingInterval: 3,
-    NodeBuild: False, NodeRun: Off, NodeSamplingRatio: 1000, NodeIndexSize : 10"
+     NodeBuild: True, NodeRun: On, NodeSamplingRatio: 1000, NodeIndexSize: 10"
 [/DEFAULT]
 
 
@@ -111,7 +107,7 @@ User could change or add/remove sentences.
   If a GROUP sentence has a different value of NodeRun, group rule has more higher priority than default rule.
   So that, it follows GROUP sentence's NodeRun value. If not defined NodeRun, it follows default behavior.
   This paragraph could have several sentences which have key:value pairs below.
-  
+
   * Group               {Mandatory, Valid value: unique string in GROUP paragraph}
   : Name of group, this value has to be unique in GROUP paragraph without space.
   User can not control this option at run-time.
@@ -129,19 +125,19 @@ User could change or add/remove sentences.
   : Same as default rule
 
 [GROUP]
-    "Group: Mgmt, NodeBuild: True, NodeRun: On"
-    "Group: MFS"
-    "Group: POS_Q"
-    "Group: GC"
+    "Group:SUBMIT,    NodeIndexSize: 5"
+    "Group:COMPLETE"
+    "Group:COMMON"
+    "Group:UNGROUPED, NodeBuild: True"
 [/GROUP]
 
 
 - FILTER paragraph defines semantic separation for the NODE sentence.
   This paragraph could have several sentences which have key:value pairs below.
-  
+
   * Filter              {Mandatory, Valid value: unique enum name in target application}
   : Name of filter, this value is used as enum name in target application cause of C-style API extension.
-  
+
   * Item                {Mandatory, Valid value: unique enumerator in target application}
   : This value is used as enumerator in target application. It's organized within round bracket.
   In round bracket, number of enumerators could be exist. Here is an example.
@@ -152,74 +148,148 @@ User could change or add/remove sentences.
 [FILTER]
     "Filter: AIR_Basic,     Item: (AIR_BASE)"
     "Filter: AIR_IOtype,    Item: (AIR_READ, AIR_WRITE)"
-    "Filter: AIR_Range,     Item: (AIR_0 ... AIR_5)"
+    "Filter: AIR_Thread,    Item: (AIR_SUBMIT, AIR_PROCESS, AIR_COMPLETE)"
+    "Filter: AIR_Range,     Item: (AIR_0 ... AIR_3)"
 [/FILTER]
+
+
+- BUCKET paragraph defines histogram's bucket range, size and scale.
+  Only histogram type NODE sentence can have and must have a Bucket option.
+  Depending on Scale notation, each BUCKET sentence is distinguished a linear type or a exponential type.
+  This paragraph could have several sentences which have key:value pairs below.
+
+  * Bucket            {Mandatory, Valid value: unique string in BUCKET paragraph}
+  : Name of bucket, this value has to be unique in BUCKET paragraph without space.
+  User can not control this option at run-time.
+
+  * Scale             {Mandatory, Valid value: unsigned integer or 2^~10^}
+  : This value means range of each bucket.
+  If this value includes circumflex symbol(^), it's exponential type. Or not, it's linear type.
+  For example, "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10" is a linear type and bucket scope is 10.
+  Bucket's ranges are 0 <= bucket[0] < 9, 10 <= bucket[1] < 20, ..., 90 <= bucket[9] < 100
+  "Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 2^" is a exponential type and bucket scope is 2^.
+  Bucket's ranges are 1 <= bucket[0] < 2, 2 <= bucket[1] < 4, ..., 512 <= bucket[9] < 1024
+  "Bucket: BUCKET_6, Bounds: (-10^3, 10^5), Scale: 10^" is a exponential type and bucket scope is 10^.
+  Bucket's ranges are -1000 < bucket[0] <= -100, -100 < bucket[1] <= -10, -10 < bucket[2] <= -1,
+  0 <= bucket[3] <= 0, 1 <= bucket[4] < 10, ..., 10000 <= bucket[8] < 100000
+
+  * Bounds            {Mandatory, Valid value: nations for intervals}
+  : This value basically follows mathematics interval. (a, b] = {x -> integer(^exponent), a < x <= b}
+  'a' is a lower boundary and 'b' is a upper boundary.
+  In a linear type BUCKET sentence, notaion has to be '[ , )' so that it's easy to get bucket size.
+  Bucket size is ((b - a) / scale). If bucket size exceed 20, syntax error will occur at compile-time.
+  In a exponential type BUCKET sentence, if a > 0, notation has to be '[ , )',
+  else if b < 0, notation has to be '( , ]', else notation has to be '( , )'.
+  'a' and 'b' have to be defined scale_value^x.
+
+[BUCKET]
+    "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10"
+    "Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)"
+    "Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3"
+    "Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 2^"
+    "Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 2^"
+    "Bucket: BUCKET_6, Bounds: (-10^3, 10^5), Scale: 10^"
+[/BUCKET]
 
 
 - NODE paragraph defines NODE sentences that tracing point of code with specific data type.
   This paragraph could have several sentences which have key:value pairs below.
-  
+
   * Node                {Mandatory, Valid value: unique enumerator in target application}
   : Name of node, this value is used as first parameter of airlog(...) API.
   For example, C++ style --> airlog("NodeA", ...), C style --> AIRLOG(NodeA, ...) 
-  
+
   * Filter              {Mandatory, Valid value: Filter name}
   : Second parameter value of airlog(...) API has to be one of the Item from this Filter.
-  
-  * Type                {Mandatory, Valid value: Count/Latency/Performance/Queue/Utilization}
+
+  * Type                {Mandatory, Valid value: Count/Histogram/Latency/Performance/Queue/Utilization}
   : Forth parameter value of airlog(...) API is calculated differently according to the type value.
-  Count       --> +/- value
+  Count       --> +/- count
+  Histogram   --> value within bucket bounds
   Latency     --> unique key for matching between start point and end point
-  Performance --> io size
+  Performance --> io size & io type
   Queue       --> queue depth
   Utilization --> usage(tick, size, ...)
-  
+
   * Group               {Mandatory, Valid value: Group name}
   : If a NODE sentence doesn't have optional key/value pairs below, those rules follow this group behavior.
   If a NODE sentence has a different value of Run, node rule has more higher priority than group rule.
-  
+
   * Build               {Optional, Valid value: True/False}
   : Same as DEFAULT rule
-  
+
   * Run                 {Optional, Valid value: On/Off}
   : Same as DEFAULT rule
-  
+
   * SamplingRatio       {Optional, Valid value: 1~99999 (probability = 1/N)}
   : Same as DEFAULT rule
 
   * IndexSize           {Optional, Valid value: 1~999}
   : Same as DEFAULT rule
 
+  * Bucket              {Mandatory(Histogram type only), Valid value: Bucket name}
+  : Only histogram type NODE sentence can have Bucket option,
+  otherwise syntax error will occur at compile-time.
+
 [NODE]
-    "Node: PERF_VOLUME,         Filter: AIR_IOtype, Type: PERFORMANCE,  Group: Mgmt"
-    "Node: LAT_BDEV_READ,       Filter: AIR_Range,  Type: LATENCY,      Group: Mgmt"
-    "Node: LAT_BDEV_WRITE,      Filter: AIR_Range,  Type: LATENCY,      Group: Mgmt"
-    "Node: PERF_METAFS_IO,      Filter: AIR_IOtype, Type: PERFORMANCE,  Group: MFS"
-    "Node: Q_AIO,               Filter: AIR_Basic,  Type: QUEUE,        Group: POS_Q"
-    "Node: Q_NVRAM,             Filter: AIR_Basic,  Type: QUEUE,        Group: POS_Q"
-    "Node: Q_SSD,               Filter: AIR_Basic,  Type: QUEUE,        Group: POS_Q"
-    "Node: Q_EVENT,             Filter: AIR_Basic,  Type: QUEUE,        Group: POS_Q"
-    "Node: Q_IO,                Filter: AIR_Basic,  Type: QUEUE,        Group: POS_Q"
-    "Node: PERF_COPY,           Filter: AIR_IOtype, Type: PERFORMANCE,  Group: GC"
+    "Node: PERF_BENCHMARK,  Filter: AIR_IOtype,  Type: Performance,  Group: COMMON"
+    "Node: LAT_SUBMIT,      Filter: AIR_Range,   Type: Latency,      Group: SUBMIT"
+    "Node: LAT_PROCESS,     Filter: AIR_Range,   Type: Latency,      Group: COMMON"
+    "Node: LAT_COMPLETE,    Filter: AIR_Range,   Type: Latency,      Group: COMPLETE"
+    "Node: LAT_IO_PATH,     Filter: AIR_Range,   Type: Latency,      Group: COMMON,     IndexSize: 3"
+    "Node: Q_SUBMISSION,    Filter: AIR_Basic,   Type: Queue,        Group: SUBMIT"
+    "Node: Q_COMPLETION,    Filter: AIR_Basic,   Type: Queue,        Group: COMPLETE,   Build: False"
+    "Node: UTIL_SUBMIT_THR, Filter: AIR_Thread,  Type: Utilization,  Group: SUBMIT"
+    "Node: CNT_TEST_EVENT,  Filter: AIR_Thread,  Type: Count,        Group: SUBMIT,     IndexSize: 10"
+    "Node: HIST_SAMPLE_1,   Filter: AIR_Range,   Type: Histogram,    Group: COMMON,     IndexSize: 10,   Bucket: BUCKET_1"
+    "Node: HIST_SAMPLE_2,   Filter: AIR_Range,   Type: Histogram,    Group: COMMON,     IndexSize: 10,   Bucket: BUCKET_2"
+    "Node: HIST_SAMPLE_3,   Filter: AIR_Range,   Type: Histogram,    Group: COMMON,     IndexSize: 10,   Bucket: BUCKET_3"
+    "Node: HIST_SAMPLE_4,   Filter: AIR_Range,   Type: Histogram,    Group: COMMON,     IndexSize: 10,   Bucket: BUCKET_4"
+    "Node: HIST_SAMPLE_5,   Filter: AIR_Range,   Type: Histogram,    Group: COMMON,     IndexSize: 10,   Bucket: BUCKET_5"
+    "Node: HIST_SAMPLE_6,   Filter: AIR_Range,   Type: Histogram,    Group: COMMON,     IndexSize: 10,   Bucket: BUCKET_6"
 [/NODE]
 
 )AIR"
-
 ```
 
 #### 2.1.2. Build
 
 ```
-# From AIR root directory
-$ make (optional target) (optional cfg=config_file_name)
-# default target is "release" and default config file is "config/air.cfg"
+git clone https://github.com/poseidonos/air.git
+cd air
+mkdir build
+cd build
+cmake ..
+```
+
+If you want to build with your own config file, you should replace the last command with
+
+```
+cmake .. -DCONFIG=/your_file_directory/filename
+```
+
+After cmake, you can see a Makefile in the build directory. Type 'make' to build AIR.
+And then you can install AIR in your system if you are a system administrator.
+
+```
+make
+sudo make install
 ```
 
 #### 2.1.3. Library
 
 ```
-# From AIR root directory
-$ lib/libair.a
+# After make
+$ ./build/src/libair.a
+$ ./build/tool/cli/air_cli
+$ ./build/tool/tui/air_tui
+
+# After make install
+$ /usr/local/lib/libair.a
+$ /usr/local/include/air/Air.h
+$ /usr/local/include/air/Air_c.h
+$ /usr/local/bin/air_cli
+$ /usr/local/bin/air_tui
 ```
 
 ### 2.2. AIR with POS
@@ -230,8 +300,7 @@ The build sequence is as follows:
 2. build SPDK
 3. build PoseidonOS
 
-The build shell is in the file `"pos_root_dir/lib/build_pos_lib.sh"`. When you try to run like this `"./build_pos_lib.sh all"`, 1 & 2 build sequence will be done. After it succeed, you can build PoseidonOS as usual. The usecase AIR with PoseidonOS is handled in AIR Tutorial.
-
+The build shell is in the file `"pos_root_dir/lib/build_lib.sh"`. After it succeed, you can build PoseidonOS as usual. The usecase AIR with PoseidonOS is handled in AIR Tutorial.
 
 
 ## 3. API
@@ -251,7 +320,7 @@ There are two types of APIs, the one is functions for preparing the profiling an
 
 ```
 ...
-#include "Air.h"
+#include <air/Air.h>
 ...
 int main(void)
 {
@@ -272,16 +341,16 @@ int main(void)
 
 Each log point has target and logger type. To use AIR, you have to specify target and logger type in code directly. After then, you can insert user APIs in your codes to profile your application.
 
-#### 3.2.1. Target & Logger Type
+#### 3.2.1. Logger Type
 
-**[Performance Target]**
-Performance target measures IOPS and bandwidth.
+**[Performance Logger]**
+Performance logger measures IOPS and bandwidth.
 
 - IOPS / Bandwidth
 - Average IOPS / Average Bandwidth
 
-**[Latency Target]**
-Latency target measures for getting latency of specific sections between function calls.
+**[Latency Logger]**
+Latency logger measures for getting latency of specific sections between function calls.
 
 - Mean latency
 - Min latency
@@ -290,21 +359,29 @@ Latency target measures for getting latency of specific sections between functio
 - Tail latencies
 - Standard deviation
 
-**[Queue Target]**
-Queue target measures queue depth.
+**[Queue Logger]**
+Queue logger measures queue depth.
 
 - Queue depth average
 - Queue depth max
 
-**[Utilization Target]**
-Utilization target measures appending + number such as tick, size and so on.
+**[Utilization Logger]**
+Utilization logger measures appending + number such as tick, size and so on.
 
 - Usage
 
-**[Count Target]**
-Count target measures +/- count number.
+**[Count Logger]**
+Count logger measures +/- count number.
 
 - Count
+
+**[Histogram Logger]**
+Histogram logger measures bounds number.
+
+- Count of each bucket
+- Count of underflow
+- Count of overflow
+- Average value of total count
 
 #### 3.2.2. API
 
@@ -468,12 +545,12 @@ airlog("UTIL_reactor", "IDLE", function_id, tick);
 
 #### 3.2.2.5. Count Log
 
-Add count log point in your application code area where you measure count.
+Add count in your application's logging code where you measure count.
 
 **[Definition]**
 
 ```
-airlog(string_literal node_name, string_literal filter_item, uint64_t index, uint64_t count)
+airlog(string_literal node_name, string_literal filter_item, uint64_t index, int64_t count)
 ```
 
 **[Parameter]**
@@ -483,7 +560,7 @@ airlog(string_literal node_name, string_literal filter_item, uint64_t index, uin
 | node_name   | String literal type value called node_name. It indicates the log point. This value is converted integer value at compile-time. |
 | filter_item | String literal type value called node_name. It indicates the semantic separation. This value is converted integer value at compile-time. |
 | index       | Unsigned integer. user defined numerical separation.         |
-| count       | Signed integer. Count to be sampled.                         |
+| count       | Signed integer.                                              |
 
 **[API Use Case]**
 
@@ -501,9 +578,55 @@ airlog("COUNT_FlowControl", "FreeBlock", 0, -1);
       "IOWorker"(7347), index:0, filter:"FreeBlock" Period(count:3  ), Total(count:6.2  )
 ```
 
+#### 3.2.2.6. Histogram Log
+
+Add bucket count in your application's logging code where you measure number.
+
+**[Definition]**
+
+```
+airlog(string_literal node_name, string_literal filter_item, uint64_t index, int64_t number)
+```
+
+**[Parameter]**
+
+| Parameter   | Description                                                  |
+| :---------- | :----------------------------------------------------------- |
+| node_name   | String literal type value called node_name. It indicates the log point. This value is converted integer value at compile-time. |
+| filter_item | String literal type value called node_name. It indicates the semantic separation. This value is converted integer value at compile-time. |
+| index       | Unsigned integer. user defined numerical separation.         |
+| number      | Signed integer. This value to be counted at specific bucket. |
+
+**[API Use Case]**
+
+```
+airlog("HIST_SAMPLE_3", "AIR_0", 0, -100);
+...
+airlog("HIST_SAMPLE_6", "AIR_BASE", 1, 99999);
+```
+
+**[TUI result]**
+
+```
+( )[O]++Node:HIST_SAMPLE_3("histogram")
+      "HistogramLog"(19471), index:0x0, filter:"AIR_0", bucket_type:"linear"
+        Unit    value:(minimum/average/maximum) count:(underflow -100    -80     -60     -40     -20     0       20      40      60      80      overflow)
+        Period         -101    -50     -20             18.9K      |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |0      |0      |0      |0      |      0
+        Cumulation     -101    -50     -20             94.3K      |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |0      |0      |0      |0      |      0
+      "HistogramLog"(19471), index:0x1, filter:"AIR_0", bucket_type:"linear"
+        Unit    value:(minimum/average/maximum) count:(underflow -100    -80     -60     -40     -20     0       20      40      60      80      overflow)
+        Period         0       40      80              0          |0      |0      |0      |0      |0      |18.9K  |18.9K  |18.9K  |18.9K  |      18.9K
+        Cumulation     0       40      80              0          |0      |0      |0      |0      |0      |94.3K  |94.3K  |94.3K  |94.3K  |      94.3K
+( )[O]++Node:HIST_SAMPLE_6("histogram")
+      "HistogramLog"(19471), index:0x0, filter:"AIR_0", bucket_type:"exponential"
+        Unit    value:(minimum/average/maximum) count:(underflow -1.0K   -100    -10     -1  0   1       10      100     1.0K    10.0K   100.0K  overflow)
+        Period         -1.0K   6.7K    100.0K          18.9K      |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |      18.9K
+        Cumulation     -1.0K   6.7K    100.0K          94.3K      |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |      94.3K
+```
+
 ### 3.3. C Support
 
-From AIR 0.2.0-alpha, AIR can profile SPDK source code. Since SPDK is based on C, the C wrapping APIs operating only in C based code are used. The usage is same as described above. The differences are the API function name(C++ style: small letter, C style: capital letter), 1st & 2nd parameters(C++ style: string literal, C style: enum). And these APIs are declared in header file `"Air_c.h"`.
+From AIR 0.2.0-alpha, AIR can profile SPDK source code. Since SPDK is based on C, the C wrapping APIs operating only in C based code are used. The usage is same as described above. The differences are the API function name(C++ style: small letter, C style: capital letter), 1st & 2nd parameters(C++ style: string literal, C style: enum). And these APIs are declared in header file `Air_c.h`.
 
 | C Wrapping APIs                                              |
 | :----------------------------------------------------------- |

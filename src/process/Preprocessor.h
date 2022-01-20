@@ -25,14 +25,14 @@
 #ifndef AIR_PREPROCESSOR_H
 #define AIR_PREPROCESSOR_H
 
+#include <map>
+#include <vector>
+
 #include "src/collection/writer/LatencyWriter.h"
 #include "src/config/ConfigInterface.h"
 #include "src/data_structure/NodeManager.h"
 #include "src/lib/Data.h"
 #include "src/meta/NodeMeta.h"
-
-#include <map>
-#include <vector>
 
 namespace process
 {
@@ -70,7 +70,8 @@ private:
     node::NodeManager* node_manager {nullptr};
     collection::LatencyWriter latency_writer {};
     static const uint64_t MAX_TIME {900000000}; // 900 ms
-    const uint32_t MAX_NID_SIZE {cfg::GetSentenceCount(config::ParagraphType::NODE)};
+    const uint32_t MAX_NID_SIZE {
+        cfg::GetSentenceCount(config::ParagraphType::NODE)};
 };
 
 } // namespace process

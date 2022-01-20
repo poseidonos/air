@@ -22,19 +22,19 @@
  *   SOFTWARE.
  */
 
-#include "src/lib/Hash.cpp"
-
 #include <gmock/gmock.h>
+
+#include "src/lib/Hash.cpp"
 
 class HashTest : public ::testing::Test
 {
 public:
-    air::HashMap<uint64_t>* hash_map{nullptr};
+    air::HashMap<uint64_t>* hash_map {nullptr};
 
 protected:
     HashTest()
     {
-        hash_map = new air::HashMap<uint64_t>{5};
+        hash_map = new air::HashMap<uint64_t> {5};
     }
     ~HashTest() override
     {

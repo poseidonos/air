@@ -17,18 +17,13 @@
 class FakeCollectionManager : public collection::CollectionManager
 {
 public:
-    FakeCollectionManager(
-        meta::GlobalMetaGetter* new_global_meta_getter,
+    FakeCollectionManager(meta::GlobalMetaGetter* new_global_meta_getter,
         meta::NodeMetaGetter* new_node_meta_getter,
-        node::NodeManager* new_node_manager,
-        collection::Subject* new_subject)
+        node::NodeManager* new_node_manager, collection::Subject* new_subject)
     :
 
-      collection::CollectionManager(
-          new_global_meta_getter,
-          new_node_meta_getter,
-          new_node_manager,
-          new_subject)
+      collection::CollectionManager(new_global_meta_getter, new_node_meta_getter,
+          new_node_manager, new_subject)
     {
     }
 
@@ -56,8 +51,8 @@ public:
         value = new_value;
         return;
     }
-    uint32_t nid{0};
-    uint64_t filter_index{0};
-    uint64_t node_index{0};
-    uint64_t value{0};
+    uint32_t nid {0};
+    uint64_t filter_index {0};
+    uint64_t node_index {0};
+    uint64_t value {0};
 };

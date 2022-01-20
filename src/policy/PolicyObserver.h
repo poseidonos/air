@@ -34,8 +34,7 @@ namespace policy
 class Observer : public lib_design::Observer
 {
 public:
-    explicit Observer(RuleManager* new_rule_manager)
-    : rule_manager(new_rule_manager)
+    explicit Observer(RuleManager* new_rule_manager): rule_manager(new_rule_manager)
     {
     }
     virtual ~Observer(void)
@@ -46,7 +45,7 @@ public:
     virtual void Handle(void);
 
 private:
-    RuleManager* rule_manager{nullptr};
+    RuleManager* rule_manager {nullptr};
 };
 
 } // namespace policy

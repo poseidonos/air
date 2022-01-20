@@ -22,16 +22,15 @@
  *   SOFTWARE.
  */
 
+#include "mock_global_meta_getter.h"
+#include "mock_node_manager.h"
+#include "mock_node_meta_getter.h"
 #include "src/data_structure/NodeData.h"
 #include "src/process/processor/CountProcessor.h"
 #include "src/process/processor/HistogramProcessor.h"
 #include "src/process/processor/PerformanceProcessor.h"
 #include "src/process/processor/QueueProcessor.h"
 #include "src/process/processor/UtilizationProcessor.h"
-
-#include "mock_global_meta_getter.h"
-#include "mock_node_manager.h"
-#include "mock_node_meta_getter.h"
 
 using ::testing::_;
 using ::testing::Invoke;

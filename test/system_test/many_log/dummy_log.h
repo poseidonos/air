@@ -8,6 +8,7 @@ public:
     void Run(void);
     void Stop(void);
     void TestLog(void);
+
 private:
     static bool run;
 };

@@ -27,11 +27,11 @@
 #include "src/config/ConfigInterface.h"
 
 int
-policy::Ruler::_CheckEnableNodeRule(uint32_t type1, uint32_t type2,
-    uint32_t value1, uint32_t value2)
+policy::Ruler::_CheckEnableNodeRule(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
     /*  type2: command, value1: bool, value2: node_id range  */
-    int result{-1};
+    int result {-1};
     uint32_t upper_bit, lower_bit;
 
     switch (type2)
@@ -76,11 +76,11 @@ policy::Ruler::_CheckEnableNodeRule(uint32_t type1, uint32_t type2,
 }
 
 int
-policy::Ruler::_CheckInitNodeRule(uint32_t type1, uint32_t type2,
-    uint32_t value1, uint32_t value2)
+policy::Ruler::_CheckInitNodeRule(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
     /*  type2: command, value1: node_id range group_id  */
-    int result{-1};
+    int result {-1};
     uint32_t upper_bit, lower_bit;
 
     switch (type2)
@@ -128,12 +128,11 @@ policy::Ruler::_CheckInitNodeRule(uint32_t type1, uint32_t type2,
 }
 
 int
-policy::Ruler::_CheckSetSamplingRatioRule(uint32_t type1, uint32_t type2,
-    uint32_t value1,
-    uint32_t value2)
+policy::Ruler::_CheckSetSamplingRatioRule(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
     /*  type2: command, value1: ratio, value2: node_id range  */
-    int result{-1};
+    int result {-1};
     uint32_t upper_bit, lower_bit;
 
     if (1 > value1 || 10000 < value1)
@@ -187,11 +186,11 @@ policy::Ruler::_CheckSetSamplingRatioRule(uint32_t type1, uint32_t type2,
 }
 
 int
-policy::Ruler::_CheckStreamInterval(uint32_t type1, uint32_t type2,
-    uint32_t value1, uint32_t value2)
+policy::Ruler::_CheckStreamInterval(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
     /*  value1: interval  */
-    int result{0};
+    int result {0};
     if (0 >= value1 || 30 < value1)
     {
         result = -12;
@@ -201,10 +200,10 @@ policy::Ruler::_CheckStreamInterval(uint32_t type1, uint32_t type2,
 }
 
 int
-policy::Ruler::CheckRule(uint32_t type1, uint32_t type2, uint32_t value1,
-    uint32_t value2)
+policy::Ruler::CheckRule(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
-    int result{0};
+    int result {0};
 
     switch (type2)
     {
@@ -244,10 +243,10 @@ policy::Ruler::CheckRule(uint32_t type1, uint32_t type2, uint32_t value1,
 }
 
 bool
-policy::Ruler::_SetEnableNodeRule(uint32_t type1, uint32_t type2,
-    uint32_t value1, uint32_t value2)
+policy::Ruler::_SetEnableNodeRule(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
-    bool result{false};
+    bool result {false};
     bool data;
     uint32_t i, upper_bit, lower_bit;
 
@@ -308,11 +307,11 @@ policy::Ruler::_SetEnableNodeRule(uint32_t type1, uint32_t type2,
 }
 
 bool
-policy::Ruler::_SetSamplingRatioRule(uint32_t type1, uint32_t type2,
-    uint32_t value1, uint32_t value2)
+policy::Ruler::_SetSamplingRatioRule(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
     /*  type2: command, value1: ratio, value2: node_id range*/
-    bool result{false};
+    bool result {false};
     uint32_t i, upper_bit, lower_bit;
 
     switch (type2)
@@ -365,10 +364,10 @@ policy::Ruler::_SetSamplingRatioRule(uint32_t type1, uint32_t type2,
 }
 
 bool
-policy::Ruler::SetRule(uint32_t type1, uint32_t type2, uint32_t value1,
-    uint32_t value2)
+policy::Ruler::SetRule(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
-    bool result{false};
+    bool result {false};
     bool data;
 
     switch (type2)

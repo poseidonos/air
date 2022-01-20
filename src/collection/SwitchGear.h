@@ -48,9 +48,9 @@ public:
 
 private:
     void _CheckDeadline(lib::Data* data);
-    meta::NodeMetaGetter* node_meta_getter{nullptr};
-    node::NodeManager* node_manager{nullptr};
-    const uint32_t MAX_NID_SIZE{
+    meta::NodeMetaGetter* node_meta_getter {nullptr};
+    node::NodeManager* node_manager {nullptr};
+    const uint32_t MAX_NID_SIZE {
         cfg::GetSentenceCount(config::ParagraphType::NODE)};
 };
 

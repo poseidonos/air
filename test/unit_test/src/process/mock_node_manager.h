@@ -22,13 +22,12 @@
  *   SOFTWARE.
  */
 
-#include "src/data_structure/NodeManager.h"
-
 #include <gmock/gmock.h>
+
+#include "src/data_structure/NodeManager.h"
 
 namespace node
 {
-
 class MockNodeManager : public NodeManager
 {
 public:
@@ -36,9 +35,12 @@ public:
     MOCK_METHOD(NodeDataArray*, GetNodeDataArray, (uint32_t tid), (override));
     MOCK_METHOD(void, SetNodeDataArrayName, (uint32_t tid), (override));
     MOCK_METHOD(void, CreateNodeDataArray, (uint32_t tid), (override));
-    MOCK_METHOD(void, DeleteNodeDataArray, (NodeDataArray* node_data_array), (override));
-    MOCK_METHOD(bool, CanDeleteNodeDataArray, (NodeDataArray* node_data_array), (override));
-    MOCK_METHOD(lib::AccLatencyData*, GetAccLatData, (uint32_t nid, uint32_t hash_index, uint32_t filter_index), (override));
+    MOCK_METHOD(
+        void, DeleteNodeDataArray, (NodeDataArray * node_data_array), (override));
+    MOCK_METHOD(bool, CanDeleteNodeDataArray, (NodeDataArray * node_data_array),
+        (override));
+    MOCK_METHOD(lib::AccLatencyData*, GetAccLatData,
+        (uint32_t nid, uint32_t hash_index, uint32_t filter_index), (override));
 };
 
 } // namespace node

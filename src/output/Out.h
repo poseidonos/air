@@ -57,8 +57,8 @@ private:
         0,
     };
 
-    key_t msg_q_key_id{0};
-    key_t msg_q_key_value{0};
+    key_t msg_q_key_id {0};
+    key_t msg_q_key_value {0};
 };
 } // namespace output
 

@@ -31,13 +31,21 @@
 
 TEST_F(ConfigInterfaceTest, GetSentenceName)
 {
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::DEFAULT, 0).compare(""));
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::GROUP, 3).compare("POS_META"));
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::FILTER, 1).compare("Range"));
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::BUCKET, 0).compare("BUCKET_1"));
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::BUCKET, 5).compare("BUCKET_6"));
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::NODE, 0).compare("PERF_PSD"));
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::NODE, 1).compare("PERF_VOLUME"));
+    EXPECT_EQ(
+        0, cfg::GetSentenceName(config::ParagraphType::DEFAULT, 0).compare(""));
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::GROUP, 3).compare("POS_META"));
+    EXPECT_EQ(
+        0, cfg::GetSentenceName(config::ParagraphType::FILTER, 1).compare("Range"));
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::BUCKET, 0).compare("BUCKET_1"));
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::BUCKET, 5).compare("BUCKET_6"));
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::NODE, 0).compare("PERF_PSD"));
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::NODE, 1)
+            .compare("PERF_VOLUME"));
 }
 
 TEST_F(ConfigInterfaceTest, GetSentenceCount)
@@ -58,65 +66,114 @@ TEST_F(ConfigInterfaceTest, GetSentenceIndex)
     EXPECT_EQ(0, cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_PSD"));
     EXPECT_EQ(4, cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_CP"));
     EXPECT_EQ(8, cfg::GetSentenceIndex(config::ParagraphType::NODE, "LAT_REBUILD"));
-    EXPECT_EQ(13, cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_SCHEDULING"));
+    EXPECT_EQ(
+        13, cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_SCHEDULING"));
     EXPECT_EQ(-1, cfg::GetSentenceIndex(config::ParagraphType::NODE, "UNKNOWN"));
 }
 
 TEST_F(ConfigInterfaceTest, GetIntValue)
 {
-    EXPECT_EQ(1, cfg::GetIntValue(config::ParagraphType::DEFAULT, "StreamingInterval"));
-    EXPECT_EQ(1000, cfg::GetIntValue(config::ParagraphType::DEFAULT, "NodeSamplingRatio"));
-    EXPECT_EQ(32, cfg::GetIntValue(config::ParagraphType::DEFAULT, "NodeIndexSize"));
+    EXPECT_EQ(
+        1, cfg::GetIntValue(config::ParagraphType::DEFAULT, "StreamingInterval"));
+    EXPECT_EQ(1000,
+        cfg::GetIntValue(config::ParagraphType::DEFAULT, "NodeSamplingRatio"));
+    EXPECT_EQ(
+        32, cfg::GetIntValue(config::ParagraphType::DEFAULT, "NodeIndexSize"));
     EXPECT_EQ(1, cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"));
     EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::DEFAULT, "NodeBuild"));
     EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::DEFAULT, "NodeRun"));
 
-    EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::GROUP, "NodeBuild", "POS_META"));
-    EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::GROUP, "NodeBuild", "POS"));
+    EXPECT_EQ(
+        0, cfg::GetIntValue(config::ParagraphType::GROUP, "NodeBuild", "POS_META"));
+    EXPECT_EQ(
+        0, cfg::GetIntValue(config::ParagraphType::GROUP, "NodeBuild", "POS"));
     EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::GROUP, "NodeRun", "POS"));
-    EXPECT_EQ(32, cfg::GetIntValue(config::ParagraphType::GROUP, "NodeIndexSize", "POS"));
-    EXPECT_EQ(100, cfg::GetIntValue(config::ParagraphType::GROUP, "NodeIndexSize", "POS_JOURNAL"));
+    EXPECT_EQ(
+        32, cfg::GetIntValue(config::ParagraphType::GROUP, "NodeIndexSize", "POS"));
+    EXPECT_EQ(100,
+        cfg::GetIntValue(
+            config::ParagraphType::GROUP, "NodeIndexSize", "POS_JOURNAL"));
 
-    EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_0"));
-    EXPECT_EQ(1, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_1"));
-    EXPECT_EQ(2, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_2"));
-    EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_0"));
-    EXPECT_EQ(3, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_3"));
-    EXPECT_EQ(7, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_7"));
-    EXPECT_EQ(10, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_10"));
+    EXPECT_EQ(0,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_0"));
+    EXPECT_EQ(1,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_1"));
+    EXPECT_EQ(2,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_2"));
+    EXPECT_EQ(0,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_0"));
+    EXPECT_EQ(3,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_3"));
+    EXPECT_EQ(7,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_7"));
+    EXPECT_EQ(10,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_10"));
 
-    EXPECT_EQ(10, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_1"));
-    EXPECT_EQ(3, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_2"));
-    EXPECT_EQ(20, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_3"));
-    EXPECT_EQ(2, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_4"));
-    EXPECT_EQ(2, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_5"));
-    EXPECT_EQ(10, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_6"));
+    EXPECT_EQ(
+        10, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_1"));
+    EXPECT_EQ(
+        3, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_2"));
+    EXPECT_EQ(
+        20, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_3"));
+    EXPECT_EQ(
+        2, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_4"));
+    EXPECT_EQ(
+        2, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_5"));
+    EXPECT_EQ(
+        10, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_6"));
 
-    EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::NODE, "Build", "PERF_PSD"));
+    EXPECT_EQ(
+        0, cfg::GetIntValue(config::ParagraphType::NODE, "Build", "PERF_PSD"));
     EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::NODE, "Run", "PERF_PSD"));
-    EXPECT_EQ(1, cfg::GetIntValue(config::ParagraphType::NODE, "Build", "PERF_VOLUME"));
-    EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::NODE, "Run", "PERF_VOLUME"));
-    EXPECT_EQ(1, cfg::GetIntValue(config::ParagraphType::NODE, "Build", "PERF_METAFS"));
-    EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::NODE, "Run", "PERF_METAFS"));
-    EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::NODE, "Build", "PERF_REBUILD"));
-    EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::NODE, "Run", "PERF_REBUILD"));
-    EXPECT_EQ(32, cfg::GetIntValue(config::ParagraphType::NODE, "IndexSize", "PERF_REBUILD"));
-    EXPECT_EQ(100, cfg::GetIntValue(config::ParagraphType::NODE, "IndexSize", "PERF_CP"));
+    EXPECT_EQ(
+        1, cfg::GetIntValue(config::ParagraphType::NODE, "Build", "PERF_VOLUME"));
+    EXPECT_EQ(
+        0, cfg::GetIntValue(config::ParagraphType::NODE, "Run", "PERF_VOLUME"));
+    EXPECT_EQ(
+        1, cfg::GetIntValue(config::ParagraphType::NODE, "Build", "PERF_METAFS"));
+    EXPECT_EQ(
+        0, cfg::GetIntValue(config::ParagraphType::NODE, "Run", "PERF_METAFS"));
+    EXPECT_EQ(
+        0, cfg::GetIntValue(config::ParagraphType::NODE, "Build", "PERF_REBUILD"));
+    EXPECT_EQ(
+        0, cfg::GetIntValue(config::ParagraphType::NODE, "Run", "PERF_REBUILD"));
+    EXPECT_EQ(32,
+        cfg::GetIntValue(config::ParagraphType::NODE, "IndexSize", "PERF_REBUILD"));
+    EXPECT_EQ(
+        100, cfg::GetIntValue(config::ParagraphType::NODE, "IndexSize", "PERF_CP"));
     EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::NODE, "Build", "LAT_PSD"));
-    EXPECT_EQ(100, cfg::GetIntValue(config::ParagraphType::NODE, "SamplingRatio", "LAT_PSD"));
-    EXPECT_EQ(77, cfg::GetIntValue(config::ParagraphType::NODE, "IndexSize", "LAT_PSD"));
-    EXPECT_EQ(1000, cfg::GetIntValue(config::ParagraphType::NODE, "SamplingRatio", "LAT_SUBMIT"));
+    EXPECT_EQ(100,
+        cfg::GetIntValue(config::ParagraphType::NODE, "SamplingRatio", "LAT_PSD"));
+    EXPECT_EQ(
+        77, cfg::GetIntValue(config::ParagraphType::NODE, "IndexSize", "LAT_PSD"));
+    EXPECT_EQ(1000,
+        cfg::GetIntValue(
+            config::ParagraphType::NODE, "SamplingRatio", "LAT_SUBMIT"));
 }
 
 TEST_F(ConfigInterfaceTest, GetStrValue)
 {
-    EXPECT_EQ(0, cfg::GetStrValue(config::ParagraphType::NODE, "Type", "PERF_PSD").compare("PERFORMANCE"));
-    EXPECT_EQ(0, cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_1").compare("BUCKET_1"));
-    EXPECT_EQ(0, cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_2").compare("BUCKET_2"));
-    EXPECT_EQ(0, cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_3").compare("BUCKET_3"));
-    EXPECT_EQ(0, cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_4").compare("BUCKET_4"));
-    EXPECT_EQ(0, cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_5").compare("BUCKET_5"));
-    EXPECT_EQ(0, cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_6").compare("BUCKET_6"));
+    EXPECT_EQ(0,
+        cfg::GetStrValue(config::ParagraphType::NODE, "Type", "PERF_PSD")
+            .compare("PERFORMANCE"));
+    EXPECT_EQ(0,
+        cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_1")
+            .compare("BUCKET_1"));
+    EXPECT_EQ(0,
+        cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_2")
+            .compare("BUCKET_2"));
+    EXPECT_EQ(0,
+        cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_3")
+            .compare("BUCKET_3"));
+    EXPECT_EQ(0,
+        cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_4")
+            .compare("BUCKET_4"));
+    EXPECT_EQ(0,
+        cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_5")
+            .compare("BUCKET_5"));
+    EXPECT_EQ(0,
+        cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", "HIST_TEST_6")
+            .compare("BUCKET_6"));
 }
 
 TEST_F(ConfigInterfaceTest, GetNodeType)

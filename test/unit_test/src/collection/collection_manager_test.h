@@ -28,7 +28,6 @@
 #include "mock_node_manager.h"
 #include "mock_node_meta.h"
 #include "mock_output_observer.h"
-
 #include "src/collection/CollectionCorHandler.h"
 #include "src/collection/CollectionManager.cpp"
 #include "src/collection/CollectionManager.h"
@@ -53,11 +52,12 @@ protected:
     {
         mock_global_meta_getter = new MockGlobalMetaGetter;
         mock_node_meta_getter = new MockNodeMetaGetter;
-        mock_node_manager = new MockNodeManager {mock_global_meta_getter, mock_node_meta_getter};
+        mock_node_manager =
+            new MockNodeManager {mock_global_meta_getter, mock_node_meta_getter};
         collection_subject = new collection::Subject;
-        collection_manager = new collection::CollectionManager {
-            mock_global_meta_getter, mock_node_meta_getter,
-            mock_node_manager, collection_subject};
+        collection_manager =
+            new collection::CollectionManager {mock_global_meta_getter,
+                mock_node_meta_getter, mock_node_manager, collection_subject};
     }
     ~CollectionManagerTest() override
     {

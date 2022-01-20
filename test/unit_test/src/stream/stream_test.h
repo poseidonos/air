@@ -5,12 +5,12 @@
 class StreamTest : public ::testing::Test
 {
 public:
-    stream::Stream* stream{nullptr};
+    stream::Stream* stream {nullptr};
 
 protected:
     StreamTest()
     {
-        stream = new stream::Stream{};
+        stream = new stream::Stream {};
     }
     ~StreamTest() override
     {

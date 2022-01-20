@@ -39,8 +39,10 @@ public:
     }
 
 private:
-    double _GetExponentialTypeBucketStartValue(int32_t bucket_zero_index, int32_t bucket_index, int64_t bucket_scale);
-    double _GetExponentialTypeBucketEndValue(int32_t bucket_zero_index, int32_t bucket_index, int64_t bucket_scale);
+    double _GetExponentialTypeBucketStartValue(
+        int32_t bucket_zero_index, int32_t bucket_index, int64_t bucket_scale);
+    double _GetExponentialTypeBucketEndValue(
+        int32_t bucket_zero_index, int32_t bucket_index, int64_t bucket_scale);
     void _ProcessData(lib::Data* air_data, lib::AccData* acc_data) override;
     void _JsonifyData(struct JsonifyData data) override;
     void _InitData(lib::Data* air_data, lib::AccData* acc_data) override;

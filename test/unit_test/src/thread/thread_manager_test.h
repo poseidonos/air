@@ -6,14 +6,14 @@
 class ThreadManagerTest : public ::testing::Test
 {
 public:
-    MockChainManager* mock_chain_manager{nullptr};
-    thread::ThreadManager* thread_manager{nullptr};
+    MockChainManager* mock_chain_manager {nullptr};
+    thread::ThreadManager* thread_manager {nullptr};
 
 protected:
     ThreadManagerTest()
     {
-        mock_chain_manager = new MockChainManager{};
-        thread_manager = new thread::ThreadManager{mock_chain_manager};
+        mock_chain_manager = new MockChainManager {};
+        thread_manager = new thread::ThreadManager {mock_chain_manager};
     }
     ~ThreadManagerTest()
     {

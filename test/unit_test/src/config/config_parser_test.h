@@ -29,12 +29,12 @@
 class ConfigParserTest : public ::testing::Test
 {
 public:
-    config::ConfigParser* cfg{nullptr};
+    config::ConfigParser* cfg {nullptr};
 
 protected:
     ConfigParserTest()
     {
-        cfg = new config::ConfigParser{};
+        cfg = new config::ConfigParser {};
     }
     ~ConfigParserTest()
     {

@@ -52,7 +52,7 @@ public:
     }
 
 private:
-    std::atomic_flag flag{ATOMIC_FLAG_INIT};
+    std::atomic_flag flag {ATOMIC_FLAG_INIT};
 };
 
 #endif // AIR_LOCK_H

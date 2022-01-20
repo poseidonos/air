@@ -5,12 +5,12 @@
 class OutTest : public ::testing::Test
 {
 public:
-    output::OutCommand* out_command{nullptr};
+    output::OutCommand* out_command {nullptr};
 
 protected:
     OutTest()
     {
-        out_command = new output::OutCommand{};
+        out_command = new output::OutCommand {};
     }
     ~OutTest() override
     {

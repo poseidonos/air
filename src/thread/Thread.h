@@ -68,10 +68,10 @@ protected:
         return thread_run;
     }
 
-    pthread_t thread{0};
-    cpu_set_t cpu_set{0};
-    bool thread_run{false};
-    uint32_t run_skip_count{0};
+    pthread_t thread {0};
+    cpu_set_t cpu_set {0};
+    bool thread_run {false};
+    uint32_t run_skip_count {0};
 };
 
 class OneTimeThread : public AirThread
@@ -149,8 +149,8 @@ public:
     }
 
 private:
-    int32_t sleeptime_us{INT_E4};
-    timespec last_timestamp{0, 0};
+    int32_t sleeptime_us {INT_E4};
+    timespec last_timestamp {0, 0};
 };
 
 } // namespace thread

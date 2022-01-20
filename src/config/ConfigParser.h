@@ -59,13 +59,16 @@ public:
         if (air::string_view::npos != range_pos)
         {
             air::string_view start_item {value.substr(0, range_pos)};
-            air::string_view end_item {value.substr(range_pos + 3, value.size() - range_pos - 3)};
+            air::string_view end_item {
+                value.substr(range_pos + 3, value.size() - range_pos - 3)};
             start_item = Strip(start_item);
             end_item = Strip(end_item);
             size_t start_token_pos {start_item.find("_")};
             size_t end_token_pos {end_item.find("_")};
-            air::string_view start_suffix {start_item.substr(start_token_pos + 1, start_item.size() - start_token_pos)};
-            air::string_view end_suffix {end_item.substr(end_token_pos + 1, end_item.size() - end_token_pos)};
+            air::string_view start_suffix {start_item.substr(
+                start_token_pos + 1, start_item.size() - start_token_pos)};
+            air::string_view end_suffix {end_item.substr(
+                end_token_pos + 1, end_item.size() - end_token_pos)};
             int64_t start_num {Stoi(start_suffix)};
             int64_t end_num {Stoi(end_suffix)};
 
@@ -101,7 +104,8 @@ public:
     }
 
     static constexpr int32_t
-    GetIntValueFromSentence(air::string_view sentence, air::string_view key, air::string_view index = "")
+    GetIntValueFromSentence(air::string_view sentence, air::string_view key,
+        air::string_view index = "")
     {
         size_t start_pos {sentence.find(key)};
 
@@ -120,15 +124,19 @@ public:
         {
             comma_pos = sentence.size();
         }
-        air::string_view key_value {sentence.substr(start_pos, comma_pos - start_pos)};
+        air::string_view key_value {
+            sentence.substr(start_pos, comma_pos - start_pos)};
         size_t colon_pos {key_value.find(":")};
 
-        air::string_view value {key_value.substr(colon_pos + 1, key_value.size() - colon_pos)};
+        air::string_view value {
+            key_value.substr(colon_pos + 1, key_value.size() - colon_pos)};
         value = Strip(value);
 
-        if (key == "AirBuild" || key == "NodeBuild" || key == "NodeRun" || key == "Build" || key == "Run")
+        if (key == "AirBuild" || key == "NodeBuild" || key == "NodeRun" ||
+            key == "Build" || key == "Run")
         {
-            if (value == "TRUE" || value == "True" || value == "true" || value == "ON" || value == "On" || value == "on")
+            if (value == "TRUE" || value == "True" || value == "true" ||
+                value == "ON" || value == "On" || value == "on")
             {
                 return 1;
             }
@@ -161,12 +169,15 @@ public:
             start_item = Strip(start_item);
             size_t start_token_pos {start_item.find("_")};
             air::string_view start_prefix {start_item.substr(0, start_token_pos)};
-            air::string_view start_suffix {start_item.substr(start_token_pos + 1, start_item.size() - start_token_pos)};
+            air::string_view start_suffix {start_item.substr(
+                start_token_pos + 1, start_item.size() - start_token_pos)};
             int64_t start_num {Stoi(start_suffix)};
-            air::string_view end_item {value.substr(range_pos + 3, value.size() - range_pos - 3)};
+            air::string_view end_item {
+                value.substr(range_pos + 3, value.size() - range_pos - 3)};
             end_item = Strip(end_item);
             size_t end_token_pos {end_item.find("_")};
-            air::string_view end_suffix {end_item.substr(end_token_pos + 1, end_item.size() - end_token_pos)};
+            air::string_view end_suffix {end_item.substr(
+                end_token_pos + 1, end_item.size() - end_token_pos)};
             int64_t end_num {Stoi(end_suffix)};
 
             if (end_num < start_num + index)
@@ -186,7 +197,8 @@ public:
 
             while (prev_comma < value.size())
             {
-                air::string_view range_value {value.substr(prev_comma, curr_comma - prev_comma)};
+                air::string_view range_value {
+                    value.substr(prev_comma, curr_comma - prev_comma)};
                 range_value = Strip(range_value);
 
                 if (index == count)
@@ -217,7 +229,8 @@ public:
     static constexpr air::string_view
     GetStrValueFromSentence(air::string_view sentence, air::string_view key)
     {
-        if (key != "Group" && key != "Node" && key != "Filter" && key != "Type" && key != "Bucket")
+        if (key != "Group" && key != "Node" && key != "Filter" && key != "Type" &&
+            key != "Bucket")
         {
             return "";
         }
@@ -235,7 +248,8 @@ public:
         }
 
         size_t colon_pos {sentence.find(":", start_pos + 1)};
-        air::string_view value {sentence.substr(colon_pos + 1, comma_pos - colon_pos - 1)};
+        air::string_view value {
+            sentence.substr(colon_pos + 1, comma_pos - colon_pos - 1)};
         value = Strip(value);
 
         return value;
@@ -300,14 +314,17 @@ public:
         while (air::string_view::npos != start_kv)
         {
             size_t quote_pos {paragraph.find("\"", colon_pos + 1)};
-            if (air::string_view::npos == separator_pos || quote_pos <= separator_pos)
+            if (air::string_view::npos == separator_pos ||
+                quote_pos <= separator_pos)
             {
                 separator_pos = quote_pos;
             }
 
-            air::string_view key {paragraph.substr(start_kv, colon_pos - start_kv + 1)};
+            air::string_view key {
+                paragraph.substr(start_kv, colon_pos - start_kv + 1)};
             key = Strip(key);
-            air::string_view value {paragraph.substr(colon_pos + 1, separator_pos - colon_pos - 1)};
+            air::string_view value {
+                paragraph.substr(colon_pos + 1, separator_pos - colon_pos - 1)};
             value = Strip(value);
 
             if (0 == name.compare(value))
@@ -334,7 +351,8 @@ public:
     GetLowerBoundFromBucketSentence(air::string_view sentence)
     {
         air::string_view bounds_value {_GetBoundsFromBucketSentence(sentence)};
-        air::string_view lower_bound {bounds_value.substr(1, bounds_value.find(",") - 1)};
+        air::string_view lower_bound {
+            bounds_value.substr(1, bounds_value.find(",") - 1)};
         lower_bound = Strip(lower_bound);
         int64_t result {StolWithExponent(lower_bound)};
         return result;
@@ -344,8 +362,9 @@ public:
     GetUpperBoundFromBucketSentence(air::string_view sentence)
     {
         air::string_view bounds_value {_GetBoundsFromBucketSentence(sentence)};
-        air::string_view upper_bound {bounds_value.substr(bounds_value.find(",") + 1,
-            bounds_value.size() - bounds_value.find(",") - 2)};
+        air::string_view upper_bound {
+            bounds_value.substr(bounds_value.find(",") + 1,
+                bounds_value.size() - bounds_value.find(",") - 2)};
         upper_bound = Strip(upper_bound);
         int64_t result {StolWithExponent(upper_bound)};
         return result;
@@ -367,7 +386,8 @@ public:
 
 private:
     static constexpr int32_t
-    _GetItemIndexValueFromFilterSentence(air::string_view sentence, air::string_view index)
+    _GetItemIndexValueFromFilterSentence(
+        air::string_view sentence, air::string_view index)
     {
         air::string_view value {_GetValueInRoundBracket(sentence)};
         if (value == "")
@@ -380,19 +400,23 @@ private:
 
         if (air::string_view::npos != range_pos)
         {
-            air::string_view end_item {value.substr(range_pos + 3, value.size() - range_pos - 3)};
+            air::string_view end_item {
+                value.substr(range_pos + 3, value.size() - range_pos - 3)};
             air::string_view start_item {value.substr(0, range_pos)};
             end_item = Strip(end_item);
             start_item = Strip(start_item);
             size_t end_token_pos {end_item.find("_")};
             size_t start_token_pos {start_item.find("_")};
-            air::string_view end_suffix {end_item.substr(end_token_pos + 1, end_item.size() - end_token_pos)};
-            air::string_view start_suffix {start_item.substr(start_token_pos + 1, start_item.size() - start_token_pos)};
+            air::string_view end_suffix {end_item.substr(
+                end_token_pos + 1, end_item.size() - end_token_pos)};
+            air::string_view start_suffix {start_item.substr(
+                start_token_pos + 1, start_item.size() - start_token_pos)};
             int64_t end_num {Stoi(end_suffix)};
             int64_t start_num {Stoi(start_suffix)};
 
             size_t index_token_pos {index.find("_")};
-            air::string_view index_suffix {index.substr(index_token_pos + 1, index.size() - index_token_pos)};
+            air::string_view index_suffix {
+                index.substr(index_token_pos + 1, index.size() - index_token_pos)};
             int64_t index_num {Stoi(index_suffix)};
 
             if (end_num < index_num)
@@ -410,7 +434,8 @@ private:
 
             while (prev_comma < value.size())
             {
-                air::string_view range_value {value.substr(prev_comma, curr_comma - prev_comma)};
+                air::string_view range_value {
+                    value.substr(prev_comma, curr_comma - prev_comma)};
                 range_value = Strip(range_value);
 
                 if (index == range_value)
@@ -448,7 +473,8 @@ private:
         }
         else
         {
-            return sentence.substr(value_start_pos + 1, value_end_pos - value_start_pos - 1);
+            return sentence.substr(
+                value_start_pos + 1, value_end_pos - value_start_pos - 1);
         }
     }
 
@@ -456,8 +482,10 @@ private:
     _GetBoundsFromBucketSentence(air::string_view sentence)
     {
         size_t bounds_start_pos {sentence.find(":", sentence.find("Bounds")) + 1};
-        size_t bounds_end_pos {sentence.find(",", sentence.find(",", bounds_start_pos) + 1)};
-        air::string_view bounds_value {sentence.substr(bounds_start_pos, bounds_end_pos - bounds_start_pos)};
+        size_t bounds_end_pos {
+            sentence.find(",", sentence.find(",", bounds_start_pos) + 1)};
+        air::string_view bounds_value {
+            sentence.substr(bounds_start_pos, bounds_end_pos - bounds_start_pos)};
         return Strip(bounds_value);
     }
 
@@ -470,8 +498,8 @@ private:
         {
             scale_end_pos = sentence.find(",", scale_start_pos);
         }
-        air::string_view scale_value {sentence.substr(scale_start_pos,
-            scale_end_pos - scale_start_pos)};
+        air::string_view scale_value {
+            sentence.substr(scale_start_pos, scale_end_pos - scale_start_pos)};
         return Strip(scale_value);
     }
 };

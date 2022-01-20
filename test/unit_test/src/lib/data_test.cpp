@@ -29,8 +29,8 @@
 
 TEST_F(DataTest, QueueData)
 {
-    bool b{false};
-    uint64_t value{0xFF00EE00DD00CA00};
+    bool b {false};
+    uint64_t value {0xFF00EE00DD00CA00};
     EXPECT_EQ(b, queue_data->access);
     EXPECT_EQ(value, queue_data->sum_depth);
     EXPECT_LT(3.0f, queue_data->depth_period_avg);
@@ -38,7 +38,7 @@ TEST_F(DataTest, QueueData)
 
 TEST_F(DataTest, LatencyData)
 {
-    uint32_t value{0};
+    uint32_t value {0};
     EXPECT_EQ(value, lat_data->min);
 
     value = 0x0000FEAD;
@@ -58,7 +58,7 @@ TEST_F(DataTest, HistogramData)
     EXPECT_EQ(0, histogram_data->period_min_value);
     EXPECT_EQ(0, histogram_data->period_max_value);
     EXPECT_EQ(0, histogram_data->period_avg_value);
-    for (int i = 0; i < 20; i ++)
+    for (int i = 0; i < 20; i++)
     {
         EXPECT_EQ(0, histogram_data->period_bucket[i]);
     }
@@ -69,7 +69,7 @@ TEST_F(DataTest, HistogramData)
     EXPECT_EQ(0, histogram_data->bucket_size);
     EXPECT_EQ(lib::BucketType::LINEAR, histogram_data->bucket_type);
     EXPECT_EQ(0, histogram_data->bucket_zero_index);
-    for (int i = 0; i < 20; i ++)
+    for (int i = 0; i < 20; i++)
     {
         EXPECT_EQ("", histogram_data->bucket_name[i]);
     }
@@ -82,7 +82,7 @@ TEST_F(DataTest, AccHistogramData)
     EXPECT_EQ(0, acc_histogram_data->cumulation_min_value);
     EXPECT_EQ(0, acc_histogram_data->cumulation_max_value);
     EXPECT_EQ(0, acc_histogram_data->cumulation_avg_value);
-    for (int i = 0; i < 20; i ++)
+    for (int i = 0; i < 20; i++)
     {
         EXPECT_EQ(0, acc_histogram_data->cumulation_bucket[i]);
     }

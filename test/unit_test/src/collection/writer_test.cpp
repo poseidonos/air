@@ -57,9 +57,10 @@ TEST_F(WriterTest, PerformanceWriter_LogData)
 TEST_F(WriterTest, PerformanceWriter_InformInit)
 {
     lib::AccData* data_dirty {new lib::AccPerformanceData};
-    lib::AccPerformanceData* perf_data {static_cast<lib::AccPerformanceData*>(data_dirty)};
+    lib::AccPerformanceData* perf_data {
+        static_cast<lib::AccPerformanceData*>(data_dirty)};
 
-    unsigned int value{0};
+    unsigned int value {0};
     EXPECT_EQ(perf_data->need_erase, value);
     value = 1;
     performance_writer->InformInit(data_dirty);
@@ -117,7 +118,7 @@ TEST_F(WriterTest, LatencyWriter_InformInit)
     lib::AccData* data_dirty {new lib::AccLatencyData};
     lib::AccLatencyData* lat_data {static_cast<lib::AccLatencyData*>(data_dirty)};
 
-    unsigned int value{0};
+    unsigned int value {0};
     EXPECT_EQ(lat_data->need_erase, value);
     value = 1;
     latency_writer->InformInit(data_dirty);
@@ -147,7 +148,7 @@ TEST_F(WriterTest, QueueWriter_InformInit)
     lib::AccData* data_dirty {new lib::AccQueueData};
     lib::AccQueueData* q_data {static_cast<lib::AccQueueData*>(data_dirty)};
 
-    uint64_t value{0};
+    uint64_t value {0};
     EXPECT_EQ(q_data->need_erase, value);
     queue_writer->InformInit(data_dirty);
     value = 1;
@@ -269,7 +270,8 @@ TEST_F(WriterTest, UtilizationWriter_LogData)
 TEST_F(WriterTest, UtilizationWriter_InformInit)
 {
     lib::AccData* data_dirty {new lib::AccUtilizationData};
-    lib::AccUtilizationData* util_data {static_cast<lib::AccUtilizationData*>(data_dirty)};
+    lib::AccUtilizationData* util_data {
+        static_cast<lib::AccUtilizationData*>(data_dirty)};
 
     EXPECT_EQ(0, util_data->need_erase);
     util_writer->InformInit(data_dirty);
@@ -294,7 +296,8 @@ TEST_F(WriterTest, HistogramWriter_SetSamplingRate)
 TEST_F(WriterTest, HistogramWriter_InformInit)
 {
     lib::AccData* data_dirty {new lib::AccHistogramData};
-    lib::AccHistogramData* histogram_data {static_cast<lib::AccHistogramData*>(data_dirty)};
+    lib::AccHistogramData* histogram_data {
+        static_cast<lib::AccHistogramData*>(data_dirty)};
 
     EXPECT_EQ(0, histogram_data->need_erase);
     histogram_writer->InformInit(data_dirty);

@@ -31,7 +31,8 @@
 #include "src/config/ConfigInterface.h"
 
 void
-node::NodeInitializer::InitNodeData(uint32_t nid, air::ProcessorType type, NodeData* data)
+node::NodeInitializer::InitNodeData(
+    uint32_t nid, air::ProcessorType type, NodeData* data)
 {
     if (nullptr == data)
     {
@@ -51,12 +52,15 @@ node::NodeInitializer::InitNodeData(uint32_t nid, air::ProcessorType type, NodeD
 void
 node::NodeInitializer::_InitHistogramData(uint32_t nid, NodeData* data)
 {
-    air::string_view node_name {cfg::GetSentenceName(config::ParagraphType::NODE, nid)};
-    air::string_view bucket_name {cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", node_name)};
+    air::string_view node_name {
+        cfg::GetSentenceName(config::ParagraphType::NODE, nid)};
+    air::string_view bucket_name {
+        cfg::GetStrValue(config::ParagraphType::NODE, "Bucket", node_name)};
     int64_t bucket_lower_bound {cfg::GetLowerBoundWithBucketName(bucket_name)};
     int64_t bucket_upper_bound {cfg::GetUpperBoundWithBucketName(bucket_name)};
     bool bucket_linear_type {cfg::IsLinearTypeWithBucketName(bucket_name)};
-    int32_t bucket_scale {cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", bucket_name)};
+    int32_t bucket_scale {
+        cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", bucket_name)};
 
     uint32_t hash_size {data->GetIndexSize()};
     uint32_t filter_size {data->GetFilterSize()};
@@ -67,29 +71,26 @@ node::NodeInitializer::_InitHistogramData(uint32_t nid, NodeData* data)
     {
         for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
         {
-            lib::HistogramData* user_data =
-                static_cast<lib::HistogramData*>(data->GetUserDataByHashIndex(
-                    hash_index, filter_index));
-            lib::HistogramData* air_data =
-                static_cast<lib::HistogramData*>(data->GetAirData(
-                    hash_index, filter_index));
+            lib::HistogramData* user_data = static_cast<lib::HistogramData*>(
+                data->GetUserDataByHashIndex(hash_index, filter_index));
+            lib::HistogramData* air_data = static_cast<lib::HistogramData*>(
+                data->GetAirData(hash_index, filter_index));
             if (bucket_linear_type)
             {
                 _InitHistogramLinearType(user_data, bucket_lower_bound,
                     bucket_upper_bound, bucket_scale);
-                _InitHistogramLinearType(air_data, bucket_lower_bound,
-                    bucket_upper_bound, bucket_scale);
+                _InitHistogramLinearType(
+                    air_data, bucket_lower_bound, bucket_upper_bound, bucket_scale);
             }
             else
             {
                 _InitHistogramExponentialType(user_data, bucket_lower_bound,
                     bucket_upper_bound, bucket_scale);
-                _InitHistogramExponentialType(air_data, bucket_lower_bound,
-                    bucket_upper_bound, bucket_scale);
+                _InitHistogramExponentialType(
+                    air_data, bucket_lower_bound, bucket_upper_bound, bucket_scale);
             }
-            lib::AccHistogramData* acc_data =
-                static_cast<lib::AccHistogramData*>(data->GetAccData(
-                    hash_index, filter_index));
+            lib::AccHistogramData* acc_data = static_cast<lib::AccHistogramData*>(
+                data->GetAccData(hash_index, filter_index));
             acc_data->since = curr_time;
         }
     }
@@ -114,9 +115,11 @@ node::NodeInitializer::_InitHistogramLinearType(lib::HistogramData* data,
         std::cout << "BucketSize is bigger than 20\n";
         data->bucket_size = 20;
     }
-    for (uint64_t bucket_index = 0; bucket_index < data->bucket_size; bucket_index++)
+    for (uint64_t bucket_index = 0; bucket_index < data->bucket_size;
+         bucket_index++)
     {
-        data->bucket_name[bucket_index] = std::to_string(lower_bound + ((int64_t)bucket_index * scale));
+        data->bucket_name[bucket_index] =
+            std::to_string(lower_bound + ((int64_t)bucket_index * scale));
     }
 }
 
@@ -151,7 +154,8 @@ node::NodeInitializer::_InitHistogramExponentialType(lib::HistogramData* data,
         data->bucket_zero_index = -1 * lower_exponent;
 
         int32_t curr_exponent {-1 * lower_exponent};
-        for (uint64_t bucket_index = 0; bucket_index < data->bucket_size; bucket_index++)
+        for (uint64_t bucket_index = 0; bucket_index < data->bucket_size;
+             bucket_index++)
         {
             data->bucket_name[bucket_index] =
                 "-" + std::to_string(scale) + "^" + std::to_string(curr_exponent);
@@ -176,7 +180,8 @@ node::NodeInitializer::_InitHistogramExponentialType(lib::HistogramData* data,
         data->bucket_zero_index = (data->bucket_size - 1) - upper_exponent;
 
         int32_t curr_exponent {lower_exponent};
-        for (uint64_t bucket_index = 0; bucket_index < data->bucket_size; bucket_index++)
+        for (uint64_t bucket_index = 0; bucket_index < data->bucket_size;
+             bucket_index++)
         {
             data->bucket_name[bucket_index] =
                 std::to_string(scale) + "^" + std::to_string(curr_exponent);
@@ -202,7 +207,8 @@ node::NodeInitializer::_InitHistogramExponentialType(lib::HistogramData* data,
 
         int32_t curr_exponent {-1 * lower_exponent};
         uint64_t negative_unit_size = static_cast<uint64_t>(-1 * lower_exponent);
-        for (uint64_t bucket_index = 0; bucket_index < negative_unit_size; bucket_index++)
+        for (uint64_t bucket_index = 0; bucket_index < negative_unit_size;
+             bucket_index++)
         {
             data->bucket_name[bucket_index] =
                 "-" + std::to_string(scale) + "^" + std::to_string(curr_exponent);
@@ -210,7 +216,8 @@ node::NodeInitializer::_InitHistogramExponentialType(lib::HistogramData* data,
         }
         data->bucket_name[data->bucket_zero_index] = "0";
         curr_exponent = 0;
-        for (uint64_t bucket_index = data->bucket_zero_index + 1; bucket_index < data->bucket_size; bucket_index++)
+        for (uint64_t bucket_index = data->bucket_zero_index + 1;
+             bucket_index < data->bucket_size; bucket_index++)
         {
             data->bucket_name[bucket_index] =
                 std::to_string(scale) + "^" + std::to_string(curr_exponent);

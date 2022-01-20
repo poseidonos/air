@@ -48,7 +48,7 @@ public:
     virtual void Handle(void);
 
 private:
-    CollectionManager* collection_manager{nullptr};
+    CollectionManager* collection_manager {nullptr};
 };
 
 } // namespace collection

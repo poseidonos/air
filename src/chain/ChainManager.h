@@ -58,8 +58,7 @@ public:
     bool IsRun(meta::GlobalMeta* g_meta, uint32_t delayed_time);
 
 protected:
-    explicit TaskChain(uint32_t new_period)
-    : period(new_period)
+    explicit TaskChain(uint32_t new_period): period(new_period)
     {
         deadline = period;
     }
@@ -68,15 +67,14 @@ private:
     void _ResetTime(void);
     int32_t _SpendTime(uint32_t time);
 
-    uint32_t period{0};  // 10 millisecond resolution
-    int32_t deadline{0}; // 10 millisecond resolution
+    uint32_t period {0};  // 10 millisecond resolution
+    int32_t deadline {0}; // 10 millisecond resolution
 };
 
 class SwitchGearTask : public TaskChain
 {
 public:
-    SwitchGearTask(void)
-    : TaskChain(50)
+    SwitchGearTask(void): TaskChain(50)
     {
     }
     virtual void RunChain(lib_design::AbstractCoRHandler** cor_handler,
@@ -86,8 +84,7 @@ public:
 class PreprocessTask : public TaskChain
 {
 public:
-    PreprocessTask(void)
-    : TaskChain(100)
+    PreprocessTask(void): TaskChain(100)
     {
     }
     virtual void RunChain(lib_design::AbstractCoRHandler** cor_handler,
@@ -97,8 +94,7 @@ public:
 class CLITask : public TaskChain
 {
 public:
-    CLITask(void)
-    : TaskChain(100)
+    CLITask(void): TaskChain(100)
     {
     }
     virtual void RunChain(lib_design::AbstractCoRHandler** cor_handler,
@@ -108,8 +104,7 @@ public:
 class AnalysisTask : public TaskChain
 {
 public:
-    AnalysisTask(void)
-    : TaskChain(1000)
+    AnalysisTask(void): TaskChain(1000)
     {
     }
     virtual void RunChain(lib_design::AbstractCoRHandler** cor_handler,
@@ -132,8 +127,7 @@ public:
     void Init(void);
     void RunChain(uint32_t delayed_time);
     void
-    AttachChain(lib_design::AbstractCoRHandler* new_cor_handler,
-        uint32_t index)
+    AttachChain(lib_design::AbstractCoRHandler* new_cor_handler, uint32_t index)
     {
         cor_handler[index] = new_cor_handler;
     }
@@ -160,14 +154,14 @@ public:
     }
 
 private:
-    lib_design::AbstractCoRHandler* cor_handler[to_dtype(pi::ChainHandler::COUNT)]{
+    lib_design::AbstractCoRHandler* cor_handler[to_dtype(pi::ChainHandler::COUNT)] {
         nullptr,
     };
-    SwitchGearTask switch_gear_task{};
-    PreprocessTask preprocess_task{};
-    CLITask cli_task{};
-    AnalysisTask analysis_task{};
-    meta::GlobalMeta* global_meta{nullptr};
+    SwitchGearTask switch_gear_task {};
+    PreprocessTask preprocess_task {};
+    CLITask cli_task {};
+    AnalysisTask analysis_task {};
+    meta::GlobalMeta* global_meta {nullptr};
 };
 
 } // namespace chain

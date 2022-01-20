@@ -45,7 +45,7 @@ private:
     void _SendCommandWithOption(AConfig& tree, std::string& cmd_str);
     void _AsyncSystemCall(std::string& cmd_str);
 
-    int pid{-1};
+    int pid {-1};
 };
 
 } // namespace air

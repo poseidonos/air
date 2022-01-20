@@ -81,7 +81,9 @@ enum class TimeLogState : uint32_t
 struct TimeLog
 {
     uint64_t key {0};
-    timespec timestamp {0, };
+    timespec timestamp {
+        0,
+    };
 };
 
 struct LatencyData : public Data
@@ -116,7 +118,9 @@ struct AccLatencyData : public AccData
     uint64_t total_sample_count {0};
     uint32_t overflow_warning {0};
 
-    uint64_t timelag[TIMELAG_SIZE] {0, };
+    uint64_t timelag[TIMELAG_SIZE] {
+        0,
+    };
 };
 
 struct QueueData : public Data
@@ -129,7 +133,9 @@ struct QueueData : public Data
     uint32_t logging_point {0};
     uint32_t num_called {0};
     uint32_t sampling_rate {0};
-    std::mt19937 mersenne {0, };
+    std::mt19937 mersenne {
+        0,
+    };
 };
 
 struct AccQueueData : public AccData
@@ -179,7 +185,9 @@ struct HistogramData : public Data
     // Periodically & Automatically initialized period_xxx data
     uint64_t period_underflow {0};
     uint64_t period_overflow {0};
-    uint64_t period_bucket[20] {0, };
+    uint64_t period_bucket[20] {
+        0,
+    };
     int64_t period_min_value {0};
     int64_t period_max_value {0};
     int64_t period_avg_value {0};
@@ -198,15 +206,20 @@ struct HistogramData : public Data
 
     // Bucket name is a minimum value of each bucket
     // Once set by NodeInitializer, never change
-    std::string bucket_name[20] {"", };
+    std::string bucket_name[20] {
+        "",
+    };
 };
 
-// Single Buffer per thread(+filter,+index), Can be initialized this struct data by air_cli
+// Single Buffer per thread(+filter,+index), Can be initialized this struct data by
+// air_cli
 struct AccHistogramData : public AccData
 {
     uint64_t cumulation_underflow {0};
     uint64_t cumulation_overflow {0};
-    uint64_t cumulation_bucket[20] {0, };
+    uint64_t cumulation_bucket[20] {
+        0,
+    };
     int64_t cumulation_min_value {0};
     int64_t cumulation_max_value {0};
     int64_t cumulation_avg_value {0};

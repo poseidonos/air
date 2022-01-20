@@ -54,9 +54,8 @@ chain::TaskChain::IsRun(meta::GlobalMeta* g_meta, uint32_t delayed_time)
 }
 
 void
-chain::SwitchGearTask::RunChain(
-    lib_design::AbstractCoRHandler** cor_handler, meta::GlobalMeta* g_meta,
-    int32_t option)
+chain::SwitchGearTask::RunChain(lib_design::AbstractCoRHandler** cor_handler,
+    meta::GlobalMeta* g_meta, int32_t option)
 {
     if (true == g_meta->AirPlay())
     {
@@ -65,9 +64,8 @@ chain::SwitchGearTask::RunChain(
 }
 
 void
-chain::PreprocessTask::RunChain(
-    lib_design::AbstractCoRHandler** cor_handler, meta::GlobalMeta* g_meta,
-    int32_t option)
+chain::PreprocessTask::RunChain(lib_design::AbstractCoRHandler** cor_handler,
+    meta::GlobalMeta* g_meta, int32_t option)
 {
     if (true == g_meta->AirPlay())
     {
@@ -129,13 +127,13 @@ chain::ChainManager::RunChain(uint32_t delayed_time)
     {
         if (analysis_run)
         {
-            preprocess_task.RunChain(cor_handler, global_meta,
-                to_dtype(pi::PreprocessOption::FORCED));
+            preprocess_task.RunChain(
+                cor_handler, global_meta, to_dtype(pi::PreprocessOption::FORCED));
         }
         else
         {
-            preprocess_task.RunChain(cor_handler, global_meta,
-                to_dtype(pi::PreprocessOption::NORMAL));
+            preprocess_task.RunChain(
+                cor_handler, global_meta, to_dtype(pi::PreprocessOption::NORMAL));
         }
     }
     if (cli_run)

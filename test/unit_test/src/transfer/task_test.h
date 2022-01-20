@@ -7,7 +7,8 @@ class TaskTest : public ::testing::Test
 {
 public:
     static int function_call_count;
-    static int TestFunction(const air::JSONdoc& doc)
+    static int
+    TestFunction(const air::JSONdoc& doc)
     {
         function_call_count++;
         return 0;

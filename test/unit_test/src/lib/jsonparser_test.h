@@ -28,8 +28,8 @@ class JSONparserTest : public air::JSONparser
 {
 public:
     void
-    TEST_AddJson(air::JSONdoc& doc, std::string doc_name,
-        air::JSONtype type, std::string key, std::string value)
+    TEST_AddJson(air::JSONdoc& doc, std::string doc_name, air::JSONtype type,
+        std::string key, std::string value)
     {
         _AddJson(doc, doc_name, type, key, value);
     }

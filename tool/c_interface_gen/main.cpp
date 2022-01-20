@@ -89,20 +89,24 @@ main(void)
         uint32_t node_size = cfg::GetSentenceCount(config::ParagraphType::NODE);
         for (uint32_t i = 0; i < node_size; i++)
         {
-            air_h_file << "    " << cfg::GetSentenceName(config::ParagraphType::NODE, i) << ",\n";
+            air_h_file << "    "
+                       << cfg::GetSentenceName(config::ParagraphType::NODE, i)
+                       << ",\n";
         }
         air_h_file << "};\n\n";
 
         uint32_t filter_size = cfg::GetSentenceCount(config::ParagraphType::FILTER);
         for (uint32_t i = 0; i < filter_size; i++)
         {
-            air::string_view name = cfg::GetSentenceName(config::ParagraphType::FILTER, i);
+            air::string_view name =
+                cfg::GetSentenceName(config::ParagraphType::FILTER, i);
             air_h_file << "enum " << name << "\n{\n";
 
             int32_t item_size = cfg::GetItemSizeWithFilterName(name);
             for (int32_t j = 0; j < item_size; j++)
             {
-                air_h_file << "    " << cfg::GetItemStrWithFilterName(name, j) << ",\n";
+                air_h_file << "    " << cfg::GetItemStrWithFilterName(name, j)
+                           << ",\n";
             }
 
             air_h_file << "};\n\n";
@@ -116,8 +120,10 @@ main(void)
         air_h_file << "void AIR_ACTIVATE(void);\n";
         air_h_file << "void AIR_DEACTIVATE(void);\n";
         air_h_file << "void AIR_FINALIZE(void);\n";
-        air_h_file << "void AIRLOG(uint32_t node_id, uint32_t filter_item, uint64_t node_index, uint64_t value);\n";
-        air_h_file << "void AIRLOG_DUMMY(uint32_t node_id, uint32_t filter_item, uint64_t node_index, uint64_t value);\n";
+        air_h_file << "void AIRLOG(uint32_t node_id, uint32_t filter_item, "
+                      "uint64_t node_index, uint64_t value);\n";
+        air_h_file << "void AIRLOG_DUMMY(uint32_t node_id, uint32_t filter_item, "
+                      "uint64_t node_index, uint64_t value);\n";
     }
     catch (const std::out_of_range& e)
     {

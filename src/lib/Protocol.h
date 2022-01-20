@@ -165,7 +165,7 @@ enum class OnOff : uint32_t
     COUNT
 };
 
-static const uint32_t k_max_subject_size{
+static const uint32_t k_max_subject_size {
     (to_dtype(InSubject::COUNT) > to_dtype(PolicySubject::COUNT))
         ? to_dtype(InSubject::COUNT)
         : to_dtype(PolicySubject::COUNT)};

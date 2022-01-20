@@ -26,7 +26,8 @@
 
 #include <iostream>
 
-node::NodeData::NodeData(air::ProcessorType ptype, uint32_t index_size, uint32_t filter_size)
+node::NodeData::NodeData(
+    air::ProcessorType ptype, uint32_t index_size, uint32_t filter_size)
 : ptype(ptype),
   index_size(index_size),
   filter_size(filter_size)
@@ -55,7 +56,8 @@ node::NodeData::NodeData(air::ProcessorType ptype, uint32_t index_size, uint32_t
         {
             for (uint32_t index = 0; index < index_size; index++)
             {
-                for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
+                for (uint32_t filter_index = 0; filter_index < filter_size;
+                     filter_index++)
                 {
                     user_data[index][filter_index] = new lib::LatencyData;
                 }
@@ -66,7 +68,8 @@ node::NodeData::NodeData(air::ProcessorType ptype, uint32_t index_size, uint32_t
         {
             for (uint32_t index = 0; index < index_size; index++)
             {
-                for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
+                for (uint32_t filter_index = 0; filter_index < filter_size;
+                     filter_index++)
                 {
                     user_data[index][filter_index] = new lib::PerformanceData;
                     air_data[index][filter_index] = new lib::PerformanceData;
@@ -79,7 +82,8 @@ node::NodeData::NodeData(air::ProcessorType ptype, uint32_t index_size, uint32_t
         {
             for (uint32_t index = 0; index < index_size; index++)
             {
-                for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
+                for (uint32_t filter_index = 0; filter_index < filter_size;
+                     filter_index++)
                 {
                     user_data[index][filter_index] = new lib::QueueData;
                     air_data[index][filter_index] = new lib::QueueData;
@@ -92,7 +96,8 @@ node::NodeData::NodeData(air::ProcessorType ptype, uint32_t index_size, uint32_t
         {
             for (uint32_t index = 0; index < index_size; index++)
             {
-                for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
+                for (uint32_t filter_index = 0; filter_index < filter_size;
+                     filter_index++)
                 {
                     user_data[index][filter_index] = new lib::UtilizationData;
                     air_data[index][filter_index] = new lib::UtilizationData;
@@ -105,7 +110,8 @@ node::NodeData::NodeData(air::ProcessorType ptype, uint32_t index_size, uint32_t
         {
             for (uint32_t index = 0; index < index_size; index++)
             {
-                for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
+                for (uint32_t filter_index = 0; filter_index < filter_size;
+                     filter_index++)
                 {
                     user_data[index][filter_index] = new lib::CountData;
                     air_data[index][filter_index] = new lib::CountData;
@@ -118,7 +124,8 @@ node::NodeData::NodeData(air::ProcessorType ptype, uint32_t index_size, uint32_t
         {
             for (uint32_t index = 0; index < index_size; index++)
             {
-                for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
+                for (uint32_t filter_index = 0; filter_index < filter_size;
+                     filter_index++)
                 {
                     user_data[index][filter_index] = new lib::HistogramData;
                     air_data[index][filter_index] = new lib::HistogramData;
@@ -133,7 +140,7 @@ node::NodeData::NodeData(air::ProcessorType ptype, uint32_t index_size, uint32_t
         }
     }
 
-    hash_map = new air::HashMap<uint64_t>{index_size};
+    hash_map = new air::HashMap<uint64_t> {index_size};
 }
 
 node::NodeData::~NodeData(void)

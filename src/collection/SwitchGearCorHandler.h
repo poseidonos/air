@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    SwitchGear* switch_gear{nullptr};
+    SwitchGear* switch_gear {nullptr};
 };
 
 } // namespace collection

@@ -22,14 +22,14 @@
  *   SOFTWARE.
  */
 
-#include "src/lib/Msg.h"
-
 #include <gmock/gmock.h>
+
+#include "src/lib/Msg.h"
 
 class MsgTest : public ::testing::Test
 {
 public:
-    lib::MsgEntry entry{0};
+    lib::MsgEntry entry {0};
 
 protected:
     MsgTest()

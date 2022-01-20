@@ -30,5 +30,5 @@ public:
     }
 
 private:
-    uint32_t interval{1};
+    uint32_t interval {1};
 };

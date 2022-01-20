@@ -64,108 +64,141 @@ TEST_F(TestAPI, Finalize)
 
 TEST_F(TestAPI, LogData_Performance)
 {
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_PSD"),
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "PERF_PSD"), "BI_0"),
-        cfg::GetNodeType("PERF_PSD")>(0, 4096);
+    mock_air
+        ->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_PSD"),
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
+                cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "PERF_PSD"),
+                "BI_0"),
+            cfg::GetNodeType("PERF_PSD")>(0, 4096);
 
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_PSD"),
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "PERF_PSD"), "BI_0"),
-        cfg::GetNodeType("PERF_PSD")>(0, 4096);
+    mock_air
+        ->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_PSD"),
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
+                cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "PERF_PSD"),
+                "BI_0"),
+            cfg::GetNodeType("PERF_PSD")>(0, 4096);
 
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_PSD"),
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "PERF_PSD"), "BI_0"),
-        cfg::GetNodeType("PERF_PSD")>(0, 4096);
+    mock_air
+        ->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_PSD"),
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
+                cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "PERF_PSD"),
+                "BI_0"),
+            cfg::GetNodeType("PERF_PSD")>(0, 4096);
 }
 
 TEST_F(TestAPI, LogData_Latency)
 {
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "LAT_SUBMIT"),
+    mock_air->LogData<cfg::GetSentenceIndex(
+                          config::ParagraphType::NODE, "LAT_SUBMIT"),
         cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "LAT_SUBMIT"), "BI_0"),
+            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "LAT_SUBMIT"),
+            "BI_0"),
         cfg::GetNodeType("LAT_SUBMIT")>(0, 123);
 
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "LAT_SUBMIT"),
+    mock_air->LogData<cfg::GetSentenceIndex(
+                          config::ParagraphType::NODE, "LAT_SUBMIT"),
         cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "LAT_SUBMIT"), "BI_0"),
+            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "LAT_SUBMIT"),
+            "BI_0"),
         cfg::GetNodeType("LAT_SUBMIT")>(0, 123);
 
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "LAT_SUBMIT"),
+    mock_air->LogData<cfg::GetSentenceIndex(
+                          config::ParagraphType::NODE, "LAT_SUBMIT"),
         cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "LAT_SUBMIT"), "BI_0"),
+            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "LAT_SUBMIT"),
+            "BI_0"),
         cfg::GetNodeType("LAT_SUBMIT")>(0, 123);
 }
 
 TEST_F(TestAPI, LogData_Queue)
 {
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_SUBMIT"),
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "Q_SUBMIT"), "BI_0"),
-        cfg::GetNodeType("Q_SUBMIT")>(0, 128);
+    mock_air
+        ->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_SUBMIT"),
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
+                cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "Q_SUBMIT"),
+                "BI_0"),
+            cfg::GetNodeType("Q_SUBMIT")>(0, 128);
 
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_SUBMIT"),
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "Q_SUBMIT"), "BI_0"),
-        cfg::GetNodeType("Q_SUBMIT")>(0, 128);
+    mock_air
+        ->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_SUBMIT"),
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
+                cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "Q_SUBMIT"),
+                "BI_0"),
+            cfg::GetNodeType("Q_SUBMIT")>(0, 128);
 
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_SUBMIT"),
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "Q_SUBMIT"), "BI_0"),
-        cfg::GetNodeType("Q_SUBMIT")>(0, 128);
+    mock_air
+        ->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_SUBMIT"),
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
+                cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "Q_SUBMIT"),
+                "BI_0"),
+            cfg::GetNodeType("Q_SUBMIT")>(0, 128);
 }
 
 TEST_F(TestAPI, LogData_Utilization)
 {
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "UTIL_PSD"),
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "UTIL_PSD"), "BI_0"),
-        cfg::GetNodeType("UTIL_PSD")>(0, 100);
+    mock_air
+        ->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "UTIL_PSD"),
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
+                cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "UTIL_PSD"),
+                "BI_0"),
+            cfg::GetNodeType("UTIL_PSD")>(0, 100);
 
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "UTIL_PSD"),
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "UTIL_PSD"), "BI_0"),
-        cfg::GetNodeType("UTIL_PSD")>(0, 100);
+    mock_air
+        ->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "UTIL_PSD"),
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
+                cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "UTIL_PSD"),
+                "BI_0"),
+            cfg::GetNodeType("UTIL_PSD")>(0, 100);
 
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "UTIL_PSD"),
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "UTIL_PSD"), "BI_0"),
-        cfg::GetNodeType("UTIL_PSD")>(0, 100);
+    mock_air
+        ->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "UTIL_PSD"),
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
+                cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "UTIL_PSD"),
+                "BI_0"),
+            cfg::GetNodeType("UTIL_PSD")>(0, 100);
 }
 
 TEST_F(TestAPI, LogData_Count)
 {
     mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "CNT_PSD"),
         cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "CNT_PSD"), "BI_0"),
+            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "CNT_PSD"),
+            "BI_0"),
         cfg::GetNodeType("CNT_PSD")>(0, 1);
 
     mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "CNT_PSD"),
         cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "CNT_PSD"), "BI_0"),
+            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "CNT_PSD"),
+            "BI_0"),
         cfg::GetNodeType("CNT_PSD")>(0, 1);
 
     mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "CNT_PSD"),
         cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "CNT_PSD"), "BI_0"),
+            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "CNT_PSD"),
+            "BI_0"),
         cfg::GetNodeType("CNT_PSD")>(0, 1);
 }
 
 TEST_F(TestAPI, LogData_Histogram)
 {
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "HIST_TEST_1"),
+    mock_air->LogData<cfg::GetSentenceIndex(
+                          config::ParagraphType::NODE, "HIST_TEST_1"),
         cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "HIST_TEST_1"), "ONE"),
+            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "HIST_TEST_1"),
+            "ONE"),
         cfg::GetNodeType("HIST_TEST_1")>(0, 30);
 
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "HIST_TEST_1"),
+    mock_air->LogData<cfg::GetSentenceIndex(
+                          config::ParagraphType::NODE, "HIST_TEST_1"),
         cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "HIST_TEST_1"), "ONE"),
+            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "HIST_TEST_1"),
+            "ONE"),
         cfg::GetNodeType("HIST_TEST_1")>(0, 30);
 
-    mock_air->LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, "HIST_TEST_1"),
+    mock_air->LogData<cfg::GetSentenceIndex(
+                          config::ParagraphType::NODE, "HIST_TEST_1"),
         cfg::GetIntValue(config::ParagraphType::FILTER, "Item",
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "HIST_TEST_1"), "ONE"),
+            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", "HIST_TEST_1"),
+            "ONE"),
         cfg::GetNodeType("HIST_TEST_1")>(0, 30);
 }

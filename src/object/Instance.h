@@ -93,52 +93,52 @@ private:
     void _DeleteDetectorModule(void);
     void _DeleteTransferModule(void);
 
-    meta::NodeMeta* node_meta{nullptr};
-    meta::NodeMetaGetter* node_meta_getter{nullptr};
-    meta::GlobalMeta* global_meta{nullptr};
-    meta::GlobalMetaGetter* global_meta_getter{nullptr};
+    meta::NodeMeta* node_meta {nullptr};
+    meta::NodeMetaGetter* node_meta_getter {nullptr};
+    meta::GlobalMeta* global_meta {nullptr};
+    meta::GlobalMetaGetter* global_meta_getter {nullptr};
 
-    chain::ChainManager* chain_manager{nullptr};
+    chain::ChainManager* chain_manager {nullptr};
 
-    collection::CollectionManager* collection_manager{nullptr};
-    collection::Subject* collection_subject{nullptr};
-    collection::Observer* collection_observer{nullptr};
-    collection::CollectionCoRHandler* collection_cor_handler{nullptr};
-    collection::SwitchGearCoRHandler* switch_gear_cor_handler{nullptr};
-    collection::SwitchGear* switch_gear{nullptr};
+    collection::CollectionManager* collection_manager {nullptr};
+    collection::Subject* collection_subject {nullptr};
+    collection::Observer* collection_observer {nullptr};
+    collection::CollectionCoRHandler* collection_cor_handler {nullptr};
+    collection::SwitchGearCoRHandler* switch_gear_cor_handler {nullptr};
+    collection::SwitchGear* switch_gear {nullptr};
 
-    input::InCommand* in_command{nullptr};
-    input::InCoRHandler* in_cor_handler{nullptr};
-    input::Subject* in_subject{nullptr};
+    input::InCommand* in_command {nullptr};
+    input::InCoRHandler* in_cor_handler {nullptr};
+    input::Subject* in_subject {nullptr};
 
-    policy::Subject* policy_subject{nullptr};
-    policy::RuleManager* policy_rule_manager{nullptr};
-    policy::PolicyCoRHandler* policy_cor_handler{nullptr};
-    policy::Observer* policy_observer{nullptr};
-    policy::Ruler* policy_ruler{nullptr};
+    policy::Subject* policy_subject {nullptr};
+    policy::RuleManager* policy_rule_manager {nullptr};
+    policy::PolicyCoRHandler* policy_cor_handler {nullptr};
+    policy::Observer* policy_observer {nullptr};
+    policy::Ruler* policy_ruler {nullptr};
 
-    process::ProcessCoRHandler* process_cor_handler{nullptr};
-    process::ProcessManager* process_manager{nullptr};
-    process::PreprocessCoRHandler* preprocess_cor_handler{nullptr};
-    process::Preprocessor* preprocessor{nullptr};
+    process::ProcessCoRHandler* process_cor_handler {nullptr};
+    process::ProcessManager* process_manager {nullptr};
+    process::PreprocessCoRHandler* preprocess_cor_handler {nullptr};
+    process::Preprocessor* preprocessor {nullptr};
 
-    node::NodeManager* node_manager{nullptr};
+    node::NodeManager* node_manager {nullptr};
 
-    output::OutCommand* out_command{nullptr};
-    output::OutputCoRHandler* out_cor_handler{nullptr};
-    output::Observer* out_observer{nullptr};
-    output::OutputManager* out_manager{nullptr};
+    output::OutCommand* out_command {nullptr};
+    output::OutputCoRHandler* out_cor_handler {nullptr};
+    output::Observer* out_observer {nullptr};
+    output::OutputManager* out_manager {nullptr};
 
-    stream::Stream* stream{nullptr};
-    stream::StreamCoRHandler* stream_cor_handler{nullptr};
+    stream::Stream* stream {nullptr};
+    stream::StreamCoRHandler* stream_cor_handler {nullptr};
 
-    thread::ThreadManager* thread_manager{nullptr};
+    thread::ThreadManager* thread_manager {nullptr};
 
-    detect::DetectCoRHandler* detect_cor_handler{nullptr};
-    detect::Detector* detector{nullptr};
+    detect::DetectCoRHandler* detect_cor_handler {nullptr};
+    detect::Detector* detector {nullptr};
 
-    transfer::TransferCoRHandler* transfer_cor_handler{nullptr};
-    transfer::Transfer* transfer{nullptr};
+    transfer::TransferCoRHandler* transfer_cor_handler {nullptr};
+    transfer::Transfer* transfer {nullptr};
 };
 
 } // namespace air

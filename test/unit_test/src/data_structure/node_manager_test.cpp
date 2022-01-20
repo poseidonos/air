@@ -26,12 +26,11 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
 #include <pthread.h>
 
 TEST_F(NodeManagerTest, SetNodeDataArrayName)
 {
-    uint32_t tid{0x00000001};
+    uint32_t tid {0x00000001};
 
     node_manager->CreateNodeDataArray(tid);
     node::NodeDataArray* node_data_array = node_manager->GetNodeDataArray(tid);
@@ -50,7 +49,7 @@ TEST_F(NodeManagerTest, SetNodeDataArrayName)
 
 TEST_F(NodeManagerTest, CreateNodeDataArray)
 {
-    uint32_t tid{0x00000001};
+    uint32_t tid {0x00000001};
 
     node_manager->CreateNodeDataArray(tid);
     node::NodeDataArray* node_data_array = node_manager->GetNodeDataArray(tid);
@@ -70,7 +69,7 @@ TEST_F(NodeManagerTest, CreateNodeDataArray)
 
 TEST_F(NodeManagerTest, DeleteNodeDataArray)
 {
-    uint32_t tid{0x00000001};
+    uint32_t tid {0x00000001};
 
     node_manager->CreateNodeDataArray(tid);
     node::NodeDataArray* node_data_array = node_manager->GetNodeDataArray(tid);
@@ -87,7 +86,7 @@ TEST_F(NodeManagerTest, DeleteNodeDataArray)
 
 TEST_F(NodeManagerTest, CanDelete)
 {
-    uint32_t tid{0x00000001};
+    uint32_t tid {0x00000001};
 
     node_manager->CreateNodeDataArray(tid);
     node::NodeDataArray* node_data_array = node_manager->GetNodeDataArray(tid);

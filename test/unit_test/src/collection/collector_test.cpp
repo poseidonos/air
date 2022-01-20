@@ -47,8 +47,9 @@ TEST_F(CollectorTest, PerformanceCollector_LogData)
 TEST_F(CollectorTest, PerformanceCollector_InformInit)
 {
     lib::AccData* data_dirty {new lib::AccPerformanceData};
-    lib::AccPerformanceData* perf_data {static_cast<lib::AccPerformanceData*>(data_dirty)};
-    unsigned int value{0};
+    lib::AccPerformanceData* perf_data {
+        static_cast<lib::AccPerformanceData*>(data_dirty)};
+    unsigned int value {0};
 
     EXPECT_EQ(value, perf_data->need_erase);
     performance_collector->InformInit(data_dirty);
@@ -84,7 +85,7 @@ TEST_F(CollectorTest, LatencyCollector_InformInit)
     lib::AccData* data_dirty {new lib::AccLatencyData};
     lib::AccLatencyData* lat_data {static_cast<lib::AccLatencyData*>(data_dirty)};
 
-    uint32_t value{0};
+    uint32_t value {0};
     EXPECT_EQ(value, lat_data->need_erase);
     latency_collector->InformInit(data_dirty);
     value = 1;
@@ -115,7 +116,7 @@ TEST_F(CollectorTest, QueueCollector_InformInit)
     lib::AccData* data_dirty {new lib::AccQueueData};
     lib::AccQueueData* q_data {static_cast<lib::AccQueueData*>(data_dirty)};
 
-    uint32_t value{0};
+    uint32_t value {0};
     EXPECT_EQ(value, q_data->need_erase);
     queue_collector->InformInit(data_dirty);
     value = 1;
@@ -180,7 +181,8 @@ TEST_F(CollectorTest, UtilizationCollector_LogData)
 TEST_F(CollectorTest, UtilizationCollector_InformInit)
 {
     lib::AccData* data_dirty {new lib::AccUtilizationData};
-    lib::AccUtilizationData* util_data {static_cast<lib::AccUtilizationData*>(data_dirty)};
+    lib::AccUtilizationData* util_data {
+        static_cast<lib::AccUtilizationData*>(data_dirty)};
 
     EXPECT_EQ(0, util_data->need_erase);
     util_collector->InformInit(data_dirty);
@@ -210,7 +212,8 @@ TEST_F(CollectorTest, HistogramCollector_LogData)
 TEST_F(CollectorTest, HistogramCollector_InformInit)
 {
     lib::AccData* data_dirty {new lib::AccHistogramData};
-    lib::AccHistogramData* histogram_data {static_cast<lib::AccHistogramData*>(data_dirty)};
+    lib::AccHistogramData* histogram_data {
+        static_cast<lib::AccHistogramData*>(data_dirty)};
 
     EXPECT_EQ(0, histogram_data->need_erase);
     histogram_collector->InformInit(data_dirty);

@@ -168,7 +168,8 @@ StolWithExponent(air::string_view str)
     if (air::string_view::npos != pow_pos)
     {
         int64_t base {StolWithExponent(str.substr(0, pow_pos))};
-        int64_t exponent {StolWithExponent(str.substr(pow_pos + 1, str.size() - pow_pos - 1))};
+        int64_t exponent {
+            StolWithExponent(str.substr(pow_pos + 1, str.size() - pow_pos - 1))};
         if (0 == exponent)
         {
             if (is_positive)

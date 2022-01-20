@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    collection::Observer* observer{nullptr};
+    collection::Observer* observer {nullptr};
 };
 
 } // namespace collection

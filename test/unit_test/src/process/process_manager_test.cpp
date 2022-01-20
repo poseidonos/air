@@ -29,7 +29,8 @@
 
 TEST_F(ProcessManagerTest, Init)
 {
-    EXPECT_EQ((int)cfg::GetSentenceCount(config::ParagraphType::NODE), process_manager.Init());
+    EXPECT_EQ((int)cfg::GetSentenceCount(config::ParagraphType::NODE),
+        process_manager.Init());
 }
 
 TEST_F(ProcessManagerTest, StreamData)

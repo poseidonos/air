@@ -56,15 +56,13 @@ public:
     {
     }
     virtual int Notify(uint32_t index, uint32_t type1, uint32_t type2,
-        uint32_t value1, uint32_t value2, int pid, int cmd_type,
-        int cmd_order);
+        uint32_t value1, uint32_t value2, int pid, int cmd_type, int cmd_order);
 };
 
 class InCommand
 {
 public:
-    explicit InCommand(input::Subject* new_subject)
-    : subject(new_subject)
+    explicit InCommand(input::Subject* new_subject): subject(new_subject)
     {
         struct msqid_ds msq_stat
         {
@@ -76,7 +74,7 @@ public:
         msg_q_key_id = msgget(msg_q_key_value, IPC_CREAT | 0666);
 
         msq_stat.msg_perm.uid = msg_q_key_value;
-        msq_stat.msg_qbytes = 4096;               // set max number of bytes allowed in MsgQ
+        msq_stat.msg_qbytes = 4096; // set max number of bytes allowed in MsgQ
         msgctl(msg_q_key_id, IPC_SET, &msq_stat); // set AIR pid to kernel
     }
     ~InCommand(void)
@@ -93,12 +91,12 @@ private:
     void _CheckDisableNodeCMD(void);
     void _CheckInitNodeCMD(void);
     void _CheckSetSamplingRatioCMD(void);
-    void _NotifyToPolicy(uint32_t type2, uint32_t value1, uint32_t value2,
-        int pid, int64_t cmd_type, int cmd_order);
+    void _NotifyToPolicy(uint32_t type2, uint32_t value1, uint32_t value2, int pid,
+        int64_t cmd_type, int cmd_order);
 
-    input::Subject* subject{nullptr};
-    key_t msg_q_key_id{0};
-    key_t msg_q_key_value{0};
+    input::Subject* subject {nullptr};
+    key_t msg_q_key_id {0};
+    key_t msg_q_key_value {0};
     struct RecvMsgSt
     {
         int64_t pid;

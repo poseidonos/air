@@ -32,11 +32,14 @@ TEST_F(ProcessorTest, ThreadAwareStreamData_PerformanceType)
     int tid {123};
 
     air::string_view node_name_perf1 {"PERF_BENCHMARK"};
-    perf_processor.StreamData(node_name_perf1, tid, "thread0", nullptr, air::ProcessorType::PERFORMANCE, 1, 32, 32);
+    perf_processor.StreamData(node_name_perf1, tid, "thread0", nullptr,
+        air::ProcessorType::PERFORMANCE, 1, 32, 32);
     air::string_view node_name_perf2 {"PERF_BENCHMARK"};
-    perf_processor.StreamData(node_name_perf2, tid, "thread0", &perf_data, air::ProcessorType::PERFORMANCE, 1, 32, 32);
+    perf_processor.StreamData(node_name_perf2, tid, "thread0", &perf_data,
+        air::ProcessorType::PERFORMANCE, 1, 32, 32);
     air::string_view node_name_perf3 {"PERF_BENCHMARK"};
-    perf_processor.StreamData(node_name_perf3, tid, "thread0", &perf_data, air::ProcessorType::PERFORMANCE, 1, 32, 32);
+    perf_processor.StreamData(node_name_perf3, tid, "thread0", &perf_data,
+        air::ProcessorType::PERFORMANCE, 1, 32, 32);
 }
 
 TEST_F(ProcessorTest, ThreadAwareStreamData_QueueType)
@@ -44,9 +47,11 @@ TEST_F(ProcessorTest, ThreadAwareStreamData_QueueType)
     int tid {123};
 
     air::string_view node_name_q1 {"Q_SUBMISSION"};
-    queue_processor.StreamData(node_name_q1, tid, "thread0", &queue_data, air::ProcessorType::QUEUE, 1, 32, 32);
+    queue_processor.StreamData(node_name_q1, tid, "thread0", &queue_data,
+        air::ProcessorType::QUEUE, 1, 32, 32);
     air::string_view node_name_q2 {"Q_COMPLETION"};
-    queue_processor.StreamData(node_name_q2, tid, "thread0", &queue_data, air::ProcessorType::QUEUE, 1, 32, 32);
+    queue_processor.StreamData(node_name_q2, tid, "thread0", &queue_data,
+        air::ProcessorType::QUEUE, 1, 32, 32);
 }
 
 TEST_F(ProcessorTest, QueueProcessData)
@@ -59,29 +64,39 @@ TEST_F(ProcessorTest, QueueProcessData)
     q_data->access = true;
     acc_q_data->need_erase = false;
     air::string_view node_name_q1 {"Q_SUBMISSION"};
-    queue_processor.StreamData(node_name_q1, 0, "thread0", &queue_data, air::ProcessorType::QUEUE, 1, 32, 32);
-    EXPECT_EQ(true, ((10.1f > acc_q_data->depth_total_avg) && (9.9f < acc_q_data->depth_total_avg)));
+    queue_processor.StreamData(node_name_q1, 0, "thread0", &queue_data,
+        air::ProcessorType::QUEUE, 1, 32, 32);
+    EXPECT_EQ(true,
+        ((10.1f > acc_q_data->depth_total_avg) &&
+            (9.9f < acc_q_data->depth_total_avg)));
 
-    queue_processor.StreamData(node_name_q1, 0, "thread0", &queue_data, air::ProcessorType::QUEUE, 1, 32, 32); // for swap
+    queue_processor.StreamData(node_name_q1, 0, "thread0", &queue_data,
+        air::ProcessorType::QUEUE, 1, 32, 32); // for swap
 
     q_data->num_req = 12;
     q_data->sum_depth = 240;
     q_data->access = true;
     acc_q_data->need_erase = false;
     air::string_view node_name_q2 {"Q_SUBMISSION"};
-    queue_processor.StreamData(node_name_q2, 0, "thread0", &queue_data, air::ProcessorType::QUEUE, 1, 32, 32);
-    EXPECT_EQ(true, ((15.1f > acc_q_data->depth_total_avg) && (14.9f < acc_q_data->depth_total_avg)));
+    queue_processor.StreamData(node_name_q2, 0, "thread0", &queue_data,
+        air::ProcessorType::QUEUE, 1, 32, 32);
+    EXPECT_EQ(true,
+        ((15.1f > acc_q_data->depth_total_avg) &&
+            (14.9f < acc_q_data->depth_total_avg)));
 }
 
 TEST_F(ProcessorTest, UtilizationProcessData)
 {
-    lib::UtilizationData* u_data {(lib::UtilizationData*)util_data.GetAirData(0, 0)};
-    lib::AccUtilizationData* u_acc {(lib::AccUtilizationData*)util_data.GetAccData(0, 0)};
+    lib::UtilizationData* u_data {
+        (lib::UtilizationData*)util_data.GetAirData(0, 0)};
+    lib::AccUtilizationData* u_acc {
+        (lib::AccUtilizationData*)util_data.GetAccData(0, 0)};
 
     u_data->usage = 400;
     u_data->access = true;
     air::string_view node_name_util1 {"UTIL_SUBMIT_THR"};
-    util_processor.StreamData(node_name_util1, 0, "thread0", &util_data, air::ProcessorType::UTILIZATION, 1, 32, 32);
+    util_processor.StreamData(node_name_util1, 0, "thread0", &util_data,
+        air::ProcessorType::UTILIZATION, 1, 32, 32);
 
     EXPECT_EQ(400, u_acc->total_usage);
 }
@@ -103,7 +118,8 @@ TEST_F(ProcessorTest, CountProcessData_Case1)
     c_acc->total_num_req_negative = 0;
 
     air::string_view node_name_count1 {"CNT_TEST_EVENT"};
-    count_processor.StreamData(node_name_count1, 0, "thread0", &count_data, air::ProcessorType::COUNT, 1, 32, 32);
+    count_processor.StreamData(node_name_count1, 0, "thread0", &count_data,
+        air::ProcessorType::COUNT, 1, 32, 32);
 
     EXPECT_EQ(1, c_acc->negative);
     EXPECT_EQ(900, c_acc->total_count);
@@ -128,7 +144,8 @@ TEST_F(ProcessorTest, CountProcessData_Case2)
     c_acc->total_num_req_negative = 30;
 
     air::string_view node_name_count1 {"CNT_TEST_EVENT"};
-    count_processor.StreamData(node_name_count1, 0, "thread0", &count_data, air::ProcessorType::COUNT, 1, 32, 32);
+    count_processor.StreamData(node_name_count1, 0, "thread0", &count_data,
+        air::ProcessorType::COUNT, 1, 32, 32);
 
     EXPECT_EQ(0, c_acc->negative);
     EXPECT_EQ(9100, c_acc->total_count);
@@ -153,7 +170,8 @@ TEST_F(ProcessorTest, CountProcessData_Case3)
     c_acc->total_num_req_negative = 30;
 
     air::string_view node_name_count1 {"CNT_TEST_EVENT"};
-    count_processor.StreamData(node_name_count1, 0, "thread0", &count_data, air::ProcessorType::COUNT, 1, 32, 32);
+    count_processor.StreamData(node_name_count1, 0, "thread0", &count_data,
+        air::ProcessorType::COUNT, 1, 32, 32);
 
     EXPECT_EQ(0, c_acc->negative);
     EXPECT_EQ(10100, c_acc->total_count);
@@ -178,7 +196,8 @@ TEST_F(ProcessorTest, CountProcessData_Case4)
     c_acc->total_num_req_negative = 30;
 
     air::string_view node_name_count1 {"CNT_TEST_EVENT"};
-    count_processor.StreamData(node_name_count1, 0, "thread0", &count_data, air::ProcessorType::COUNT, 1, 32, 32);
+    count_processor.StreamData(node_name_count1, 0, "thread0", &count_data,
+        air::ProcessorType::COUNT, 1, 32, 32);
 
     EXPECT_EQ(1, c_acc->negative);
     EXPECT_EQ(79900, c_acc->total_count);
@@ -188,8 +207,10 @@ TEST_F(ProcessorTest, CountProcessData_Case4)
 
 TEST_F(ProcessorTest, HitogramProcessData_Case1)
 {
-    lib::HistogramData* h_data {(lib::HistogramData*)histogram_data.GetAirData(1, 0)};
-    lib::AccHistogramData* h_acc {(lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
+    lib::HistogramData* h_data {
+        (lib::HistogramData*)histogram_data.GetAirData(1, 0)};
+    lib::AccHistogramData* h_acc {
+        (lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
 
     h_data->access = true;
     h_data->bucket_lower_bound = 0;
@@ -213,7 +234,8 @@ TEST_F(ProcessorTest, HitogramProcessData_Case1)
     h_acc->cumulation_max_value = 3455;
 
     air::string_view node_name {"HIST_TEST_1"};
-    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data, air::ProcessorType::HISTOGRAM, 1, 32, 32);
+    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data,
+        air::ProcessorType::HISTOGRAM, 1, 32, 32);
 
     EXPECT_EQ(0, h_data->period_avg_value); // because it's initialized
     EXPECT_EQ(23, h_acc->cumulation_underflow);
@@ -228,8 +250,10 @@ TEST_F(ProcessorTest, HitogramProcessData_Case1)
 
 TEST_F(ProcessorTest, HitogramProcessData_Case2)
 {
-    lib::HistogramData* h_data {(lib::HistogramData*)histogram_data.GetAirData(1, 0)};
-    lib::AccHistogramData* h_acc {(lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
+    lib::HistogramData* h_data {
+        (lib::HistogramData*)histogram_data.GetAirData(1, 0)};
+    lib::AccHistogramData* h_acc {
+        (lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
 
     h_data->access = true;
     h_data->bucket_lower_bound = 33;
@@ -248,7 +272,8 @@ TEST_F(ProcessorTest, HitogramProcessData_Case2)
     h_acc->cumulation_bucket[10] = 20;
 
     air::string_view node_name {"HIST_TEST_2"};
-    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data, air::ProcessorType::HISTOGRAM, 1, 32, 32);
+    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data,
+        air::ProcessorType::HISTOGRAM, 1, 32, 32);
 
     EXPECT_EQ(0, h_data->period_avg_value); // because it's initialized
     EXPECT_EQ(20, h_acc->cumulation_bucket[0]);
@@ -262,8 +287,10 @@ TEST_F(ProcessorTest, HitogramProcessData_Case2)
 
 TEST_F(ProcessorTest, HitogramProcessData_Case3)
 {
-    lib::HistogramData* h_data {(lib::HistogramData*)histogram_data.GetAirData(1, 0)};
-    lib::AccHistogramData* h_acc {(lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
+    lib::HistogramData* h_data {
+        (lib::HistogramData*)histogram_data.GetAirData(1, 0)};
+    lib::AccHistogramData* h_acc {
+        (lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
 
     h_data->access = true;
     h_data->bucket_lower_bound = -100;
@@ -281,7 +308,8 @@ TEST_F(ProcessorTest, HitogramProcessData_Case3)
     h_acc->cumulation_bucket[3] = 9;
 
     air::string_view node_name {"HIST_TEST_3"};
-    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data, air::ProcessorType::HISTOGRAM, 1, 32, 32);
+    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data,
+        air::ProcessorType::HISTOGRAM, 1, 32, 32);
 
     EXPECT_EQ(0, h_data->period_avg_value); // because it's initialized
     EXPECT_EQ(7, h_acc->cumulation_bucket[0]);
@@ -295,8 +323,10 @@ TEST_F(ProcessorTest, HitogramProcessData_Case3)
 
 TEST_F(ProcessorTest, HitogramProcessData_Case4)
 {
-    lib::HistogramData* h_data {(lib::HistogramData*)histogram_data.GetAirData(1, 0)};
-    lib::AccHistogramData* h_acc {(lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
+    lib::HistogramData* h_data {
+        (lib::HistogramData*)histogram_data.GetAirData(1, 0)};
+    lib::AccHistogramData* h_acc {
+        (lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
 
     h_data->access = true;
     h_data->bucket_lower_bound = 1;
@@ -314,7 +344,8 @@ TEST_F(ProcessorTest, HitogramProcessData_Case4)
     h_data->period_bucket[9] = 10;
 
     air::string_view node_name {"HIST_TEST_4"};
-    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data, air::ProcessorType::HISTOGRAM, 1, 32, 32);
+    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data,
+        air::ProcessorType::HISTOGRAM, 1, 32, 32);
 
     EXPECT_EQ(0, h_data->period_avg_value); // because it's initialized
     EXPECT_EQ(10, h_acc->cumulation_bucket[0]);
@@ -332,8 +363,10 @@ TEST_F(ProcessorTest, HitogramProcessData_Case4)
 
 TEST_F(ProcessorTest, HitogramProcessData_Case5)
 {
-    lib::HistogramData* h_data {(lib::HistogramData*)histogram_data.GetAirData(1, 0)};
-    lib::AccHistogramData* h_acc {(lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
+    lib::HistogramData* h_data {
+        (lib::HistogramData*)histogram_data.GetAirData(1, 0)};
+    lib::AccHistogramData* h_acc {
+        (lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
 
     h_data->access = true;
     h_data->bucket_lower_bound = -4095;
@@ -355,7 +388,8 @@ TEST_F(ProcessorTest, HitogramProcessData_Case5)
     h_acc->cumulation_bucket[7] = 10;
 
     air::string_view node_name {"HIST_TEST_5"};
-    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data, air::ProcessorType::HISTOGRAM, 1, 32, 32);
+    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data,
+        air::ProcessorType::HISTOGRAM, 1, 32, 32);
 
     EXPECT_EQ(0, h_data->period_avg_value); // because it's initialized
     EXPECT_EQ(10, h_acc->cumulation_bucket[0]);
@@ -371,8 +405,10 @@ TEST_F(ProcessorTest, HitogramProcessData_Case5)
 
 TEST_F(ProcessorTest, HitogramProcessData_Case6)
 {
-    lib::HistogramData* h_data {(lib::HistogramData*)histogram_data.GetAirData(1, 0)};
-    lib::AccHistogramData* h_acc {(lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
+    lib::HistogramData* h_data {
+        (lib::HistogramData*)histogram_data.GetAirData(1, 0)};
+    lib::AccHistogramData* h_acc {
+        (lib::AccHistogramData*)histogram_data.GetAccData(1, 0)};
 
     h_data->access = true;
     h_data->bucket_lower_bound = -999;
@@ -395,7 +431,8 @@ TEST_F(ProcessorTest, HitogramProcessData_Case6)
     h_acc->cumulation_bucket[8] = 10;
 
     air::string_view node_name {"HIST_TEST_6"};
-    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data, air::ProcessorType::HISTOGRAM, 1, 32, 32);
+    histogram_processor.StreamData(node_name, 0, "thread0", &histogram_data,
+        air::ProcessorType::HISTOGRAM, 1, 32, 32);
 
     EXPECT_EQ(0, h_data->period_avg_value); // because it's initialized
     EXPECT_EQ(10, h_acc->cumulation_bucket[0]);

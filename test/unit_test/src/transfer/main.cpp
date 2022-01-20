@@ -22,14 +22,13 @@ TEST_F(TaskTest, Singleton)
 
 TEST_F(TaskTest, Register_Lambda_Type1)
 {
-    transfer::Task::Get().Register({"NodeA", "NodeB"},
-        [](const air::JSONdoc& doc) -> int {return 0;}
-    );
+    transfer::Task::Get().Register(
+        {"NodeA", "NodeB"}, [](const air::JSONdoc& doc) -> int { return 0; });
 }
 
 TEST_F(TaskTest, Register_Lambda_Type2)
 {
-    auto t2 = [](const air::JSONdoc& doc) -> int {return 0;};
+    auto t2 = [](const air::JSONdoc& doc) -> int { return 0; };
     transfer::Task::Get().Register({"NodeA"}, t2);
 }
 
@@ -40,19 +39,16 @@ TEST_F(TaskTest, Register_Function)
 
 TEST_F(TaskTest, NotifyAll)
 {
-    int count{0};
-    transfer::Task::Get().Register({"Node"},
-        [&](const air::JSONdoc& doc) -> int
+    int count {0};
+    transfer::Task::Get().Register({"Node"}, [&](const air::JSONdoc& doc) -> int {
+        usleep(count * 100000);
+        count++;
+        if (count >= 3)
         {
-            usleep(count * 100000);
-            count++;
-            if (count >= 3)
-            {
-                return -1;
-            }
-            return 0;
+            return -1;
         }
-    );
+        return 0;
+    });
     air::JSONdoc& doc = air::json("doc");
     transfer::Task::Get().NotifyAll(std::move(doc));
     EXPECT_EQ(1, count);
@@ -70,18 +66,16 @@ TEST_F(TaskTest, Lambda_Capture_Reference)
 {
     struct Obj
     {
-        int data{100};
+        int data {100};
     };
     Obj obj;
     EXPECT_EQ(100, obj.data);
 
-    transfer::Task::Get().Register({"Node"},
-        [&obj](const air::JSONdoc& doc) -> int
-        {
+    transfer::Task::Get().Register(
+        {"Node"}, [&obj](const air::JSONdoc& doc) -> int {
             obj.data++;
             return 0;
-        }
-    );
+        });
 
     obj.data++;
     air::JSONdoc& doc = air::json("doc");
@@ -94,21 +88,28 @@ TEST_F(TaskTest, Lambda_Capture_Copy)
 {
     struct Obj
     {
-        int* data{nullptr};
-        Obj(){ data = new int{100}; }
-        Obj(const Obj& rhs){ data = new int{*rhs.data}; }
-        ~Obj(){ delete data; }
+        int* data {nullptr};
+        Obj()
+        {
+            data = new int {100};
+        }
+        Obj(const Obj& rhs)
+        {
+            data = new int {*rhs.data};
+        }
+        ~Obj()
+        {
+            delete data;
+        }
     };
-    Obj* obj = new Obj{};
+    Obj* obj = new Obj {};
     EXPECT_EQ(100, *obj->data);
 
-    transfer::Task::Get().Register({"Node"},
-        [copy = *obj](const air::JSONdoc& doc) mutable -> int
-        {
+    transfer::Task::Get().Register(
+        {"Node"}, [copy = *obj](const air::JSONdoc& doc) mutable -> int {
             (*copy.data)++;
             return 0;
-        }
-    );
+        });
 
     (*obj->data)++;
     air::JSONdoc& doc = air::json("doc");
@@ -152,21 +153,22 @@ TEST_F(TransferTest, SendData)
     groupTop["groupB"] = {groupB};
     obj["group"] = {groupTop};
 
-    transfer::Task::Get().Register({"Apple", "Banana"},
-        [](const air::JSONdoc& doc) -> int
-        {
+    transfer::Task::Get().Register(
+        {"Apple", "Banana"}, [](const air::JSONdoc& doc) -> int {
             std::stringstream stream_apple;
             stream_apple << doc["Apple"];
             std::string str_apple = stream_apple.str();
-            EXPECT_EQ(0, str_apple.compare("{\"color\": \"red\", \"weight(kg)\": 0.93}"));
+            EXPECT_EQ(
+                0, str_apple.compare("{\"color\": \"red\", \"weight(kg)\": 0.93}"));
 
             std::stringstream stream_banana;
             stream_banana << doc["Banana"];
             std::string str_banana = stream_banana.str();
-            EXPECT_EQ(0, str_banana.compare("{\"color\": \"yellow\", \"weight(kg)\": 2.34}"));
+            EXPECT_EQ(0,
+                str_banana.compare(
+                    "{\"color\": \"yellow\", \"weight(kg)\": 2.34}"));
             return 0;
-        }
-    );
+        });
 
     transfer::Transfer transfer;
     transfer.SendData();

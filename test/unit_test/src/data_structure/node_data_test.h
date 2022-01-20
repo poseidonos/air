@@ -31,7 +31,7 @@
 class NodeDataTest : public ::testing::Test
 {
 public:
-    node::NodeData* node_data{nullptr};
+    node::NodeData* node_data {nullptr};
 
 protected:
     NodeDataTest()

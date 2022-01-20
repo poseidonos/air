@@ -34,7 +34,8 @@
 namespace config
 {
 static constexpr int32_t
-CheckKeyTypo(ParagraphType type, const air::string_view* key_list, air::string_view sentence)
+CheckKeyTypo(
+    ParagraphType type, const air::string_view* key_list, air::string_view sentence)
 {
     size_t cur_pos {sentence.find(":")};
     size_t prev_pos {0};
@@ -140,7 +141,8 @@ CheckKeyTypoNode(const air::string_view* key_list, air::string_view sentence)
             {
                 next_comma = sentence.size();
             }
-            air::string_view value {sentence.substr(cur_pos + 1, next_comma - cur_pos - 1)};
+            air::string_view value {
+                sentence.substr(cur_pos + 1, next_comma - cur_pos - 1)};
             value = Strip(value);
             if (value == "QUEUE" || value == "Queue")
             {
@@ -189,7 +191,8 @@ CheckKeyTypoNode(const air::string_view* key_list, air::string_view sentence)
 }
 
 static constexpr int32_t
-CheckMandatoryKey(const air::string_view* key_list, uint32_t num_mandatory, air::string_view sentence)
+CheckMandatoryKey(const air::string_view* key_list, uint32_t num_mandatory,
+    air::string_view sentence)
 {
     int key_cnt {0};
 
@@ -203,7 +206,8 @@ CheckMandatoryKey(const air::string_view* key_list, uint32_t num_mandatory, air:
 
         while (air::string_view::npos != cur_pos)
         {
-            air::string_view sentence_key {sentence.substr(prev_pos, cur_pos - prev_pos)};
+            air::string_view sentence_key {
+                sentence.substr(prev_pos, cur_pos - prev_pos)};
             sentence_key = Strip(sentence_key);
 
             if (mandatory_key == sentence_key)
@@ -235,7 +239,8 @@ CheckKeyDuplication(air::string_view sentence)
 
     while (air::string_view::npos != colon_pos)
     {
-        air::string_view target_key {sentence.substr(comma_pos, colon_pos - comma_pos)};
+        air::string_view target_key {
+            sentence.substr(comma_pos, colon_pos - comma_pos)};
         target_key = Strip(target_key);
 
         size_t comparative_colon {sentence.find(":", colon_pos + 1)};
@@ -243,7 +248,8 @@ CheckKeyDuplication(air::string_view sentence)
         comparative_comma += 1;
         while (air::string_view::npos != comparative_colon)
         {
-            air::string_view comparative_key {sentence.substr(comparative_comma, comparative_colon - comparative_comma)};
+            air::string_view comparative_key {sentence.substr(
+                comparative_comma, comparative_colon - comparative_comma)};
             comparative_key = Strip(comparative_key);
 
             if (target_key == comparative_key)

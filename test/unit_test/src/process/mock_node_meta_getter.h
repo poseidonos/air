@@ -22,17 +22,17 @@
  *   SOFTWARE.
  */
 
-#include "src/meta/NodeMeta.h"
-
 #include <gmock/gmock.h>
+
+#include "src/meta/NodeMeta.h"
 
 namespace meta
 {
-
 class MockNodeMetaGetter : public NodeMetaGetter
 {
 public:
-    MOCK_METHOD(air::ProcessorType, ProcessorType, (uint32_t nid), (const, override));
+    MOCK_METHOD(
+        air::ProcessorType, ProcessorType, (uint32_t nid), (const, override));
     MOCK_METHOD(uint32_t, IndexSize, (uint32_t nid), (const, override));
     MOCK_METHOD(uint32_t, FilterSize, (uint32_t nid), (const, override));
     MOCK_METHOD(bool, Run, (uint32_t nid), (const, override));

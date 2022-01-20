@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    output::Observer* observer{nullptr};
+    output::Observer* observer {nullptr};
 };
 
 } // namespace output

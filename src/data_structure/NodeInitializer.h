@@ -31,7 +31,6 @@
 
 namespace node
 {
-
 class NodeInitializer
 {
 public:
@@ -39,8 +38,8 @@ public:
 
 private:
     void _InitHistogramData(uint32_t nid, NodeData* data);
-    void _InitHistogramLinearType(lib::HistogramData* data,
-        int64_t lower_bound, int64_t upper_bound, int32_t scale);
+    void _InitHistogramLinearType(lib::HistogramData* data, int64_t lower_bound,
+        int64_t upper_bound, int32_t scale);
     void _InitHistogramExponentialType(lib::HistogramData* data,
         int64_t lower_bound, int64_t upper_bound, int32_t scale);
 };

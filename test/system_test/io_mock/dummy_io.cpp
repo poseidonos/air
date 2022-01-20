@@ -1,11 +1,11 @@
 
 #include "dummy_io.h"
-#include <air/Air.h>
 
+#include <air/Air.h>
 #include <pthread.h>
-#include <thread>
 
 #include <string>
+#include <thread>
 
 bool DummyIO::run = true;
 
@@ -39,7 +39,8 @@ DummyIO::Print()
     pthread_setaffinity_np(pthread_self(), sizeof(cpu), &cpu);
     pthread_setname_np(pthread_self(), "Print");
 
-    while (run) {
+    while (run)
+    {
         sleep(1);
         printf(" [DummyIO] Read_IOPS: %8u\r", read_iops);
         fflush(stdout);
@@ -60,7 +61,8 @@ DummyIO::SubmitIO()
     int i {0};
     bool sq_push {false};
 
-    while (run) {
+    while (run)
+    {
         if (1000000000 < i)
             i = 0;
 
@@ -69,15 +71,18 @@ DummyIO::SubmitIO()
             airlog("LAT_IO_PATH", "AIR_0", 0, i);
 
             std::lock_guard<std::mutex> guard(sq_lock[0]);
-            if (sq[0].size() < 256) {
+            if (sq[0].size() < 256)
+            {
                 sq[0].push(i);
                 sq_push = true;
             }
-            else {
+            else
+            {
                 sq_push = false;
             }
 
-            if (sq_push) {
+            if (sq_push)
+            {
                 airlog("LAT_IO_PATH", "AIR_1", 0, i);
                 airlog("LAT_SUBMIT", "AIR_1", 0, i);
                 i++;
@@ -89,21 +94,23 @@ DummyIO::SubmitIO()
             airlog("LAT_IO_PATH", "AIR_0", 1, i);
 
             std::lock_guard<std::mutex> guard(sq_lock[1]);
-            if (sq[1].size() < 256) {
+            if (sq[1].size() < 256)
+            {
                 sq[1].push(i);
                 sq_push = true;
             }
-            else {
+            else
+            {
                 sq_push = false;
             }
 
-            if (sq_push) {
+            if (sq_push)
+            {
                 airlog("LAT_IO_PATH", "AIR_1", 1, i);
                 i++;
             }
             airlog("UTIL_SUBMIT_THR", "AIR_SUBMIT", 1, 10);
         }
-
     }
 }
 
@@ -116,13 +123,15 @@ DummyIO::ProcessIO(int qid)
     pthread_setaffinity_np(pthread_self(), sizeof(cpu), &cpu);
     pthread_setname_np(pthread_self(), "ProcessIO");
 
-    while (run) {
+    while (run)
+    {
         bool valid {false};
         int value {0};
 
         {
             std::lock_guard<std::mutex> guard(sq_lock[qid]);
-            if (!sq[qid].empty()) {
+            if (!sq[qid].empty())
+            {
                 airlog("Q_SUBMISSION", "AIR_BASE", qid, sq[qid].size());
                 valid = true;
                 value = sq[qid].front();
@@ -134,9 +143,11 @@ DummyIO::ProcessIO(int qid)
             }
         }
 
-        if (valid) {
+        if (valid)
+        {
             std::lock_guard<std::mutex> guard(cq_lock[qid]);
-            if (cq[qid].size() < 256) {
+            if (cq[qid].size() < 256)
+            {
                 cq[qid].push(value);
                 airlog("LAT_PROCESS", "AIR_1", 512 + qid, value);
             }
@@ -153,14 +164,15 @@ DummyIO::CompleteIO()
     pthread_setaffinity_np(pthread_self(), sizeof(cpu), &cpu);
     pthread_setname_np(pthread_self(), "CompleteIO");
 
-    while (run) {
-
+    while (run)
+    {
         int count {0};
         int value {0};
 
         {
             std::lock_guard<std::mutex> guard(cq_lock[0]);
-            if (!cq[0].empty()) {
+            if (!cq[0].empty())
+            {
                 airlog("Q_COMPLETION", "AIR_BASE", 0, cq[0].size());
                 count++;
                 value = cq[0].front();
@@ -179,24 +191,25 @@ DummyIO::CompleteIO()
 
         {
             std::lock_guard<std::mutex> guard(cq_lock[1]);
-            if (!cq[1].empty()) {
+            if (!cq[1].empty())
+            {
                 airlog("Q_COMPLETION", "AIR_BASE", 1, cq[1].size());
                 count++;
                 value = cq[1].front();
                 cq[1].pop();
-                
+
                 airlog("PERF_BENCHMARK", "AIR_READ", 513, 4096);
                 airlog("CNT_TEST_EVENT", "AIR_COMPLETE", 1, -1);
-                
+
                 airlog("LAT_IO_PATH", "AIR_3", 1, value);
                 airlog("UTIL_SUBMIT_THR", "AIR_COMPLETE", 1, 10);
             }
         }
 
-        if (count) {
+        if (count)
+        {
             std::lock_guard<std::mutex> guard(iops_lock);
             read_iops += count;
         }
-
     }
 }

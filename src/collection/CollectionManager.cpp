@@ -35,13 +35,12 @@
 
 int
 collection::Subject::Notify(uint32_t index, uint32_t type1, uint32_t type2,
-    uint32_t value1, uint32_t value2, int pid,
-    int cmd_type, int cmd_order)
+    uint32_t value1, uint32_t value2, int pid, int cmd_type, int cmd_order)
 {
     if (index < to_dtype(pi::CollectionSubject::COUNT))
     {
-        arr_observer[index]->Update(type1, type2, value1, value2, pid, cmd_type,
-            cmd_order);
+        arr_observer[index]->Update(
+            type1, type2, value1, value2, pid, cmd_type, cmd_order);
         return 0;
     }
     return -1;
@@ -124,18 +123,16 @@ collection::CollectionManager::HandleMsg(void)
             ret_code = result * -1;
         }
         subject->Notify(to_dtype(pi::CollectionSubject::TO_OUTPUT),
-            to_dtype(pi::Type1::COLLECTION_TO_OUTPUT), 0, ret_code, 0,
-            entry.pid, entry.cmd_type, entry.cmd_order);
+            to_dtype(pi::Type1::COLLECTION_TO_OUTPUT), 0, ret_code, 0, entry.pid,
+            entry.cmd_type, entry.cmd_order);
     }
 }
 
 int
-collection::CollectionManager::UpdateCollection(uint32_t type1,
-    uint32_t type2,
-    uint32_t value1,
-    uint32_t value2)
+collection::CollectionManager::UpdateCollection(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
-    int result{0}; // SUCCESS
+    int result {0}; // SUCCESS
 
     switch (type2)
     {
@@ -184,8 +181,7 @@ collection::CollectionManager::UpdateCollection(uint32_t type1,
 }
 
 int
-collection::CollectionManager::_EnableNode(uint32_t node_index,
-    uint32_t is_run)
+collection::CollectionManager::_EnableNode(uint32_t node_index, uint32_t is_run)
 {
     if (to_dtype(pi::OnOff::ON) == is_run)
     {
@@ -204,9 +200,8 @@ collection::CollectionManager::_EnableNode(uint32_t node_index,
 }
 
 int
-collection::CollectionManager::_EnableRangeNode(uint32_t start_idx,
-    uint32_t end_idx,
-    uint32_t is_run)
+collection::CollectionManager::_EnableRangeNode(
+    uint32_t start_idx, uint32_t end_idx, uint32_t is_run)
 {
     for (uint32_t i = start_idx; i <= end_idx; i++)
     {
@@ -220,10 +215,10 @@ collection::CollectionManager::_EnableRangeNode(uint32_t start_idx,
 }
 
 int
-collection::CollectionManager::_EnableGroupNode(uint32_t gid,
-    uint32_t is_run)
+collection::CollectionManager::_EnableGroupNode(uint32_t gid, uint32_t is_run)
 {
-    for (uint32_t i = 0; i < cfg::GetSentenceCount(config::ParagraphType::NODE); i++)
+    for (uint32_t i = 0; i < cfg::GetSentenceCount(config::ParagraphType::NODE);
+         i++)
     {
         if ((uint32_t)node_meta_getter->GroupId(i) == gid)
         {
@@ -238,12 +233,11 @@ collection::CollectionManager::_EnableGroupNode(uint32_t gid,
 }
 
 int
-collection::CollectionManager::_UpdateEnable(uint32_t type1, uint32_t type2,
-    uint32_t value1,
-    uint32_t value2)
+collection::CollectionManager::_UpdateEnable(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
     // value1: enable/disable, value2: node info(node id, range, group id)
-    int result{0};
+    int result {0};
     uint32_t upper_bit = (value2 >> 16) & 0x0000FFFF;
     uint32_t lower_bit = value2 & 0x0000FFFF;
 
@@ -280,20 +274,22 @@ collection::CollectionManager::_InitNode(uint32_t nid)
         return;
     }
 
-    if (air::ProcessorType::LATENCY ==
-        node_meta_getter->ProcessorType(nid))
+    if (air::ProcessorType::LATENCY == node_meta_getter->ProcessorType(nid))
     {
         for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
         {
-            for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
+            for (uint32_t filter_index = 0; filter_index < filter_size;
+                 filter_index++)
             {
-                collector[nid]->InformInit(node_manager->GetAccLatData(nid, hash_index, filter_index));
+                collector[nid]->InformInit(
+                    node_manager->GetAccLatData(nid, hash_index, filter_index));
             }
         }
     }
     else
     {
-        for (auto iter = node_manager->nda_map.begin(); iter != node_manager->nda_map.end(); ++iter)
+        for (auto iter = node_manager->nda_map.begin();
+             iter != node_manager->nda_map.end(); ++iter)
         {
             node::NodeDataArray* arr = iter->second;
             node::NodeData* node_data = arr->node[nid];
@@ -301,9 +297,11 @@ collection::CollectionManager::_InitNode(uint32_t nid)
             {
                 for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
                 {
-                    for (uint32_t filter_index = 0; filter_index < filter_size; filter_index++)
+                    for (uint32_t filter_index = 0; filter_index < filter_size;
+                         filter_index++)
                     {
-                        collector[nid]->InformInit(node_data->GetAccData(hash_index, filter_index));
+                        collector[nid]->InformInit(
+                            node_data->GetAccData(hash_index, filter_index));
                     }
                 }
             }
@@ -312,9 +310,8 @@ collection::CollectionManager::_InitNode(uint32_t nid)
 }
 
 int
-collection::CollectionManager::_UpdateInit(uint32_t type1, uint32_t type2,
-    uint32_t value1,
-    uint32_t value2)
+collection::CollectionManager::_UpdateInit(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
     // value1: node info(node id, range, group id)
     uint32_t upper_bit = (value1 >> 16) & 0x0000FFFF;
@@ -333,7 +330,8 @@ collection::CollectionManager::_UpdateInit(uint32_t type1, uint32_t type2,
             break;
 
         case (to_dtype(pi::Type2::INITIALIZE_NODE_WITH_GROUP)):
-            for (uint32_t i = 0; i < cfg::GetSentenceCount(config::ParagraphType::NODE); i++)
+            for (uint32_t i = 0;
+                 i < cfg::GetSentenceCount(config::ParagraphType::NODE); i++)
             {
                 if ((uint32_t)node_meta_getter->GroupId(i) == value1)
                 {
@@ -354,8 +352,8 @@ collection::CollectionManager::_UpdateInit(uint32_t type1, uint32_t type2,
 }
 
 int
-collection::CollectionManager::_UpdateNodeSamplingRate(uint32_t node_index,
-    uint32_t new_ratio)
+collection::CollectionManager::_UpdateNodeSamplingRate(
+    uint32_t node_index, uint32_t new_ratio)
 {
     if (collector[node_index] != nullptr)
     {
@@ -365,15 +363,13 @@ collection::CollectionManager::_UpdateNodeSamplingRate(uint32_t node_index,
 }
 
 int
-collection::CollectionManager::_UpdateSamplingRate(uint32_t type1,
-    uint32_t type2,
-    uint32_t value1,
-    uint32_t value2)
+collection::CollectionManager::_UpdateSamplingRate(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
     // value1: rate, value2: node info(node id, range, group id)
     uint32_t lower_bit = value2 & 0x0000FFFF;
     uint32_t upper_bit = (value2 >> 16) & 0x0000FFFF;
-    int result{0};
+    int result {0};
 
     switch (type2)
     {
@@ -393,7 +389,8 @@ collection::CollectionManager::_UpdateSamplingRate(uint32_t type1,
             break;
 
         case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP)):
-            for (uint32_t i = 0; i < cfg::GetSentenceCount(config::ParagraphType::NODE); i++)
+            for (uint32_t i = 0;
+                 i < cfg::GetSentenceCount(config::ParagraphType::NODE); i++)
             {
                 result = _UpdateNodeSamplingRate(i, value1);
                 if (result != 0)

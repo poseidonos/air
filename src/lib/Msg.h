@@ -31,13 +31,13 @@ namespace lib
 {
 struct MsgEntry
 {
-    uint32_t type1{0};
-    uint32_t type2{0};
-    uint32_t value1{0};
-    uint32_t value2{0};
-    int pid{0};
-    int cmd_type{0};
-    int cmd_order{0};
+    uint32_t type1 {0};
+    uint32_t type2 {0};
+    uint32_t value1 {0};
+    uint32_t value2 {0};
+    int pid {0};
+    int cmd_type {0};
+    int cmd_order {0};
 };
 
 enum class MsgType : int64_t
@@ -57,13 +57,13 @@ enum class AirStatus : uint32_t
 
 struct FileMsg
 {
-    int64_t type{(int64_t)MsgType::FILE};
-    char name[50]{
+    int64_t type {(int64_t)MsgType::FILE};
+    char name[50] {
         0,
     };
-    uint32_t air_pid{0};
-    AirStatus status{AirStatus::IDLE};
-    char time_stamp[30]{
+    uint32_t air_pid {0};
+    AirStatus status {AirStatus::IDLE};
+    char time_stamp[30] {
         0,
     };
 };
@@ -79,13 +79,13 @@ enum class CmdType : uint32_t
 
 struct CliMsg
 {
-    uint32_t msg_id{0};
-    CmdType cmd{CmdType::NullCliCmd};
-    char node_list[256]{
+    uint32_t msg_id {0};
+    CmdType cmd {CmdType::NullCliCmd};
+    char node_list[256] {
         0,
     };
-    uint32_t value{0};
-    uint32_t air_pid{0};
+    uint32_t value {0};
+    uint32_t air_pid {0};
 };
 
 } // namespace lib

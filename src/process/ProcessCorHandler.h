@@ -48,7 +48,7 @@ public:
     }
 
 private:
-    ProcessManager* process_manager{nullptr};
+    ProcessManager* process_manager {nullptr};
 };
 
 } // namespace process

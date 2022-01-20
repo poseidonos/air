@@ -6,14 +6,14 @@
 class OutputManagerTest : public ::testing::Test
 {
 public:
-    output::OutputManager* output_manager{nullptr};
-    FakeOut* fake_out{nullptr};
+    output::OutputManager* output_manager {nullptr};
+    FakeOut* fake_out {nullptr};
 
 protected:
     OutputManagerTest()
     {
-        fake_out = new FakeOut{};
-        output_manager = new output::OutputManager{fake_out};
+        fake_out = new FakeOut {};
+        output_manager = new output::OutputManager {fake_out};
     }
     ~OutputManagerTest() override
     {

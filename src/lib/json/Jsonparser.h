@@ -39,8 +39,8 @@ public:
     static JSONdoc&
     Parse(std::string doc_name, std::string raw_json)
     {
-        return GetInstance()._ParseObject(JSONer::JSON(doc_name), doc_name,
-            raw_json);
+        return GetInstance()._ParseObject(
+            JSONer::JSON(doc_name), doc_name, raw_json);
     }
     static JSONparser&
     GetInstance(void)
@@ -51,14 +51,14 @@ public:
 
 protected:
     void
-    _AddJson(JSONdoc& doc, std::string doc_name, JSONtype type,
-        std::string key, std::string value)
+    _AddJson(JSONdoc& doc, std::string doc_name, JSONtype type, std::string key,
+        std::string value)
     {
         switch (type)
         {
             case JSONtype::OBJECT:
             {
-                std::string new_key{doc_name + "_" + key};
+                std::string new_key {doc_name + "_" + key};
                 auto& obj = JSONer::JSON(new_key);
                 _ParseObject(obj, new_key, value);
                 doc[key] = {obj};
@@ -121,8 +121,8 @@ protected:
         {
             case JSONtype::OBJECT:
             {
-                std::string new_key{doc_name + "_" + key + "_" +
-                    std::to_string(value_count)};
+                std::string new_key {
+                    doc_name + "_" + key + "_" + std::to_string(value_count)};
                 auto& obj = JSONer::JSON(new_key);
                 doc[key] += {_ParseObject(obj, new_key, value)};
                 break;
@@ -172,7 +172,8 @@ protected:
             }
             default:
             {
-                throw std::logic_error("[error][JSONparser::_AddJsonArray] invalid type");
+                throw std::logic_error(
+                    "[error][JSONparser::_AddJsonArray] invalid type");
                 break;
             }
         }
@@ -191,7 +192,7 @@ private:
     JSONtype
     _GetType(std::string value)
     {
-        JSONtype type{JSONtype::UNDEFINED};
+        JSONtype type {JSONtype::UNDEFINED};
 
         if (std::string::npos != value.find("null"))
         {
@@ -244,19 +245,19 @@ private:
         std::string key;
         std::string value;
 
-        std::size_t json_length{raw_json.length()};
-        std::size_t idx{0};
+        std::size_t json_length {raw_json.length()};
+        std::size_t idx {0};
 
-        bool has_key{false};
-        bool has_key_start_idx{false};
-        std::size_t key_start_idx{0};
+        bool has_key {false};
+        bool has_key_start_idx {false};
+        std::size_t key_start_idx {0};
 
-        bool has_value{false};
-        bool has_value_start_idx{false};
-        std::size_t value_start_idx{0};
-        std::size_t obj_bracket_count{0};
-        std::size_t arr_bracket_count{0};
-        JSONtype type{JSONtype::UNDEFINED};
+        bool has_value {false};
+        bool has_value_start_idx {false};
+        std::size_t value_start_idx {0};
+        std::size_t obj_bracket_count {0};
+        std::size_t arr_bracket_count {0};
+        JSONtype type {JSONtype::UNDEFINED};
 
         while (idx < json_length)
         {
@@ -308,7 +309,8 @@ private:
                         // rest of all (null, number, bool, string)
                         if (',' == raw_json.at(idx) || '}' == raw_json.at(idx))
                         {
-                            value = raw_json.substr(value_start_idx, idx - value_start_idx);
+                            value = raw_json.substr(
+                                value_start_idx, idx - value_start_idx);
                             has_value = true;
 
                             _CheckStringOrOthers(value, type);
@@ -326,7 +328,8 @@ private:
                         obj_bracket_count--;
                         if (0 == obj_bracket_count)
                         {
-                            value = raw_json.substr(value_start_idx, idx - value_start_idx + 1);
+                            value = raw_json.substr(
+                                value_start_idx, idx - value_start_idx + 1);
                             has_value = true;
                         }
                     }
@@ -342,7 +345,8 @@ private:
                         arr_bracket_count--;
                         if (0 == arr_bracket_count)
                         {
-                            value = raw_json.substr(value_start_idx, idx - value_start_idx + 1);
+                            value = raw_json.substr(
+                                value_start_idx, idx - value_start_idx + 1);
                             has_value = true;
                         }
                     }
@@ -374,22 +378,23 @@ private:
     }
 
     void
-    _ParseArray(JSONdoc& doc, std::string doc_name, std::string key, std::string arr)
+    _ParseArray(
+        JSONdoc& doc, std::string doc_name, std::string key, std::string arr)
     {
         // std::cout << "arr +key+: " << key
         //<< ", +value+: " << arr << std::endl;
-        std::size_t arr_length{arr.length()};
-        std::size_t idx{0};
-        std::size_t value_count{0};
+        std::size_t arr_length {arr.length()};
+        std::size_t idx {0};
+        std::size_t value_count {0};
 
-        std::size_t value_start_idx{0};
-        std::size_t obj_bracket_count{0};
-        std::size_t arr_bracket_count{0};
-        JSONtype type{JSONtype::UNDEFINED};
-        bool has_value{false};
+        std::size_t value_start_idx {0};
+        std::size_t obj_bracket_count {0};
+        std::size_t arr_bracket_count {0};
+        JSONtype type {JSONtype::UNDEFINED};
+        bool has_value {false};
         std::string value;
 
-        bool first_bracket_skipped{false};
+        bool first_bracket_skipped {false};
 
         while (idx < arr_length)
         {

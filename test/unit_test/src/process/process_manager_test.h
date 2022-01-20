@@ -22,11 +22,10 @@
  *   SOFTWARE.
  */
 
-#include "src/process/ProcessManager.h"
-
 #include "mock_global_meta_getter.h"
 #include "mock_node_manager.h"
 #include "mock_node_meta_getter.h"
+#include "src/process/ProcessManager.h"
 
 using ::testing::_;
 using ::testing::Invoke;
@@ -38,20 +37,21 @@ class ProcessManagerTest : public ::testing::Test
 public:
     NiceMock<meta::MockGlobalMetaGetter> mock_global_meta_getter;
     NiceMock<meta::MockNodeMetaGetter> mock_node_meta_getter;
-    NiceMock<node::MockNodeManager> mock_node_manager
-        {&mock_global_meta_getter, &mock_node_meta_getter};
-    process::ProcessManager process_manager {&mock_global_meta_getter,
-        &mock_node_meta_getter, &mock_node_manager};
+    NiceMock<node::MockNodeManager> mock_node_manager {
+        &mock_global_meta_getter, &mock_node_meta_getter};
+    process::ProcessManager process_manager {
+        &mock_global_meta_getter, &mock_node_meta_getter, &mock_node_manager};
 
 protected:
     void
     SetUp() override
     {
         ON_CALL(mock_global_meta_getter, AirPlay()).WillByDefault(Return(true));
-        ON_CALL(mock_global_meta_getter, StreamingInterval()).WillByDefault(Return(3));
+        ON_CALL(mock_global_meta_getter, StreamingInterval())
+            .WillByDefault(Return(3));
 
-        ON_CALL(mock_node_meta_getter, ProcessorType(_)).WillByDefault(
-            Return(air::ProcessorType::PROCESSORTYPE_NULL));
+        ON_CALL(mock_node_meta_getter, ProcessorType(_))
+            .WillByDefault(Return(air::ProcessorType::PROCESSORTYPE_NULL));
         mock_node_manager.Init();
     }
     void

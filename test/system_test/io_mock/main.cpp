@@ -1,10 +1,12 @@
 
-#include "dummy_io.h"
 #include <air/Air.h>
 
 #include <thread>
 
-int main(void)
+#include "dummy_io.h"
+
+int
+main(void)
 {
     printf("\n");
 

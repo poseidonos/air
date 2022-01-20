@@ -25,12 +25,12 @@
 #ifndef AIR_CONFIG_CHECKER_VALUE_H
 #define AIR_CONFIG_CHECKER_VALUE_H
 
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
+#include "src/config/ConfigCheckerValueBucket.h"
 #include "src/config/ConfigLib.h"
 #include "src/config/ConfigParser.h"
-#include "src/config/ConfigCheckerValueBucket.h"
 #include "src/lib/StringView.h"
 
 namespace config
@@ -62,7 +62,8 @@ public:
 
         while (colon_pos < sentence.size())
         {
-            air::string_view key {sentence.substr(prev_comma, colon_pos - prev_comma)};
+            air::string_view key {
+                sentence.substr(prev_comma, colon_pos - prev_comma)};
             key = Strip(key);
 
             if (post_comma > sentence.size())
@@ -70,12 +71,14 @@ public:
                 post_comma = sentence.size();
             }
 
-            air::string_view value {sentence.substr(colon_pos + 1, post_comma - colon_pos - 1)};
+            air::string_view value {
+                sentence.substr(colon_pos + 1, post_comma - colon_pos - 1)};
             if (key == "Item")
             {
                 std::size_t range_start_pos {sentence.find("(", colon_pos)};
                 std::size_t range_end_pos {sentence.find(")", colon_pos)};
-                value = sentence.substr(range_start_pos + 1, range_end_pos - range_start_pos - 1);
+                value = sentence.substr(
+                    range_start_pos + 1, range_end_pos - range_start_pos - 1);
             }
             value = Strip(value);
 
@@ -94,9 +97,9 @@ public:
             }
             else if (ParagraphType::BUCKET == type)
             {
-                result = ConfigCheckerValueBucket::CheckBucketValue(
-                    key, value, bucket_scale, bucket_lower_bound,
-                    bucket_upper_bound, bucket_type_linear, bucket_start_brace_has_equal,
+                result = ConfigCheckerValueBucket::CheckBucketValue(key, value,
+                    bucket_scale, bucket_lower_bound, bucket_upper_bound,
+                    bucket_type_linear, bucket_start_brace_has_equal,
                     bucket_end_brace_has_equal);
             }
             else if (ParagraphType::NODE == type)
@@ -127,9 +130,9 @@ public:
 
         if (ParagraphType::BUCKET == type)
         {
-            return ConfigCheckerValueBucket::CheckBucketSyntax(
-                bucket_scale, bucket_lower_bound, bucket_upper_bound,
-                bucket_type_linear, bucket_start_brace_has_equal, bucket_end_brace_has_equal);
+            return ConfigCheckerValueBucket::CheckBucketSyntax(bucket_scale,
+                bucket_lower_bound, bucket_upper_bound, bucket_type_linear,
+                bucket_start_brace_has_equal, bucket_end_brace_has_equal);
         }
         return 0;
     }
@@ -146,14 +149,18 @@ private:
     }
 
     static constexpr int32_t
-    _CheckSameValueInParagraph(air::string_view key, air::string_view value, ParagraphType type)
+    _CheckSameValueInParagraph(
+        air::string_view key, air::string_view value, ParagraphType type)
     {
         const uint32_t paragraph_type_index {dtype(type)};
         bool has_same_value {false};
 
-        for (uint32_t sentence_index = 0; sentence_index < sentences_count[paragraph_type_index]; sentence_index++)
+        for (uint32_t sentence_index = 0;
+             sentence_index < sentences_count[paragraph_type_index];
+             sentence_index++)
         {
-            air::string_view sentence {ConfigParser::GetSentenceFromParagraph(type, sentence_index)};
+            air::string_view sentence {
+                ConfigParser::GetSentenceFromParagraph(type, sentence_index)};
             size_t name_key_pos {sentence.find(key)};
             size_t name_colon_pos {sentence.find(":", name_key_pos + 1)};
             size_t name_comma_pos {sentence.find(",", name_key_pos + 1)};
@@ -167,7 +174,8 @@ private:
             {
                 token_pos = name_quote_pos;
             }
-            air::string_view name_value {sentence.substr(name_colon_pos + 1, token_pos - name_colon_pos - 1)};
+            air::string_view name_value {sentence.substr(
+                name_colon_pos + 1, token_pos - name_colon_pos - 1)};
             name_value = Strip(name_value);
 
             if (value == name_value)
@@ -179,7 +187,8 @@ private:
 
         if (false == has_same_value)
         {
-            throw std::logic_error("Can not find the value in (Group or Filter or Bucket)paragraph");
+            throw std::logic_error(
+                "Can not find the value in (Group or Filter or Bucket)paragraph");
         }
 
         return 0;
@@ -189,11 +198,10 @@ private:
     _CheckType(air::string_view value)
     {
         if (value == "PERFORMANCE" || value == "Performance" ||
-            value == "LATENCY" || value == "Latency" ||
-            value == "QUEUE" || value == "Queue" ||
-            value == "UTILIZATION" || value == "Utilization" ||
-            value == "COUNT" || value == "Count" ||
-            value == "HISTOGRAM" || value == "Histogram")
+            value == "LATENCY" || value == "Latency" || value == "QUEUE" ||
+            value == "Queue" || value == "UTILIZATION" || value == "Utilization" ||
+            value == "COUNT" || value == "Count" || value == "HISTOGRAM" ||
+            value == "Histogram")
         {
             return 0;
         }
@@ -206,8 +214,10 @@ private:
     static constexpr int32_t
     _CheckBoolValue(air::string_view value)
     {
-        if (value == "true" || value == "True" || value == "TRUE" || value == "false" || value == "False" || value == "FALSE" ||
-            value == "on" || value == "On" || value == "ON" || value == "off" || value == "Off" || value == "OFF")
+        if (value == "true" || value == "True" || value == "TRUE" ||
+            value == "false" || value == "False" || value == "FALSE" ||
+            value == "on" || value == "On" || value == "ON" || value == "off" ||
+            value == "Off" || value == "OFF")
         {
             return 0;
         }
@@ -298,25 +308,30 @@ private:
         size_t range_pos {value.find("...")};
         size_t comma_pos {value.find(",")};
 
-        if (air::string_view::npos != range_pos && air::string_view::npos != comma_pos)
+        if (air::string_view::npos != range_pos &&
+            air::string_view::npos != comma_pos)
         {
-            throw std::logic_error("Range expression cannot have both , and ... token");
+            throw std::logic_error(
+                "Range expression cannot have both , and ... token");
         }
         else if (air::string_view::npos != range_pos)
         {
             air::string_view start_item {value.substr(0, range_pos)};
             start_item = Strip(start_item);
-            air::string_view end_item {value.substr(range_pos + 3, value.size() - range_pos - 3)};
+            air::string_view end_item {
+                value.substr(range_pos + 3, value.size() - range_pos - 3)};
             end_item = Strip(end_item);
 
             if (0 == start_item.size() || 0 == end_item.size())
             {
-                throw std::logic_error("Range expression missed start or end value");
+                throw std::logic_error(
+                    "Range expression missed start or end value");
             }
 
             size_t start_token_pos {start_item.find("_")};
             size_t end_token_pos {end_item.find("_")};
-            if (air::string_view::npos == start_token_pos || air::string_view::npos == end_token_pos)
+            if (air::string_view::npos == start_token_pos ||
+                air::string_view::npos == end_token_pos)
             {
                 throw std::logic_error("Range value must have underscope(_)");
             }
@@ -328,12 +343,15 @@ private:
                 throw std::logic_error("Range value prefix must be same");
             }
 
-            air::string_view start_suffix {start_item.substr(start_token_pos + 1, start_item.size() - start_token_pos)};
-            air::string_view end_suffix {end_item.substr(end_token_pos + 1, end_item.size() - end_token_pos)};
+            air::string_view start_suffix {start_item.substr(
+                start_token_pos + 1, start_item.size() - start_token_pos)};
+            air::string_view end_suffix {end_item.substr(
+                end_token_pos + 1, end_item.size() - end_token_pos)};
 
             if (!IsUInt(start_suffix) || !IsUInt(end_suffix))
             {
-                throw std::logic_error("Range value suffix must be an unsigned integer");
+                throw std::logic_error(
+                    "Range value suffix must be an unsigned integer");
             }
 
             int64_t start_num {Stoi(start_suffix)};
@@ -356,7 +374,8 @@ private:
 
             while (prev_comma < value.size())
             {
-                air::string_view range_value {value.substr(prev_comma, curr_comma - prev_comma)};
+                air::string_view range_value {
+                    value.substr(prev_comma, curr_comma - prev_comma)};
                 range_value = Strip(range_value);
 
                 if (0 == range_value.size())
@@ -428,11 +447,13 @@ private:
         }
         else if (key == "Filter")
         {
-            return _CheckSameValueInParagraph("Filter", value, ParagraphType::FILTER);
+            return _CheckSameValueInParagraph(
+                "Filter", value, ParagraphType::FILTER);
         }
         else if (key == "Bucket")
         {
-            return _CheckSameValueInParagraph("Bucket", value, ParagraphType::BUCKET);
+            return _CheckSameValueInParagraph(
+                "Bucket", value, ParagraphType::BUCKET);
         }
         else if (key == "Type")
         {

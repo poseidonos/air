@@ -30,8 +30,7 @@
 #include "src/lib/json/Json.h"
 
 void
-process::QueueProcessor::_ProcessData(lib::Data* air_data,
-    lib::AccData* acc_data)
+process::QueueProcessor::_ProcessData(lib::Data* air_data, lib::AccData* acc_data)
 {
     lib::QueueData* air_queue_data {static_cast<lib::QueueData*>(air_data)};
     lib::AccQueueData* acc_queue_data {static_cast<lib::AccQueueData*>(acc_data)};
@@ -52,24 +51,29 @@ process::QueueProcessor::_ProcessData(lib::Data* air_data,
     if (0 != acc_queue_data->total_num_req)
     {
         acc_queue_data->depth_total_avg =
-            (acc_queue_data->depth_total_avg / acc_queue_data->total_num_req) * prev_total_num_req +
-            (air_queue_data->depth_period_avg / acc_queue_data->total_num_req) * air_queue_data->num_req;
+            (acc_queue_data->depth_total_avg / acc_queue_data->total_num_req) *
+                prev_total_num_req +
+            (air_queue_data->depth_period_avg / acc_queue_data->total_num_req) *
+                air_queue_data->num_req;
     }
 }
 
 void
 process::QueueProcessor::_JsonifyData(struct JsonifyData data)
 {
-    lib::AccQueueData* acc_queue_data {static_cast<lib::AccQueueData*>(data.acc_data)};
+    lib::AccQueueData* acc_queue_data {
+        static_cast<lib::AccQueueData*>(data.acc_data)};
     std::string node_name;
     node_name.assign(data.node_name_view.data(), data.node_name_view.size());
     auto& node = air::json(node_name);
     lib::QueueData* air_queue_data {static_cast<lib::QueueData*>(data.air_data)};
 
-    auto& node_obj = air::json(node_name + "_" + std::to_string(data.tid) + "_queue_"
-        + std::to_string(data.hash_value) + "_" + std::to_string(data.filter_index));
+    auto& node_obj = air::json(node_name + "_" + std::to_string(data.tid) +
+        "_queue_" + std::to_string(data.hash_value) + "_" +
+        std::to_string(data.filter_index));
 
-    std::string filter_item {cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index)};
+    std::string filter_item {
+        cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index)};
 
     node_obj["filter"] = {filter_item};
     node_obj["target_id"] = {data.tid};
@@ -87,8 +91,7 @@ process::QueueProcessor::_JsonifyData(struct JsonifyData data)
 }
 
 void
-process::QueueProcessor::_InitData(lib::Data* air_data,
-    lib::AccData* acc_data)
+process::QueueProcessor::_InitData(lib::Data* air_data, lib::AccData* acc_data)
 {
     lib::AccQueueData* acc_queue_data {static_cast<lib::AccQueueData*>(acc_data)};
     lib::QueueData* air_queue_data {static_cast<lib::QueueData*>(air_data)};

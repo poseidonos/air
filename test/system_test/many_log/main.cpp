@@ -1,28 +1,28 @@
 
+#include <air/Air.h>
 #include <unistd.h>
 
 #include <iostream>
 #include <thread>
 
-#include <air/Air.h>
-
 #include "test/system_test/many_log/dummy_log.h"
 
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
     char option;
-    int runtime = 60;    
+    int runtime = 60;
     optind = 1;
     while (-1 != (option = getopt(argc, argv, "r:")))
     {
         switch (option)
         {
-        case 'r':
-            runtime = atoi(optarg);
-            break;
-        
-        default:
-            break;
+            case 'r':
+                runtime = atoi(optarg);
+                break;
+
+            default:
+                break;
         }
     }
     std::cout << argv[0] << " start\n";

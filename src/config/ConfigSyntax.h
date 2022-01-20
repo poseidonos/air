@@ -48,10 +48,12 @@ public:
         const uint32_t paragraph_type_index {dtype(type)};
         int32_t result {0};
 
-        for (uint32_t sentence_index = 0; sentence_index < sentences_count[paragraph_type_index]; sentence_index++)
+        for (uint32_t sentence_index = 0;
+             sentence_index < sentences_count[paragraph_type_index];
+             sentence_index++)
         {
-            result = ConfigChecker::CheckKeyRule(type,
-                ConfigParser::GetSentenceFromParagraph(type, sentence_index));
+            result = ConfigChecker::CheckKeyRule(
+                type, ConfigParser::GetSentenceFromParagraph(type, sentence_index));
             if (result < 0)
             {
                 return result;
@@ -67,10 +69,12 @@ public:
         const uint32_t paragraph_type_index {dtype(type)};
         int32_t result {0};
 
-        for (uint32_t sentence_index = 0; sentence_index < sentences_count[paragraph_type_index]; sentence_index++)
+        for (uint32_t sentence_index = 0;
+             sentence_index < sentences_count[paragraph_type_index];
+             sentence_index++)
         {
-            result = ConfigChecker::CheckValueRule(type,
-                ConfigParser::GetSentenceFromParagraph(type, sentence_index));
+            result = ConfigChecker::CheckValueRule(
+                type, ConfigParser::GetSentenceFromParagraph(type, sentence_index));
             if (result < 0)
             {
                 return result;
@@ -87,25 +91,40 @@ public:
     ConfigSyntaxVerification(void)
     {
         ConfigSyntax syntax;
-        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::DEFAULT), "[Default] Paragraph Violation!");
-        static_assert(0 == syntax.CheckKeyRule(ParagraphType::DEFAULT), "[Default] Key Violation!");
-        static_assert(0 == syntax.CheckValueRule(ParagraphType::DEFAULT), "[Default] Value Violation!");
+        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::DEFAULT),
+            "[Default] Paragraph Violation!");
+        static_assert(0 == syntax.CheckKeyRule(ParagraphType::DEFAULT),
+            "[Default] Key Violation!");
+        static_assert(0 == syntax.CheckValueRule(ParagraphType::DEFAULT),
+            "[Default] Value Violation!");
 
-        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::GROUP), "[Group] Paragraph Violation!");
-        static_assert(0 == syntax.CheckKeyRule(ParagraphType::GROUP), "[Group] Key Violation!");
-        static_assert(0 == syntax.CheckValueRule(ParagraphType::GROUP), "[Group] Value Violation!");
+        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::GROUP),
+            "[Group] Paragraph Violation!");
+        static_assert(0 == syntax.CheckKeyRule(ParagraphType::GROUP),
+            "[Group] Key Violation!");
+        static_assert(0 == syntax.CheckValueRule(ParagraphType::GROUP),
+            "[Group] Value Violation!");
 
-        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::FILTER), "[Filter] Paragraph Violation!");
-        static_assert(0 == syntax.CheckKeyRule(ParagraphType::FILTER), "[Filter] Key Violation!");
-        static_assert(0 == syntax.CheckValueRule(ParagraphType::FILTER), "[Filter] Value Violation!");
+        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::FILTER),
+            "[Filter] Paragraph Violation!");
+        static_assert(0 == syntax.CheckKeyRule(ParagraphType::FILTER),
+            "[Filter] Key Violation!");
+        static_assert(0 == syntax.CheckValueRule(ParagraphType::FILTER),
+            "[Filter] Value Violation!");
 
-        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::BUCKET), "[Bucket] Paragraph Violation!");
-        static_assert(0 == syntax.CheckKeyRule(ParagraphType::BUCKET), "[Bucket] Key Violation!");
-        static_assert(0 == syntax.CheckValueRule(ParagraphType::BUCKET), "[Bucket] Value Violation!");
+        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::BUCKET),
+            "[Bucket] Paragraph Violation!");
+        static_assert(0 == syntax.CheckKeyRule(ParagraphType::BUCKET),
+            "[Bucket] Key Violation!");
+        static_assert(0 == syntax.CheckValueRule(ParagraphType::BUCKET),
+            "[Bucket] Value Violation!");
 
-        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::NODE), "[Node] Paragraph Violation!");
-        static_assert(0 == syntax.CheckKeyRule(ParagraphType::NODE), "[Node] Key Violation!");
-        static_assert(0 == syntax.CheckValueRule(ParagraphType::NODE), "[Node] Value Violation!");
+        static_assert(0 == syntax.CheckParagraphRule(ParagraphType::NODE),
+            "[Node] Paragraph Violation!");
+        static_assert(
+            0 == syntax.CheckKeyRule(ParagraphType::NODE), "[Node] Key Violation!");
+        static_assert(0 == syntax.CheckValueRule(ParagraphType::NODE),
+            "[Node] Value Violation!");
     }
 };
 

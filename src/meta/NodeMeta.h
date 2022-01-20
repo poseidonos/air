@@ -166,7 +166,8 @@ public:
     }
 
 private:
-    const uint32_t MAX_NID_SIZE{cfg::GetSentenceCount(config::ParagraphType::NODE)};
+    const uint32_t MAX_NID_SIZE {
+        cfg::GetSentenceCount(config::ParagraphType::NODE)};
     air::NodeMetaData node[cfg::GetSentenceCount(config::ParagraphType::NODE)];
 };
 
@@ -179,8 +180,7 @@ public:
     virtual ~NodeMetaGetter(void)
     {
     }
-    explicit NodeMetaGetter(NodeMeta* new_node_meta)
-    : node_meta(new_node_meta)
+    explicit NodeMetaGetter(NodeMeta* new_node_meta): node_meta(new_node_meta)
     {
     }
     virtual inline air::ProcessorType
@@ -220,7 +220,7 @@ public:
     }
 
 private:
-    NodeMeta* node_meta{nullptr};
+    NodeMeta* node_meta {nullptr};
 };
 
 } // namespace meta

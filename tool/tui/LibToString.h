@@ -32,16 +32,13 @@
 
 namespace air
 {
-
 template<typename T>
 std::string
 NumberToStrSIFmt(T value, std::string suffix = "", uint32_t padding = 0)
 {
-    static_assert(
-        std::is_same<uint64_t, T>::value ||
-        std::is_same<int64_t, T>::value ||
-        std::is_same<double, T>::value
-        , "");
+    static_assert(std::is_same<uint64_t, T>::value ||
+            std::is_same<int64_t, T>::value || std::is_same<double, T>::value,
+        "");
 
     std::stringstream stream;
     bool overflow {false};

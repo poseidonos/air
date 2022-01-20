@@ -168,11 +168,13 @@ TEST(JsonparserTest, Exception)
 {
     auto& obj = air::json("obj");
 
-    static_cast<JSONparserTest&>(JSONparserTest::GetInstance()).TEST_AddJson(obj, "obj", air::JSONtype::NULLVAL, "null", "null");
+    static_cast<JSONparserTest&>(JSONparserTest::GetInstance())
+        .TEST_AddJson(obj, "obj", air::JSONtype::NULLVAL, "null", "null");
 
     try
     {
-        static_cast<JSONparserTest&>(JSONparserTest::GetInstance()).TEST_AddJson(obj, "obj", air::JSONtype::LONG, "long", "1234");
+        static_cast<JSONparserTest&>(JSONparserTest::GetInstance())
+            .TEST_AddJson(obj, "obj", air::JSONtype::LONG, "long", "1234");
     }
     catch (std::exception& e)
     {
@@ -182,11 +184,13 @@ TEST(JsonparserTest, Exception)
     auto& arr = air::json("arr");
     arr["int"] += {1, 2, 3};
 
-    static_cast<JSONparserTest&>(JSONparserTest::GetInstance()).TEST_AddJsonArray(arr, "arr", 3, air::JSONtype::INT64, "int", "4");
+    static_cast<JSONparserTest&>(JSONparserTest::GetInstance())
+        .TEST_AddJsonArray(arr, "arr", 3, air::JSONtype::INT64, "int", "4");
 
     try
     {
-        static_cast<JSONparserTest&>(JSONparserTest::GetInstance()).TEST_AddJsonArray(arr, "arr", 4, air::JSONtype::LONG, "int", "5");
+        static_cast<JSONparserTest&>(JSONparserTest::GetInstance())
+            .TEST_AddJsonArray(arr, "arr", 4, air::JSONtype::LONG, "int", "5");
     }
     catch (std::exception& e)
     {

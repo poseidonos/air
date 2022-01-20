@@ -4,14 +4,14 @@
 class GlobalMetaTest : public ::testing::Test
 {
 public:
-    meta::GlobalMeta* global_meta{nullptr};
-    meta::GlobalMetaGetter* global_meta_getter{nullptr};
+    meta::GlobalMeta* global_meta {nullptr};
+    meta::GlobalMetaGetter* global_meta_getter {nullptr};
 
 protected:
     GlobalMetaTest()
     {
-        global_meta = new meta::GlobalMeta{};
-        global_meta_getter = new meta::GlobalMetaGetter{global_meta};
+        global_meta = new meta::GlobalMeta {};
+        global_meta_getter = new meta::GlobalMetaGetter {global_meta};
     }
     ~GlobalMetaTest() override
     {

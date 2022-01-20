@@ -79,8 +79,8 @@ public:
         return 0;
     }
 
-    key_t msg_q_key_id{0};
-    key_t msg_q_key_value{647};
+    key_t msg_q_key_id {0};
+    key_t msg_q_key_value {647};
 
     struct msg_q_send_st
     {

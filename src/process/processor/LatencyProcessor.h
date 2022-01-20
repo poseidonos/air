@@ -44,7 +44,7 @@ private:
     void _JsonifyData(struct JsonifyData data) override;
     void _InitData(lib::Data* air_data, lib::AccData* acc_data) override;
 
-    static const uint64_t OVERFLOW_THRESHOLD{0x7FFFFFFFFFFFFFFF};
+    static const uint64_t OVERFLOW_THRESHOLD {0x7FFFFFFFFFFFFFFF};
 };
 
 } // namespace process

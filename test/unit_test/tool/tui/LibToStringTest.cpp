@@ -199,7 +199,7 @@ TEST(LibToStringTest, NumberToStrSIFmt_NotNumber)
         value = air::NumberToStrSIFmt(number);
     }
     // Then: Expect to catch exception and the value isn't updated
-    catch(...)
+    catch (...)
     {
         EXPECT_EQ(0, value.compare(""));
     }

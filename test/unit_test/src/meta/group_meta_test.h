@@ -4,14 +4,14 @@
 class GroupMetaTest : public ::testing::Test
 {
 public:
-    meta::GroupMeta* group_meta{nullptr};
-    meta::GroupMetaGetter* group_meta_getter{nullptr};
+    meta::GroupMeta* group_meta {nullptr};
+    meta::GroupMetaGetter* group_meta_getter {nullptr};
 
 protected:
     GroupMetaTest()
     {
-        group_meta = new meta::GroupMeta{};
-        group_meta_getter = new meta::GroupMetaGetter{group_meta};
+        group_meta = new meta::GroupMeta {};
+        group_meta_getter = new meta::GroupMetaGetter {group_meta};
     }
     ~GroupMetaTest()
     {

@@ -40,7 +40,7 @@ public:
     void SendPacket(void);
 
 private:
-    pid_t pid{0};
+    pid_t pid {0};
 };
 
 } // namespace stream

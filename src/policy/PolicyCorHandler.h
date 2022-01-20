@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    policy::Observer* observer{nullptr};
+    policy::Observer* observer {nullptr};
 };
 
 } // namespace policy

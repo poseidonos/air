@@ -29,21 +29,41 @@
 
 TEST_F(TypeTest, Node)
 {
-    EXPECT_EQ((uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_PSD"), node_meta.nid);
+    EXPECT_EQ(
+        (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_PSD"),
+        node_meta.nid);
     EXPECT_EQ(air::ProcessorType::PERFORMANCE, node_meta.processor_type);
     EXPECT_EQ(true, node_meta.run);
     EXPECT_EQ(1000, node_meta.sample_ratio);
 
-    node_meta.nid = (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_VOLUME");
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid).compare("PERF_VOLUME"));
-    node_meta.nid = (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "LAT_PSD");
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid).compare("LAT_PSD"));
-    node_meta.nid = (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "LAT_METAFS");
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid).compare("LAT_METAFS"));
-    node_meta.nid = (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "LAT_REBUILD");
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid).compare("LAT_REBUILD"));
-    node_meta.nid = (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_SUBMIT");
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid).compare("Q_SUBMIT"));
-    node_meta.nid = (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_IOWORER");
-    EXPECT_EQ(0, cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid).compare("Q_IOWORER"));
+    node_meta.nid =
+        (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_VOLUME");
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid)
+            .compare("PERF_VOLUME"));
+    node_meta.nid =
+        (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "LAT_PSD");
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid)
+            .compare("LAT_PSD"));
+    node_meta.nid =
+        (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "LAT_METAFS");
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid)
+            .compare("LAT_METAFS"));
+    node_meta.nid =
+        (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "LAT_REBUILD");
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid)
+            .compare("LAT_REBUILD"));
+    node_meta.nid =
+        (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_SUBMIT");
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid)
+            .compare("Q_SUBMIT"));
+    node_meta.nid =
+        (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "Q_IOWORER");
+    EXPECT_EQ(0,
+        cfg::GetSentenceName(config::ParagraphType::NODE, node_meta.nid)
+            .compare("Q_IOWORER"));
 }

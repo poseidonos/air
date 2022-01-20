@@ -32,9 +32,9 @@ namespace air
 {
 struct ANode
 {
-    int nid{-1};
-    bool here{false};
-    bool fold{false};
+    int nid {-1};
+    bool here {false};
+    bool fold {false};
 };
 
 struct AGroup
@@ -48,9 +48,9 @@ struct AGroup
             delete n;
         }
     }
-    int gid{-1};
-    bool here{false};
-    bool fold{false};
+    int gid {-1};
+    bool here {false};
+    bool fold {false};
     std::map<std::string, ANode*> node;
 };
 
@@ -65,10 +65,10 @@ struct AConfig
             delete g;
         }
     }
-    bool pos_top{true};
-    bool pos_group{false};
-    bool pos_node{false};
-    int pos_id{-1};
+    bool pos_top {true};
+    bool pos_group {false};
+    bool pos_node {false};
+    int pos_id {-1};
     std::map<std::string, AGroup*> group;
 };
 

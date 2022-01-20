@@ -30,12 +30,12 @@
 class ConfigCheckerTest : public ::testing::Test
 {
 public:
-    config::ConfigChecker* cfg_checker{nullptr};
+    config::ConfigChecker* cfg_checker {nullptr};
 
 protected:
     ConfigCheckerTest()
     {
-        cfg_checker = new config::ConfigChecker{};
+        cfg_checker = new config::ConfigChecker {};
     }
     ~ConfigCheckerTest()
     {

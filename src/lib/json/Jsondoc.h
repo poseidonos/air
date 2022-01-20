@@ -196,7 +196,8 @@ public:
         is_cleared = false;
     }
 
-    JSONdoc& operator[](std::string key)
+    JSONdoc&
+    operator[](std::string key)
     {
         auto it = map.find(key);
         if (it != map.end())
@@ -213,7 +214,8 @@ public:
         }
     }
 
-    const JSONdoc& operator[](std::string key) const
+    const JSONdoc&
+    operator[](std::string key) const
     {
         auto it = map.find(key);
         if (it != map.end())
@@ -284,7 +286,8 @@ public:
             }
             case JSONtype::UNDEFINED:
             {
-                throw std::logic_error("[error][JSONdoc::operator<<] Invalid JSONtype");
+                throw std::logic_error(
+                    "[error][JSONdoc::operator<<] Invalid JSONtype");
                 break;
             }
             default:
@@ -379,7 +382,8 @@ public:
             }
             case JSONtype::ULONGLONG:
             {
-                unsigned long long* value = reinterpret_cast<unsigned long long*>(v);
+                unsigned long long* value =
+                    reinterpret_cast<unsigned long long*>(v);
                 delete value;
                 break;
             }
@@ -532,7 +536,8 @@ public:
                     if (node.first == node_name)
                     {
                         JSONdoc& item = nodes[node_name];
-                        doc->map.insert({node_name, {(void*)&item, JSONtype::OBJECT}});
+                        doc->map.insert(
+                            {node_name, {(void*)&item, JSONtype::OBJECT}});
                         break;
                     }
                 }
@@ -547,11 +552,11 @@ public:
 private:
     JSONdoc& operator=(const JSONdoc&) = delete;
 
-    JSONtype type{JSONtype::WHITESPACE};
+    JSONtype type {JSONtype::WHITESPACE};
     std::map<std::string, JSONvalue> map;
-    bool ownership{false};
-    bool key{false};
-    bool is_cleared{false};
+    bool ownership {false};
+    bool key {false};
+    bool is_cleared {false};
 };
 
 } // namespace air

@@ -60,7 +60,8 @@ air::CliSend::Send(int argc, char* argv[], int& target_pid)
 
         if (-1 == msg_q_key_id)
         {
-            cli_result->SetReturn(ReturnCode::ERR_MSG_Q_NOT_EXIST, "may use wrong pid");
+            cli_result->SetReturn(
+                ReturnCode::ERR_MSG_Q_NOT_EXIST, "may use wrong pid");
             return 0;
         }
 
@@ -72,9 +73,12 @@ air::CliSend::Send(int argc, char* argv[], int& target_pid)
             send_msg.cmd_int_value1 = (int)air_run_value;
             send_msg.cmd_order = cmd_duplicate_check[CMD_AIR_RUN];
 
-            if (-1 == msgsnd(msg_q_key_id, (void*)&send_msg, sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
+            if (-1 ==
+                msgsnd(msg_q_key_id, (void*)&send_msg,
+                    sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
             {
-                cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL, "CliSend::Send air-run");
+                cli_result->SetReturn(
+                    ReturnCode::ERR_KERNEL_MSGQ_FAIL, "CliSend::Send air-run");
             }
             else
             {
@@ -89,9 +93,12 @@ air::CliSend::Send(int argc, char* argv[], int& target_pid)
             send_msg.cmd_int_value1 = air_stream_interval_value;
             send_msg.cmd_order = cmd_duplicate_check[CMD_AIR_STREAM_INTERVAL];
 
-            if (-1 == msgsnd(msg_q_key_id, &send_msg, sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
+            if (-1 ==
+                msgsnd(msg_q_key_id, &send_msg,
+                    sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
             {
-                cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL, "CliSend::Send air-stream-interval");
+                cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL,
+                    "CliSend::Send air-stream-interval");
             }
             else
             {
@@ -109,9 +116,12 @@ air::CliSend::Send(int argc, char* argv[], int& target_pid)
             send_msg.cmd_int_value1 = (int)node_run_enable; // bool
             send_msg.cmd_order = cmd_duplicate_check[CMD_NODE_RUN];
 
-            if (-1 == msgsnd(msg_q_key_id, &send_msg, sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
+            if (-1 ==
+                msgsnd(msg_q_key_id, &send_msg,
+                    sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
             {
-                cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL, "CliSend::Send node-run");
+                cli_result->SetReturn(
+                    ReturnCode::ERR_KERNEL_MSGQ_FAIL, "CliSend::Send node-run");
             }
             else
             {
@@ -128,9 +138,12 @@ air::CliSend::Send(int argc, char* argv[], int& target_pid)
             send_msg.cmd_int_value2 = node_init_value2; // node end
             send_msg.cmd_order = cmd_duplicate_check[CMD_NODE_INIT];
 
-            if (-1 == msgsnd(msg_q_key_id, &send_msg, sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
+            if (-1 ==
+                msgsnd(msg_q_key_id, &send_msg,
+                    sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
             {
-                cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL, "CliSend::Send node-init");
+                cli_result->SetReturn(
+                    ReturnCode::ERR_KERNEL_MSGQ_FAIL, "CliSend::Send node-init");
             }
             else
             {
@@ -148,9 +161,12 @@ air::CliSend::Send(int argc, char* argv[], int& target_pid)
             send_msg.cmd_int_value3 = node_sample_ratio_value3; // node end
             send_msg.cmd_order = cmd_duplicate_check[CMD_NODE_SAMPLE_RATIO];
 
-            if (-1 == msgsnd(msg_q_key_id, &send_msg, sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
+            if (-1 ==
+                msgsnd(msg_q_key_id, &send_msg,
+                    sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
             {
-                cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL, "CliSend::Send node-sample-ratio");
+                cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL,
+                    "CliSend::Send node-sample-ratio");
             }
             else
             {
@@ -167,7 +183,7 @@ air::CliSend::Send(int argc, char* argv[], int& target_pid)
 bool
 air::CliSend::_CheckAirAlive(void)
 {
-    bool alive{false};
+    bool alive {false};
 
     std::string sys_cmd;
     sys_cmd = "ps -e | grep " + std::to_string(target_pid_value);
@@ -179,7 +195,7 @@ air::CliSend::_CheckAirAlive(void)
         return false;
     }
 
-    char sys_result[1024]{
+    char sys_result[1024] {
         0,
     };
     if (NULL != fgets(sys_result, 1024, fp))
@@ -197,7 +213,7 @@ air::CliSend::_CheckAirAlive(void)
 bool
 air::CliSend::_CheckRule(int argc, char* argv[])
 {
-    int index{0};
+    int index {0};
     int num_cmd = 0;
 
     while (argc - 1 > num_cmd)
@@ -205,13 +221,17 @@ air::CliSend::_CheckRule(int argc, char* argv[])
         int opt = getopt_long(argc, argv, "", options, &index);
         if (0 != opt)
         {
-            cli_result->SetReturn(ReturnCode::ERR_INVALID_USAGE, "option: pid/air-run/air-stream-interval/node-run/node-init/node-sample-ratio");
+            cli_result->SetReturn(ReturnCode::ERR_INVALID_USAGE,
+                "option: "
+                "pid/air-run/air-stream-interval/node-run/node-init/"
+                "node-sample-ratio");
             return false;
         }
 
         if (CMD_MAX_COUNT <= index)
         {
-            cli_result->SetReturn(ReturnCode::ERR_INVALID_USAGE, "unsupported option");
+            cli_result->SetReturn(
+                ReturnCode::ERR_INVALID_USAGE, "unsupported option");
             return false;
         }
 
@@ -228,7 +248,8 @@ air::CliSend::_CheckRule(int argc, char* argv[])
             {
                 if (false == _IsNumber(optarg))
                 {
-                    cli_result->SetReturn(ReturnCode::ERR_OPT_PID, "pid value must be an integer");
+                    cli_result->SetReturn(
+                        ReturnCode::ERR_OPT_PID, "pid value must be an integer");
                     return false;
                 }
                 target_pid_value = std::stoi(optarg);
@@ -237,7 +258,8 @@ air::CliSend::_CheckRule(int argc, char* argv[])
             {
                 if (false == _CheckBoolOpt(BoolOption::BOOL_OPT_AIR, optarg))
                 {
-                    cli_result->SetReturn(ReturnCode::ERR_OPT_AIR_RUN, "air-run value must be a boolean");
+                    cli_result->SetReturn(ReturnCode::ERR_OPT_AIR_RUN,
+                        "air-run value must be a boolean");
                     return false;
                 }
             }
@@ -245,7 +267,8 @@ air::CliSend::_CheckRule(int argc, char* argv[])
             {
                 if (false == _IsNumber(optarg))
                 {
-                    cli_result->SetReturn(ReturnCode::ERR_OPT_AIR_STREAM_INTERVAL, "air-stream-interval value must be an integer");
+                    cli_result->SetReturn(ReturnCode::ERR_OPT_AIR_STREAM_INTERVAL,
+                        "air-stream-interval value must be an integer");
                     return false;
                 }
                 air_stream_interval_value = std::stoi(optarg);
@@ -255,20 +278,23 @@ air::CliSend::_CheckRule(int argc, char* argv[])
                 char* tok = strtok(optarg, "_");
                 if (nullptr == tok)
                 {
-                    cli_result->SetReturn(ReturnCode::ERR_OPT_NODE_RUN, "missing '_'");
+                    cli_result->SetReturn(
+                        ReturnCode::ERR_OPT_NODE_RUN, "missing '_'");
                     return false;
                 }
 
                 if (false == _CheckBoolOpt(BoolOption::BOOL_OPT_NODE, tok))
                 {
-                    cli_result->SetReturn(ReturnCode::ERR_OPT_NODE_RUN, "missing boolean");
+                    cli_result->SetReturn(
+                        ReturnCode::ERR_OPT_NODE_RUN, "missing boolean");
                     return false;
                 }
 
                 tok = strtok(NULL, "_");
                 if (false == _CheckMultiOption(NodeOption::NODE_OPT_RUN, tok))
                 {
-                    cli_result->SetReturn(ReturnCode::ERR_OPT_NODE_RUN, "invalid format");
+                    cli_result->SetReturn(
+                        ReturnCode::ERR_OPT_NODE_RUN, "invalid format");
                     return false;
                 }
             }
@@ -276,7 +302,8 @@ air::CliSend::_CheckRule(int argc, char* argv[])
             {
                 if (false == _CheckMultiOption(NodeOption::NODE_OPT_INIT, optarg))
                 {
-                    cli_result->SetReturn(ReturnCode::ERR_OPT_NODE_INIT, "invalid format");
+                    cli_result->SetReturn(
+                        ReturnCode::ERR_OPT_NODE_INIT, "invalid format");
                     return false;
                 }
             }
@@ -285,21 +312,25 @@ air::CliSend::_CheckRule(int argc, char* argv[])
                 char* tok = strtok(optarg, "_");
                 if (nullptr == tok)
                 {
-                    cli_result->SetReturn(ReturnCode::ERR_OPT_NODE_SAMPLE_RATIO, "missing '_'");
+                    cli_result->SetReturn(
+                        ReturnCode::ERR_OPT_NODE_SAMPLE_RATIO, "missing '_'");
                     return false;
                 }
 
                 if (false == _IsNumber(tok))
                 {
-                    cli_result->SetReturn(ReturnCode::ERR_OPT_NODE_SAMPLE_RATIO, "missing integer");
+                    cli_result->SetReturn(
+                        ReturnCode::ERR_OPT_NODE_SAMPLE_RATIO, "missing integer");
                     return false;
                 }
                 node_sample_ratio_value1 = std::stoi(tok);
 
                 tok = strtok(NULL, "_");
-                if (false == _CheckMultiOption(NodeOption::NODE_OPT_SAMPLE_RATIO, tok))
+                if (false ==
+                    _CheckMultiOption(NodeOption::NODE_OPT_SAMPLE_RATIO, tok))
                 {
-                    cli_result->SetReturn(ReturnCode::ERR_OPT_NODE_SAMPLE_RATIO, "invalid format");
+                    cli_result->SetReturn(
+                        ReturnCode::ERR_OPT_NODE_SAMPLE_RATIO, "invalid format");
                     return false;
                 }
             }

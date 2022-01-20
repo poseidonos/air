@@ -29,7 +29,7 @@
 
 TEST_F(MsgTest, MsgEntry)
 {
-    uint32_t value{1};
+    uint32_t value {1};
     EXPECT_EQ(entry.type1, value);
 
     value = 2;

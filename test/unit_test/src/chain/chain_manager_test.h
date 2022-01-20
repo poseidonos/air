@@ -7,14 +7,14 @@
 class ChainManagerTest : public ::testing::Test
 {
 public:
-    chain::ChainManager* chain_manager{nullptr};
-    MockGlobalMeta* mock_global_meta{nullptr};
+    chain::ChainManager* chain_manager {nullptr};
+    MockGlobalMeta* mock_global_meta {nullptr};
 
 protected:
     ChainManagerTest()
     {
-        mock_global_meta = new MockGlobalMeta{};
-        chain_manager = new chain::ChainManager{mock_global_meta};
+        mock_global_meta = new MockGlobalMeta {};
+        chain_manager = new chain::ChainManager {mock_global_meta};
     }
     ~ChainManagerTest() override
     {

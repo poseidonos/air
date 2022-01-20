@@ -33,8 +33,7 @@ namespace detect
 class DetectCoRHandler : public lib_design::AbstractCoRHandler
 {
 public:
-    explicit DetectCoRHandler(Detector* new_detector)
-    : detector(new_detector)
+    explicit DetectCoRHandler(Detector* new_detector): detector(new_detector)
     {
     }
     virtual ~DetectCoRHandler(void)
@@ -47,7 +46,7 @@ public:
     }
 
 private:
-    Detector* detector{nullptr};
+    Detector* detector {nullptr};
 };
 
 } // namespace detect

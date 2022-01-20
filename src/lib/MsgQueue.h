@@ -35,7 +35,7 @@
 
 namespace lib
 {
-const key_t FILE_MSG_Q_VALUE{8888};
+const key_t FILE_MSG_Q_VALUE {8888};
 
 class MsgQueue
 {
@@ -103,15 +103,14 @@ private:
         msg_q_key_id = msgget(msg_q_key_value, IPC_CREAT | 0666);
         if (msg_q_key_id == -1)
         {
-            std::cout << "msgget() failed!\n"
-                      << std::endl;
+            std::cout << "msgget() failed!\n" << std::endl;
             exit(1);
         }
     }
 
-    key_t msg_q_key_id{0};
-    key_t msg_q_key_value{0};
-    struct FileMsg* file_msg{nullptr};
+    key_t msg_q_key_id {0};
+    key_t msg_q_key_value {0};
+    struct FileMsg* file_msg {nullptr};
 };
 
 } // namespace lib

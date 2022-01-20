@@ -9,19 +9,19 @@
 class InTest : public ::testing::Test
 {
 public:
-    input::InCommand* in_command{nullptr};
-    FakeCliSend* fake_cli_send{nullptr};
-    input::Subject* input_subject{nullptr};
-    FakeOutputObserver* fake_output_observer{nullptr};
+    input::InCommand* in_command {nullptr};
+    FakeCliSend* fake_cli_send {nullptr};
+    input::Subject* input_subject {nullptr};
+    FakeOutputObserver* fake_output_observer {nullptr};
 
 protected:
     InTest()
     {
-        fake_cli_send = new FakeCliSend{};
-        fake_output_observer = new FakeOutputObserver{};
-        input_subject = new input::Subject{};
+        fake_cli_send = new FakeCliSend {};
+        fake_output_observer = new FakeOutputObserver {};
+        input_subject = new input::Subject {};
         input_subject->Attach(fake_output_observer, 0);
-        in_command = new input::InCommand{input_subject};
+        in_command = new input::InCommand {input_subject};
     }
     ~InTest()
     {

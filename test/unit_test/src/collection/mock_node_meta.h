@@ -100,5 +100,5 @@ public:
     }
 
 private:
-    uint32_t group_id[7]{1, 0, 1, 3, 2, 0, 1};
+    uint32_t group_id[7] {1, 0, 1, 3, 2, 0, 1};
 };

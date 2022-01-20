@@ -69,7 +69,8 @@ CheckCharacterFormat(air::string_view sentence)
         {
             continue;
         }
-        else if ('(' == sentence[pos] || ')' == sentence[pos] || '.' == sentence[pos])
+        else if ('(' == sentence[pos] || ')' == sentence[pos] ||
+            '.' == sentence[pos])
         {
             continue;
         }
@@ -153,8 +154,10 @@ CheckSentenceFormat(air::string_view sentence)
             curr_comma_pos = end_quote;
         }
 
-        air::string_view key {sentence.substr(prev_comma_pos + 1, curr_colon_pos - prev_comma_pos - 1)};
-        air::string_view value {sentence.substr(curr_colon_pos + 1, curr_comma_pos - curr_colon_pos - 1)};
+        air::string_view key {sentence.substr(
+            prev_comma_pos + 1, curr_colon_pos - prev_comma_pos - 1)};
+        air::string_view value {sentence.substr(
+            curr_colon_pos + 1, curr_comma_pos - curr_colon_pos - 1)};
         key = Strip(key);
         value = Strip(value);
 
@@ -212,7 +215,8 @@ CheckSentenceFilterFormat(air::string_view sentence)
         {
             if (range_start_pos < pos && range_end_pos > pos)
             {
-                throw std::logic_error("Colon cannot exist in range expression() in filter sentence");
+                throw std::logic_error(
+                    "Colon cannot exist in range expression() in filter sentence");
             }
             colon_cnt++;
         }
@@ -237,8 +241,8 @@ CheckSentenceFilterFormat(air::string_view sentence)
     }
     size_t filter_value_start_pos {sentence.find(":", filter_key_pos) + 1};
     size_t filter_value_end_pos {sentence.find(",", filter_value_start_pos)};
-    air::string_view filter_value {sentence.substr(filter_value_start_pos,
-        filter_value_end_pos - filter_value_start_pos)};
+    air::string_view filter_value {sentence.substr(
+        filter_value_start_pos, filter_value_end_pos - filter_value_start_pos)};
 
     filter_value = Strip(filter_value);
     if (0 == filter_value.size())
@@ -246,8 +250,8 @@ CheckSentenceFilterFormat(air::string_view sentence)
         throw std::logic_error("Filter value is empty in filter sentence");
     }
 
-    air::string_view item_value {sentence.substr(range_start_pos + 1,
-        range_end_pos - range_start_pos - 1)};
+    air::string_view item_value {
+        sentence.substr(range_start_pos + 1, range_end_pos - range_start_pos - 1)};
     if (0 == item_value.size())
     {
         throw std::logic_error("Item value is empty in filter sentence");
@@ -289,21 +293,27 @@ CheckParagraphFormat(ParagraphType type, air::string_view paragraph)
 
         if (ParagraphType::FILTER == type)
         {
-            if (0 != CheckSentenceFilterFormat(paragraph.substr(start_quote, end_quote - start_quote + 1)))
+            if (0 !=
+                CheckSentenceFilterFormat(
+                    paragraph.substr(start_quote, end_quote - start_quote + 1)))
             {
                 throw std::logic_error("SentenceFilterFormat violation");
             }
         }
         else if (ParagraphType::BUCKET == type)
         {
-            if (0 != CheckSentenceBucketFormat(paragraph.substr(start_quote, end_quote - start_quote + 1)))
+            if (0 !=
+                CheckSentenceBucketFormat(
+                    paragraph.substr(start_quote, end_quote - start_quote + 1)))
             {
                 throw std::logic_error("SentenceBucketFormat violation");
             }
         }
         else
         {
-            if (0 != CheckSentenceFormat(paragraph.substr(start_quote, end_quote - start_quote + 1)))
+            if (0 !=
+                CheckSentenceFormat(
+                    paragraph.substr(start_quote, end_quote - start_quote + 1)))
             {
                 throw std::logic_error("SentenceFormat violation");
             }
@@ -361,7 +371,8 @@ CheckValueDuplication(air::string_view key, air::string_view paragraph)
                 next_comma = paragraph.find("\"", next_pos + 1);
             }
 
-            air::string_view next_value {paragraph.substr(next_colon + 1, next_comma - next_colon - 1)};
+            air::string_view next_value {
+                paragraph.substr(next_colon + 1, next_comma - next_colon - 1)};
             next_value = Strip(next_value);
 
             if (value == next_value)

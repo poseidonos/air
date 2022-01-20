@@ -29,17 +29,19 @@
 
 TEST_F(NodeInitializerTest, InitNodeData_NullData)
 {
-    node_initializer.InitNodeData(0, air::ProcessorType::PROCESSORTYPE_NULL, nullptr);
+    node_initializer.InitNodeData(
+        0, air::ProcessorType::PROCESSORTYPE_NULL, nullptr);
 }
 
 TEST_F(NodeInitializerTest, InitNodeData_HistogramType_LinearDataSample1)
 {
-    // Node: HIST_TEST_1, Filter: One, Type: Histogram, Group: POS, IndexSize: 1, Bucket: BUCKET_1
-    // Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10
-    node_initializer.InitNodeData(17, air::ProcessorType::HISTOGRAM, &histogram_node_data);
+    // Node: HIST_TEST_1, Filter: One, Type: Histogram, Group: POS, IndexSize: 1,
+    // Bucket: BUCKET_1 Bucket: BUCKET_1, Bounds: [0, 100), Scale: 10
+    node_initializer.InitNodeData(
+        17, air::ProcessorType::HISTOGRAM, &histogram_node_data);
 
-    lib::HistogramData* user_data =
-        static_cast<lib::HistogramData*>(histogram_node_data.GetUserDataByHashIndex(0, 0));
+    lib::HistogramData* user_data = static_cast<lib::HistogramData*>(
+        histogram_node_data.GetUserDataByHashIndex(0, 0));
 
     EXPECT_EQ(lib::BucketType::LINEAR, user_data->bucket_type);
     EXPECT_EQ(10, user_data->bucket_scale);
@@ -52,12 +54,13 @@ TEST_F(NodeInitializerTest, InitNodeData_HistogramType_LinearDataSample1)
 
 TEST_F(NodeInitializerTest, InitNodeData_HistogramType_LinearDataSample2)
 {
-    // Node: HIST_TEST_2, Filter: One, Type: Histogram, Group: POS, IndexSize: 1, Bucket: BUCKET_2
-    // Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)
-    node_initializer.InitNodeData(18, air::ProcessorType::HISTOGRAM, &histogram_node_data);
+    // Node: HIST_TEST_2, Filter: One, Type: Histogram, Group: POS, IndexSize: 1,
+    // Bucket: BUCKET_2 Scale: 3, Bucket: BUCKET_2, Bounds: [33, 66)
+    node_initializer.InitNodeData(
+        18, air::ProcessorType::HISTOGRAM, &histogram_node_data);
 
-    lib::HistogramData* user_data =
-        static_cast<lib::HistogramData*>(histogram_node_data.GetUserDataByHashIndex(0, 0));
+    lib::HistogramData* user_data = static_cast<lib::HistogramData*>(
+        histogram_node_data.GetUserDataByHashIndex(0, 0));
 
     EXPECT_EQ(lib::BucketType::LINEAR, user_data->bucket_type);
     EXPECT_EQ(3, user_data->bucket_scale);
@@ -70,12 +73,13 @@ TEST_F(NodeInitializerTest, InitNodeData_HistogramType_LinearDataSample2)
 
 TEST_F(NodeInitializerTest, InitNodeData_HistogramType_LinearDataSample3)
 {
-    // Node: HIST_TEST_3, Filter: One, Type: Histogram, Group: POS, IndexSize: 1, Bucket: BUCKET_3
-    // Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3
-    node_initializer.InitNodeData(19, air::ProcessorType::HISTOGRAM, &histogram_node_data);
+    // Node: HIST_TEST_3, Filter: One, Type: Histogram, Group: POS, IndexSize: 1,
+    // Bucket: BUCKET_3 Bounds: [-100, 80), Scale: 20, Bucket: BUCKET_3
+    node_initializer.InitNodeData(
+        19, air::ProcessorType::HISTOGRAM, &histogram_node_data);
 
-    lib::HistogramData* user_data =
-        static_cast<lib::HistogramData*>(histogram_node_data.GetUserDataByHashIndex(0, 0));
+    lib::HistogramData* user_data = static_cast<lib::HistogramData*>(
+        histogram_node_data.GetUserDataByHashIndex(0, 0));
 
     EXPECT_EQ(lib::BucketType::LINEAR, user_data->bucket_type);
     EXPECT_EQ(20, user_data->bucket_scale);
@@ -88,12 +92,13 @@ TEST_F(NodeInitializerTest, InitNodeData_HistogramType_LinearDataSample3)
 
 TEST_F(NodeInitializerTest, InitNodeData_HistogramType_ExponentialDataSample1)
 {
-    // Node: HIST_TEST_4, Filter: One, Type: Histogram, Group: POS, IndexSize: 1, Bucket: BUCKET_4
-    // Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 2^
-    node_initializer.InitNodeData(20, air::ProcessorType::HISTOGRAM, &histogram_node_data);
+    // Node: HIST_TEST_4, Filter: One, Type: Histogram, Group: POS, IndexSize: 1,
+    // Bucket: BUCKET_4 Bucket: BUCKET_4, Bounds: [2^0, 2^10), Scale: 2^
+    node_initializer.InitNodeData(
+        20, air::ProcessorType::HISTOGRAM, &histogram_node_data);
 
-    lib::HistogramData* user_data =
-        static_cast<lib::HistogramData*>(histogram_node_data.GetUserDataByHashIndex(0, 0));
+    lib::HistogramData* user_data = static_cast<lib::HistogramData*>(
+        histogram_node_data.GetUserDataByHashIndex(0, 0));
 
     EXPECT_EQ(lib::BucketType::EXPONENTIAL, user_data->bucket_type);
     EXPECT_EQ(2, user_data->bucket_scale);
@@ -107,12 +112,13 @@ TEST_F(NodeInitializerTest, InitNodeData_HistogramType_ExponentialDataSample1)
 
 TEST_F(NodeInitializerTest, InitNodeData_HistogramType_ExponentialDataSample2)
 {
-    // Node: HIST_TEST_5, Filter: One, Type: Histogram, Group: POS, IndexSize: 1, Bucket: BUCKET_5
-    // Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 2^
-    node_initializer.InitNodeData(21, air::ProcessorType::HISTOGRAM, &histogram_node_data);
+    // Node: HIST_TEST_5, Filter: One, Type: Histogram, Group: POS, IndexSize: 1,
+    // Bucket: BUCKET_5 Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 2^
+    node_initializer.InitNodeData(
+        21, air::ProcessorType::HISTOGRAM, &histogram_node_data);
 
-    lib::HistogramData* user_data =
-        static_cast<lib::HistogramData*>(histogram_node_data.GetUserDataByHashIndex(0, 0));
+    lib::HistogramData* user_data = static_cast<lib::HistogramData*>(
+        histogram_node_data.GetUserDataByHashIndex(0, 0));
 
     EXPECT_EQ(lib::BucketType::EXPONENTIAL, user_data->bucket_type);
     EXPECT_EQ(2, user_data->bucket_scale);
@@ -126,12 +132,13 @@ TEST_F(NodeInitializerTest, InitNodeData_HistogramType_ExponentialDataSample2)
 
 TEST_F(NodeInitializerTest, InitNodeData_HistogramType_ExponentialDataSample3)
 {
-    // Node: HIST_TEST_6, Filter: One, Type: Histogram, Group: POS, IndexSize: 1, Bucket: BUCKET_6
-    // Bucket: BUCKET_6, Bounds: (-10^3, 10^5), Scale: 10^
-    node_initializer.InitNodeData(22, air::ProcessorType::HISTOGRAM, &histogram_node_data);
+    // Node: HIST_TEST_6, Filter: One, Type: Histogram, Group: POS, IndexSize: 1,
+    // Bucket: BUCKET_6 Bucket: BUCKET_6, Bounds: (-10^3, 10^5), Scale: 10^
+    node_initializer.InitNodeData(
+        22, air::ProcessorType::HISTOGRAM, &histogram_node_data);
 
-    lib::HistogramData* user_data =
-        static_cast<lib::HistogramData*>(histogram_node_data.GetUserDataByHashIndex(0, 0));
+    lib::HistogramData* user_data = static_cast<lib::HistogramData*>(
+        histogram_node_data.GetUserDataByHashIndex(0, 0));
 
     EXPECT_EQ(lib::BucketType::EXPONENTIAL, user_data->bucket_type);
     EXPECT_EQ(10, user_data->bucket_scale);

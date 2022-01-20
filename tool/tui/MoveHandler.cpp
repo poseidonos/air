@@ -69,17 +69,17 @@ air::MoveHandler::_MoveUp(AConfig& tree)
     }
     else
     {
-        bool now{false};
-        bool done{false};
-        air::AGroup* group{nullptr};
-        air::ANode* node{nullptr};
+        bool now {false};
+        bool done {false};
+        air::AGroup* group {nullptr};
+        air::ANode* node {nullptr};
 
         for (auto g = tree.group.rbegin(); g != tree.group.rend(); ++g)
         {
             if (!g->second->fold)
             {
-                for (auto n = g->second->node.rbegin();
-                     n != g->second->node.rend(); ++n)
+                for (auto n = g->second->node.rbegin(); n != g->second->node.rend();
+                     ++n)
                 {
                     if (now)
                     {
@@ -152,10 +152,10 @@ air::MoveHandler::_MoveDown(AConfig& tree)
     }
     else
     {
-        bool now{false};
-        bool done{false};
-        air::AGroup* group{nullptr};
-        air::ANode* node{nullptr};
+        bool now {false};
+        bool done {false};
+        air::AGroup* group {nullptr};
+        air::ANode* node {nullptr};
 
         for (auto g : tree.group)
         {

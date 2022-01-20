@@ -22,9 +22,9 @@
  *   SOFTWARE.
  */
 
-#include "src/lib/Data.h"
-
 #include <gmock/gmock.h>
+
+#include "src/lib/Data.h"
 
 class DataTest : public ::testing::Test
 {

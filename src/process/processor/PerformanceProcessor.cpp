@@ -30,11 +30,12 @@
 #include "src/lib/json/Json.h"
 
 void
-process::PerformanceProcessor::_ProcessData(lib::Data* air_data,
-    lib::AccData* acc_data)
+process::PerformanceProcessor::_ProcessData(
+    lib::Data* air_data, lib::AccData* acc_data)
 {
     lib::PerformanceData* perf_data {static_cast<lib::PerformanceData*>(air_data)};
-    lib::AccPerformanceData* acc_perf_data {static_cast<lib::AccPerformanceData*>(acc_data)};
+    lib::AccPerformanceData* acc_perf_data {
+        static_cast<lib::AccPerformanceData*>(acc_data)};
 
     if (lap_time > 0.0)
     {
@@ -43,9 +44,8 @@ process::PerformanceProcessor::_ProcessData(lib::Data* air_data,
 
         double common_divisor {acc_perf_data->time_spent + lap_time};
 
-        acc_perf_data->iops_avg =
-            ((double)acc_perf_data->iops_avg / common_divisor *
-                acc_perf_data->time_spent) +
+        acc_perf_data->iops_avg = ((double)acc_perf_data->iops_avg /
+                                      common_divisor * acc_perf_data->time_spent) +
             ((double)perf_data->iops / common_divisor * lap_time);
 
         acc_perf_data->bandwidth_avg =
@@ -59,16 +59,20 @@ process::PerformanceProcessor::_ProcessData(lib::Data* air_data,
 void
 process::PerformanceProcessor::_JsonifyData(struct JsonifyData data)
 {
-    lib::PerformanceData* perf_data {static_cast<lib::PerformanceData*>(data.air_data)};
+    lib::PerformanceData* perf_data {
+        static_cast<lib::PerformanceData*>(data.air_data)};
     std::string node_name;
     node_name.assign(data.node_name_view.data(), data.node_name_view.size());
     auto& node = air::json(node_name);
-    lib::AccPerformanceData* acc_perf_data {static_cast<lib::AccPerformanceData*>(data.acc_data)};
+    lib::AccPerformanceData* acc_perf_data {
+        static_cast<lib::AccPerformanceData*>(data.acc_data)};
 
-    auto& node_obj = air::json(node_name + "_" + std::to_string(data.tid) + "_perf_"
-        + std::to_string(data.hash_value) + "_" + std::to_string(data.filter_index));
+    auto& node_obj = air::json(node_name + "_" + std::to_string(data.tid) +
+        "_perf_" + std::to_string(data.hash_value) + "_" +
+        std::to_string(data.filter_index));
 
-    std::string filter_item {cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index)};
+    std::string filter_item {
+        cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index)};
 
     node_obj["index"] = {data.hash_value};
     node_obj["target_id"] = {data.tid};
@@ -80,9 +84,8 @@ process::PerformanceProcessor::_JsonifyData(struct JsonifyData data)
     uint32_t cnt {1};
     for (const auto& pair : perf_data->packet_cnt)
     {
-        node_obj["cnt_" + std::to_string(cnt)] = {
-            std::to_string(pair.first) + "(sz)-" +
-            std::to_string(pair.second) + "(cnt)"};
+        node_obj["cnt_" + std::to_string(cnt)] = {std::to_string(pair.first) +
+            "(sz)-" + std::to_string(pair.second) + "(cnt)"};
         cnt++;
     }
 
@@ -93,10 +96,11 @@ process::PerformanceProcessor::_JsonifyData(struct JsonifyData data)
 }
 
 void
-process::PerformanceProcessor::_InitData(lib::Data* air_data,
-    lib::AccData* acc_data)
+process::PerformanceProcessor::_InitData(
+    lib::Data* air_data, lib::AccData* acc_data)
 {
-    lib::AccPerformanceData* acc_perf_data {static_cast<lib::AccPerformanceData*>(acc_data)};
+    lib::AccPerformanceData* acc_perf_data {
+        static_cast<lib::AccPerformanceData*>(acc_data)};
     lib::PerformanceData* perf_data {static_cast<lib::PerformanceData*>(air_data)};
 
     perf_data->access = 0;

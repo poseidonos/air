@@ -57,19 +57,20 @@ public:
 
 private:
     void _AddGroupInfo(air::JSONdoc& doc);
-    void _AddNodeInfo(air::string_view& group_name, air::string_view& node_name_view,
-        uint32_t nid, air::ProcessorType type);
+    void _AddNodeInfo(air::string_view& group_name,
+        air::string_view& node_name_view, uint32_t nid, air::ProcessorType type);
 
-    Processor* processor[cfg::GetSentenceCount(config::ParagraphType::NODE)]{
+    Processor* processor[cfg::GetSentenceCount(config::ParagraphType::NODE)] {
         nullptr,
     };
-    meta::GlobalMetaGetter* global_meta_getter{nullptr};
-    meta::NodeMetaGetter* node_meta_getter{nullptr};
-    node::NodeManager* node_manager{nullptr};
+    meta::GlobalMetaGetter* global_meta_getter {nullptr};
+    meta::NodeMetaGetter* node_meta_getter {nullptr};
+    node::NodeManager* node_manager {nullptr};
     TimingDistributor timing_distributor;
-    const uint32_t MAX_NID_SIZE{cfg::GetSentenceCount(config::ParagraphType::NODE)};
-    timespec last_timestamp{0, 0};
-    double time_unit{0.0};
+    const uint32_t MAX_NID_SIZE {
+        cfg::GetSentenceCount(config::ParagraphType::NODE)};
+    timespec last_timestamp {0, 0};
+    double time_unit {0.0};
 };
 
 } // namespace process

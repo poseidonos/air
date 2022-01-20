@@ -74,7 +74,8 @@ air::CliRecv::Receive(int num_cmd, int target_pid)
         }
         else
         {
-            cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL, "CliRecv::Receive");
+            cli_result->SetReturn(
+                ReturnCode::ERR_KERNEL_MSGQ_FAIL, "CliRecv::Receive");
         }
     }
 

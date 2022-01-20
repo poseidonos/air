@@ -111,19 +111,19 @@ public:
     }
 
 private:
-    air::ProcessorType ptype{air::ProcessorType::PROCESSORTYPE_NULL};
-    lib::Data*** user_data{
+    air::ProcessorType ptype {air::ProcessorType::PROCESSORTYPE_NULL};
+    lib::Data*** user_data {
         nullptr,
     };
-    lib::Data*** air_data{
+    lib::Data*** air_data {
         nullptr,
     };
-    lib::AccData*** acc_data{
+    lib::AccData*** acc_data {
         nullptr,
     };
-    uint32_t index_size{0};
-    uint32_t filter_size{0};
-    air::HashMap<uint64_t>* hash_map{nullptr};
+    uint32_t index_size {0};
+    uint32_t filter_size {0};
+    air::HashMap<uint64_t>* hash_map {nullptr};
 };
 
 } // namespace node

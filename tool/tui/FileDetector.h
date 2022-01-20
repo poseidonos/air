@@ -46,10 +46,10 @@ private:
     void _UpdatePidStatus(void);
     void _SelectPid(void);
 
-    int pid{-1};
-    bool waiting{false};
-    bool exit{false};
-    int candidates{0};
+    int pid {-1};
+    bool waiting {false};
+    bool exit {false};
+    int candidates {0};
 
     std::map<int, bool> pid_map;
 };

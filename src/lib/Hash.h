@@ -34,9 +34,7 @@ template<typename K>
 class HashNode
 {
 public:
-    HashNode(K new_key, bool new_valid)
-    : key(new_key),
-      valid(new_valid)
+    HashNode(K new_key, bool new_valid): key(new_key), valid(new_valid)
     {
     }
     K key;
@@ -57,7 +55,8 @@ public:
             return capacity;
         }
         uint32_t hash_index = _HashCode(key);
-        while (hash_arr[hash_index]->key != key && hash_arr[hash_index]->valid == false)
+        while (hash_arr[hash_index]->key != key &&
+            hash_arr[hash_index]->valid == false)
         {
             hash_index++;
             hash_index %= capacity;
@@ -121,7 +120,7 @@ public:
     {
         return size;
     }
-    static const uint64_t npos{0xFFFFFFFFFFFFFFFF};
+    static const uint64_t npos {0xFFFFFFFFFFFFFFFF};
 
 private:
     uint32_t
@@ -138,9 +137,9 @@ private:
         return x % capacity;
     }
 
-    HashNode<K>** hash_arr{nullptr};
-    uint32_t capacity{0};
-    uint32_t size{0};
+    HashNode<K>** hash_arr {nullptr};
+    uint32_t capacity {0};
+    uint32_t size {0};
 };
 
 } // namespace air

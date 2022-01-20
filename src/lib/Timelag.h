@@ -37,7 +37,8 @@ struct Timelag
     static uint64_t
     GetDiff(timespec& end, timespec& start)
     {
-        uint64_t timelag = UINT_E9 * (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec);
+        uint64_t timelag =
+            UINT_E9 * (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec);
         return timelag;
     }
 };

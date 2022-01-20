@@ -46,12 +46,18 @@ public:
 protected:
     CollectorTest()
     {
-        performance_collector = new collection::PerformanceCollector {new collection::PerformanceWriter};
-        latency_collector = new collection::LatencyCollector {new collection::LatencyWriter};
-        queue_collector = new collection::QueueCollector {new collection::QueueWriter};
-        count_collector = new collection::CountCollector {new collection::CountWriter};
-        util_collector = new collection::UtilizationCollector {new collection::UtilizationWriter};
-        histogram_collector = new collection::HistogramCollector {new collection::HistogramWriter};
+        performance_collector = new collection::PerformanceCollector {
+            new collection::PerformanceWriter};
+        latency_collector =
+            new collection::LatencyCollector {new collection::LatencyWriter};
+        queue_collector =
+            new collection::QueueCollector {new collection::QueueWriter};
+        count_collector =
+            new collection::CountCollector {new collection::CountWriter};
+        util_collector = new collection::UtilizationCollector {
+            new collection::UtilizationWriter};
+        histogram_collector =
+            new collection::HistogramCollector {new collection::HistogramWriter};
     }
     ~CollectorTest()
     {

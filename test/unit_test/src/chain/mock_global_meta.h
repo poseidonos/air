@@ -29,5 +29,5 @@ public:
     }
 
 private:
-    uint32_t interval{3};
+    uint32_t interval {3};
 };

@@ -41,22 +41,22 @@ struct AirFixture
 };
 static AirFixture air_fixture;
 
-
 class AirAPI : public benchmark::Fixture
 {
 public:
-    void SetUp(const ::benchmark::State& state)
+    void
+    SetUp(const ::benchmark::State& state)
     {
         cpu_set_t cpu_set;
         CPU_ZERO(&cpu_set);
         CPU_SET(state.thread_index + 1, &cpu_set);
         pthread_setaffinity_np(pthread_self(), sizeof(cpu_set), &cpu_set);
     }
-    void TearDown(const ::benchmark::State& state)
+    void
+    TearDown(const ::benchmark::State& state)
     {
     }
 };
-
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Performance)(benchmark::State& state)
 {
@@ -65,8 +65,10 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Performance)(benchmark::State& state)
         airlog("PERF_BENCHMARK", "AIR_READ", 0, 4096);
     }
 }
-BENCHMARK_REGISTER_F(AirAPI, Type_Performance)->MinTime(10)->ThreadRange(1, 8)->Repetitions(3);
-
+BENCHMARK_REGISTER_F(AirAPI, Type_Performance)
+    ->MinTime(10)
+    ->ThreadRange(1, 8)
+    ->Repetitions(3);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Latency)(benchmark::State& state)
 {
@@ -78,8 +80,10 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Latency)(benchmark::State& state)
         key++;
     }
 }
-BENCHMARK_REGISTER_F(AirAPI, Type_Latency)->MinTime(10)->ThreadRange(1, 8)->Repetitions(3);
-
+BENCHMARK_REGISTER_F(AirAPI, Type_Latency)
+    ->MinTime(10)
+    ->ThreadRange(1, 8)
+    ->Repetitions(3);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Queue)(benchmark::State& state)
 {
@@ -88,8 +92,10 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Queue)(benchmark::State& state)
         airlog("Q_SUBMISSION", "AIR_BASE", 0, 24);
     }
 }
-BENCHMARK_REGISTER_F(AirAPI, Type_Queue)->MinTime(10)->ThreadRange(1, 8)->Repetitions(3);
-
+BENCHMARK_REGISTER_F(AirAPI, Type_Queue)
+    ->MinTime(10)
+    ->ThreadRange(1, 8)
+    ->Repetitions(3);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Utilization)(benchmark::State& state)
 {
@@ -98,8 +104,10 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Utilization)(benchmark::State& state)
         airlog("UTIL_SUBMIT_THR", "AIR_SUBMIT", 0, 3);
     }
 }
-BENCHMARK_REGISTER_F(AirAPI, Type_Utilization)->MinTime(10)->ThreadRange(1, 8)->Repetitions(3);
-
+BENCHMARK_REGISTER_F(AirAPI, Type_Utilization)
+    ->MinTime(10)
+    ->ThreadRange(1, 8)
+    ->Repetitions(3);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Count)(benchmark::State& state)
 {
@@ -108,8 +116,10 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Count)(benchmark::State& state)
         airlog("CNT_TEST_EVENT", "AIR_SUBMIT", 0, 2);
     }
 }
-BENCHMARK_REGISTER_F(AirAPI, Type_Count)->MinTime(10)->ThreadRange(1, 8)->Repetitions(3);
-
+BENCHMARK_REGISTER_F(AirAPI, Type_Count)
+    ->MinTime(10)
+    ->ThreadRange(1, 8)
+    ->Repetitions(3);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Best)(benchmark::State& state)
 {
@@ -118,8 +128,10 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Best)(benchmark::State& state)
         airlog("HIST_SAMPLE_3", "AIR_0", 0, 10);
     }
 }
-BENCHMARK_REGISTER_F(AirAPI, Type_Histogram_Best)->MinTime(10)->ThreadRange(1, 8)->Repetitions(3);
-
+BENCHMARK_REGISTER_F(AirAPI, Type_Histogram_Best)
+    ->MinTime(10)
+    ->ThreadRange(1, 8)
+    ->Repetitions(3);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Worst)(benchmark::State& state)
 {
@@ -128,7 +140,9 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Worst)(benchmark::State& state)
         airlog("HIST_SAMPLE_6", "AIR_0", 0, 99999);
     }
 }
-BENCHMARK_REGISTER_F(AirAPI, Type_Histogram_Worst)->MinTime(10)->ThreadRange(1, 8)->Repetitions(3);
-
+BENCHMARK_REGISTER_F(AirAPI, Type_Histogram_Worst)
+    ->MinTime(10)
+    ->ThreadRange(1, 8)
+    ->Repetitions(3);
 
 BENCHMARK_MAIN();

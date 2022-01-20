@@ -6,16 +6,16 @@
 class DetectCoRHandlerTest : public ::testing::Test
 {
 public:
-    MockNodeManager* mock_node_manager{nullptr};
-    detect::Detector* detector{nullptr};
-    detect::DetectCoRHandler* detect_cor_handler{nullptr};
+    MockNodeManager* mock_node_manager {nullptr};
+    detect::Detector* detector {nullptr};
+    detect::DetectCoRHandler* detect_cor_handler {nullptr};
 
 protected:
     DetectCoRHandlerTest()
     {
-        mock_node_manager = new MockNodeManager{};
-        detector = new detect::Detector{mock_node_manager};
-        detect_cor_handler = new detect::DetectCoRHandler{detector};
+        mock_node_manager = new MockNodeManager {};
+        detector = new detect::Detector {mock_node_manager};
+        detect_cor_handler = new detect::DetectCoRHandler {detector};
     }
     ~DetectCoRHandlerTest()
     {

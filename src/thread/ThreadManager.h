@@ -40,7 +40,7 @@ public:
     virtual void RunThread(uint32_t run_skip_count);
 
 private:
-    chain::ChainManager* chain_manager{nullptr};
+    chain::ChainManager* chain_manager {nullptr};
 };
 
 } // namespace thread

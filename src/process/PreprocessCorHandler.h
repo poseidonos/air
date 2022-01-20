@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    Preprocessor* preprocessor{nullptr};
+    Preprocessor* preprocessor {nullptr};
 };
 
 } // namespace process

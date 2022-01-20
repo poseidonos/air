@@ -35,9 +35,9 @@ namespace air
 struct RangeValue
 {
     RangeValue(std::string key, JSONtype type, void* value)
-    : key{key},
-      type{type},
-      value{value}
+    : key {key},
+      type {type},
+      value {value}
     {
     }
     std::string key;
@@ -48,8 +48,7 @@ struct RangeValue
 class RangeIterator
 {
 public:
-    explicit RangeIterator(std::map<std::string, JSONvalue>::iterator it)
-    : it{it}
+    explicit RangeIterator(std::map<std::string, JSONvalue>::iterator it): it {it}
     {
     }
 
@@ -66,18 +65,20 @@ public:
         return it != rhs.it;
     }
 
-    RangeValue operator*(void)const
+    RangeValue
+    operator*(void) const
     {
         if (JSONtype::OBJECT == it->second.type)
         {
             void* vp = (*it).second.data;
             JSONdoc& doc = *((JSONdoc*)vp);
             auto doc_it = doc.map.begin();
-            return RangeValue{(*it).first, doc_it->second.type, doc_it->second.data};
+            return RangeValue {
+                (*it).first, doc_it->second.type, doc_it->second.data};
         }
         else
         {
-            return RangeValue{(*it).first, it->second.type, it->second.data};
+            return RangeValue {(*it).first, it->second.type, it->second.data};
         }
     }
 
@@ -88,27 +89,26 @@ private:
 class RangeImpl
 {
 public:
-    explicit RangeImpl(JSONdoc& obj)
-    : obj{obj}
+    explicit RangeImpl(JSONdoc& obj): obj {obj}
     {
     }
 
     RangeIterator
     begin(void) const
     {
-        return RangeIterator{obj.map.begin()};
+        return RangeIterator {obj.map.begin()};
     }
 
     RangeIterator
     end(void) const
     {
-        return RangeIterator{obj.map.end()};
+        return RangeIterator {obj.map.end()};
     }
 
     static RangeImpl
     range(JSONdoc& obj)
     {
-        return RangeImpl{obj};
+        return RangeImpl {obj};
     }
 
 private:

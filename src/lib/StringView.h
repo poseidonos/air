@@ -34,17 +34,14 @@ namespace air
 class string_view
 {
 public:
-    const static std::size_t npos{0x0FFFFFFF};
+    const static std::size_t npos {0x0FFFFFFF};
 
     template<std::size_t N>
-    constexpr string_view(const char (&a)[N])
-    : str(a),
-      len(N - 1)
+    constexpr string_view(const char (&a)[N]): str(a),
+                                               len(N - 1)
     {
     }
-    constexpr string_view(const char* a, std::size_t N)
-    : str(a),
-      len(N)
+    constexpr string_view(const char* a, std::size_t N): str(a), len(N)
     {
     }
     constexpr std::size_t
@@ -57,9 +54,12 @@ public:
     {
         return str;
     }
-    constexpr char operator[](std::size_t n) const
+    constexpr char
+    operator[](std::size_t n) const
     {
-        return n < len ? str[n] : throw std::out_of_range("air::string_view operator[] invalid");
+        return n < len
+            ? str[n]
+            : throw std::out_of_range("air::string_view operator[] invalid");
     }
     constexpr bool
     operator==(const air::string_view& arg) const
@@ -100,8 +100,8 @@ public:
     {
         if (len > pos)
         {
-            std::size_t cnt{0};
-            std::size_t curr_pos{pos};
+            std::size_t cnt {0};
+            std::size_t curr_pos {pos};
             while (len > curr_pos)
             {
                 if (arg[cnt] == str[curr_pos])
@@ -177,7 +177,7 @@ public:
                 left_size = len - start;
             }
         }
-        return air::string_view{str + start, left_size};
+        return air::string_view {str + start, left_size};
     }
     friend std::ostream&
     operator<<(std::ostream& os, const air::string_view& arg)

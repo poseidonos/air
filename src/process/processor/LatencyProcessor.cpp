@@ -32,8 +32,7 @@
 #include "src/lib/json/Json.h"
 
 void
-process::LatencyProcessor::_ProcessData(lib::Data* air_data,
-    lib::AccData* acc_data)
+process::LatencyProcessor::_ProcessData(lib::Data* air_data, lib::AccData* acc_data)
 {
     lib::AccLatencyData* acc_lat_data {static_cast<lib::AccLatencyData*>(acc_data)};
     _Calculate(acc_lat_data);
@@ -61,7 +60,8 @@ process::LatencyProcessor::_Calculate(lib::AccLatencyData* lat_data)
     lat_data->upper_quartile = lat_data->timelag[sample_count - (sample_count / 4)];
 
     // calculate total statistics
-    uint64_t total_count {lat_data->total_sample_count + (uint64_t)lat_data->sample_count};
+    uint64_t total_count {
+        lat_data->total_sample_count + (uint64_t)lat_data->sample_count};
     if (total_count >= OVERFLOW_THRESHOLD)
     {
         lat_data->overflow_warning = true;
@@ -73,10 +73,10 @@ process::LatencyProcessor::_Calculate(lib::AccLatencyData* lat_data)
             (double)(lat_data->total_sample_count + lat_data->sample_count)};
         double divisor2 {(double)(lat_data->sample_count) /
             (double)(lat_data->total_sample_count + lat_data->sample_count)};
-        lat_data->total_mean =
-            (double)(lat_data->total_mean * divisor1) + (double)(lat_data->mean * divisor2);
-        lat_data->total_median =
-            (double)(lat_data->total_median * divisor1) + (double)(lat_data->median * divisor2);
+        lat_data->total_mean = (double)(lat_data->total_mean * divisor1) +
+            (double)(lat_data->mean * divisor2);
+        lat_data->total_median = (double)(lat_data->total_median * divisor1) +
+            (double)(lat_data->median * divisor2);
         lat_data->total_lower_quartile =
             (double)(lat_data->total_lower_quartile * divisor1) +
             (double)(lat_data->lower_quartile * divisor2);
@@ -107,17 +107,21 @@ process::LatencyProcessor::_Calculate(lib::AccLatencyData* lat_data)
 void
 process::LatencyProcessor::_JsonifyData(struct JsonifyData data)
 {
-    lib::AccLatencyData* acc_lat_data {static_cast<lib::AccLatencyData*>(data.acc_data)};
+    lib::AccLatencyData* acc_lat_data {
+        static_cast<lib::AccLatencyData*>(data.acc_data)};
     std::string node_name;
     node_name.assign(data.node_name_view.data(), data.node_name_view.size());
     auto& node = air::json(node_name);
 
-    auto& node_obj = air::json(node_name + "_" + std::to_string(data.tid) + "_lat_"
-        + std::to_string(data.hash_value) + "_" + std::to_string(data.filter_index));
+    auto& node_obj = air::json(node_name + "_" + std::to_string(data.tid) +
+        "_lat_" + std::to_string(data.hash_value) + "_" +
+        std::to_string(data.filter_index));
 
-    std::string filter_range {cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index)};
+    std::string filter_range {
+        cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index)};
     filter_range += "~";
-    filter_range += cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index + 1);
+    filter_range +=
+        cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index + 1);
 
     node_obj["index"] = {data.hash_value};
     node_obj["filter"] = {filter_range};
@@ -143,8 +147,7 @@ process::LatencyProcessor::_JsonifyData(struct JsonifyData data)
 }
 
 void
-process::LatencyProcessor::_InitData(lib::Data* air_data,
-    lib::AccData* acc_data)
+process::LatencyProcessor::_InitData(lib::Data* air_data, lib::AccData* acc_data)
 {
     lib::AccLatencyData* acc_lat_data {static_cast<lib::AccLatencyData*>(acc_data)};
 
@@ -160,8 +163,7 @@ process::LatencyProcessor::_InitData(lib::Data* air_data,
         acc_lat_data->timelag[i] = 0;
     }
 
-    if ((true == acc_lat_data->overflow_warning) ||
-        (0 != acc_lat_data->need_erase))
+    if ((true == acc_lat_data->overflow_warning) || (0 != acc_lat_data->need_erase))
     {
         acc_lat_data->total_mean = 0;
         acc_lat_data->total_min = 0;

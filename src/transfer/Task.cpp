@@ -25,9 +25,9 @@
 #include "src/transfer/Task.h"
 
 #include <unistd.h>
-#include <utility>
 
 #include <stdexcept>
+#include <utility>
 
 std::mutex transfer::Task::mutex_outbox;
 std::list<transfer::Task::TaskInfo> transfer::Task::task_outbox;
@@ -116,10 +116,8 @@ transfer::Task::NotifyAll(air::JSONdoc&& json_data)
     for (auto& task_info : task_list)
     {
         air::JSONdoc&& task_data = json_data.Compound(task_info.nodes);
-        task_info.async_task = std::async(std::launch::async,
-            [&] {
-                return task_info.function(task_data);
-            });
+        task_info.async_task = std::async(
+            std::launch::async, [&] { return task_info.function(task_data); });
     }
 
     _WaitJobDone();

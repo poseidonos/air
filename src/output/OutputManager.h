@@ -47,8 +47,8 @@ public:
     {
     }
     void
-    EnqueueMsg(uint32_t type1, uint32_t type2, uint32_t value1,
-        uint32_t value2, int pid, int cmd_type, int cmd_order)
+    EnqueueMsg(uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2,
+        int pid, int cmd_type, int cmd_order)
     {
         msg.push({type1, type2, value1, value2, pid, cmd_type, cmd_order});
     }
@@ -58,7 +58,7 @@ private:
     int _SendCompletionMsg(uint32_t value1, int pid, int cmd_type, int cmd_order);
     std::string _TimeStampToHReadble(int64_t timestamp);
     std::queue<lib::MsgEntry> msg;
-    OutCommand* out_command{nullptr};
+    OutCommand* out_command {nullptr};
 };
 
 } // namespace output

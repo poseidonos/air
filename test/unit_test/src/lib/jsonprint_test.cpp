@@ -22,13 +22,13 @@
  *   SOFTWARE.
  */
 
-#include "src/lib/json/Json.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <fstream>
 #include <iostream>
+
+#include "src/lib/json/Json.h"
 
 TEST(JsonprintTest, DirectCall)
 {

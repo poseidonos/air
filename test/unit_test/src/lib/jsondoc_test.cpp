@@ -22,14 +22,14 @@
  *   SOFTWARE.
  */
 
-#include "src/lib/json/Json.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <deque>
 #include <fstream>
 #include <iostream>
+
+#include "src/lib/json/Json.h"
 
 TEST(JsondocTest, UseCase1)
 {
@@ -75,7 +75,16 @@ TEST(JsondocTest, UseCase1)
     std::getline(read_file, read_line);
     read_file.close();
 
-    EXPECT_EQ(0, read_line.compare("{\"interval\": 1, \"node\": [{\"id\": 0, \"name\": \"PERF_VOL\", \"tid_arr\": {\"aid_arr\": [{\"aid\": 0, \"cnt_1\": \"4096(sz)-1082504(cnt)\", \"iops_read\": 979265, \"iops_write\": 103239}, {\"aid\": 1, \"cnt_1\": \"4096(sz)-303466(cnt)\", \"iops_read\": 301422, \"iops_write\": 2144}, {\"aid\": 2, \"cnt_1\": \"4096(sz)-224444(cnt)\", \"iops_read\": 222222, \"iops_write\": 2222}], \"tid\": 30234, \"tname\": \"Reactor01\"}}], \"status\": \"normal\", \"timestamp\": 15849345}"));
+    EXPECT_EQ(0,
+        read_line.compare(
+            "{\"interval\": 1, \"node\": [{\"id\": 0, \"name\": \"PERF_VOL\", "
+            "\"tid_arr\": {\"aid_arr\": [{\"aid\": 0, \"cnt_1\": "
+            "\"4096(sz)-1082504(cnt)\", \"iops_read\": 979265, \"iops_write\": "
+            "103239}, {\"aid\": 1, \"cnt_1\": \"4096(sz)-303466(cnt)\", "
+            "\"iops_read\": 301422, \"iops_write\": 2144}, {\"aid\": 2, \"cnt_1\": "
+            "\"4096(sz)-224444(cnt)\", \"iops_read\": 222222, \"iops_write\": "
+            "2222}], \"tid\": 30234, \"tname\": \"Reactor01\"}}], \"status\": "
+            "\"normal\", \"timestamp\": 15849345}"));
 }
 
 TEST(JsondocTest, UseCase2)
@@ -104,7 +113,10 @@ TEST(JsondocTest, UseCase2)
     std::getline(read_file, read_line);
     read_file.close();
 
-    EXPECT_EQ(0, read_line.compare("{\"gender\": [[\"male\", \"female\"]], \"name\": [\"name1\", \"name2\"], \"timestamp\": [101, 102, 103, 104]}"));
+    EXPECT_EQ(0,
+        read_line.compare(
+            "{\"gender\": [[\"male\", \"female\"]], \"name\": [\"name1\", "
+            "\"name2\"], \"timestamp\": [101, 102, 103, 104]}"));
 }
 
 TEST(JsondocTest, jsondocApiException)
@@ -149,7 +161,7 @@ TEST(JsondocTest, jsondocApiException)
 
     try
     {
-        uint8_t uint8_value{1};
+        uint8_t uint8_value {1};
         obj["uint8_t"] += {uint8_value};
     }
     catch (std::exception& e)
@@ -178,9 +190,9 @@ TEST(JsondocTest, jsondocApiException)
 TEST(JsondocTest, jsondocClearException)
 {
     auto& obj = air::json("obj");
-    long long longlong_value{1234};
+    long long longlong_value {1234};
     obj["longlong"] = {longlong_value};
-    unsigned long long ulonglong_value{1234};
+    unsigned long long ulonglong_value {1234};
     obj["ulonglong"] = {ulonglong_value};
     obj = {};
 
@@ -227,13 +239,16 @@ TEST(JsondocTest, Compound)
     groupTop["groupB"] = {groupB};
     obj["group"] = {groupTop};
 
-    std::deque<std::string> q{"Apple", "Banana"};
+    std::deque<std::string> q {"Apple", "Banana"};
     auto compound = obj.Compound(q);
 
     std::stringstream stream;
     stream << compound;
     std::string str = stream.str();
-    EXPECT_EQ(0, str.compare("{\"Apple\": {\"color\": \"red\", \"weight(kg)\": 0.93}, \"Banana\": {\"color\": \"yellow\", \"weight(kg)\": 2.34}, \"interval\": 3, \"timestamp\": 1639469944}"));
+    EXPECT_EQ(0,
+        str.compare("{\"Apple\": {\"color\": \"red\", \"weight(kg)\": 0.93}, "
+                    "\"Banana\": {\"color\": \"yellow\", \"weight(kg)\": 2.34}, "
+                    "\"interval\": 3, \"timestamp\": 1639469944}"));
 
     air::json_clear();
 }

@@ -5,14 +5,14 @@
 class ThreadTest : public ::testing::Test
 {
 public:
-    thread::OneTimeThread* one_time_thread{nullptr};
-    thread::PeriodicThread* periodic_thread{nullptr};
+    thread::OneTimeThread* one_time_thread {nullptr};
+    thread::PeriodicThread* periodic_thread {nullptr};
 
 protected:
     ThreadTest()
     {
-        one_time_thread = new thread::OneTimeThread{};
-        periodic_thread = new thread::PeriodicThread{};
+        one_time_thread = new thread::OneTimeThread {};
+        periodic_thread = new thread::PeriodicThread {};
     }
     ~ThreadTest()
     {

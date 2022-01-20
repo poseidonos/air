@@ -43,8 +43,8 @@ enum class EventType : int
 
 struct EventData
 {
-    int value{0};
-    EventType type{EventType::DEFAULT};
+    int value {0};
+    EventType type {EventType::DEFAULT};
 };
 
 } // namespace air

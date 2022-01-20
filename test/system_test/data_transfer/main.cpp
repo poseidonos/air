@@ -36,7 +36,7 @@ main(int argc, char* argv[])
     dummy_log.Run();
     auto thr_dummy = std::thread(&DummyLog::TestLog, dummy_log);
 
-    Delegator* d = new Delegator{3};
+    Delegator* d = new Delegator {3};
     d->Test();
 
     sleep(runtime);

@@ -12,25 +12,25 @@
 class PolicyTest : public ::testing::Test
 {
 public:
-    MockGlobalMeta* mock_global_meta{nullptr};
-    MockNodeMeta* mock_node_meta{nullptr};
-    policy::Ruler* ruler{nullptr};
-    policy::Subject* policy_subject{nullptr};
-    policy::RuleManager* rule_manager{nullptr};
-    policy::Observer* policy_observer{nullptr};
-    policy::PolicyCoRHandler* policy_cor_handler{nullptr};
+    MockGlobalMeta* mock_global_meta {nullptr};
+    MockNodeMeta* mock_node_meta {nullptr};
+    policy::Ruler* ruler {nullptr};
+    policy::Subject* policy_subject {nullptr};
+    policy::RuleManager* rule_manager {nullptr};
+    policy::Observer* policy_observer {nullptr};
+    policy::PolicyCoRHandler* policy_cor_handler {nullptr};
 
 protected:
     PolicyTest()
     {
-        mock_global_meta = new MockGlobalMeta{};
-        mock_node_meta = new MockNodeMeta{};
-        ruler = new policy::Ruler{mock_node_meta, mock_global_meta};
+        mock_global_meta = new MockGlobalMeta {};
+        mock_node_meta = new MockNodeMeta {};
+        ruler = new policy::Ruler {mock_node_meta, mock_global_meta};
 
-        policy_subject = new policy::Subject{};
-        rule_manager = new policy::RuleManager{ruler, policy_subject};
-        policy_observer = new policy::Observer{rule_manager};
-        policy_cor_handler = new policy::PolicyCoRHandler{policy_observer};
+        policy_subject = new policy::Subject {};
+        rule_manager = new policy::RuleManager {ruler, policy_subject};
+        policy_observer = new policy::Observer {rule_manager};
+        policy_cor_handler = new policy::PolicyCoRHandler {policy_observer};
     }
     ~PolicyTest()
     {

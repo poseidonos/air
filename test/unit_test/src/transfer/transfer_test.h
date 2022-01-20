@@ -5,7 +5,6 @@
 class TransferTest : public ::testing::Test
 {
 public:
-
 protected:
     TransferTest()
     {

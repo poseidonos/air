@@ -25,8 +25,8 @@
 #ifndef AIR_CONFIG_CHECKER_VALUE_BUCKET_H
 #define AIR_CONFIG_CHECKER_VALUE_BUCKET_H
 
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
 #include "src/config/ConfigLib.h"
 #include "src/config/ConfigParser.h"
@@ -78,22 +78,26 @@ public:
     {
         if (ONE_EXA < bucket_upper_bound || MINUS_ONE_EXA > bucket_upper_bound)
         {
-            throw std::invalid_argument("Bucket exponential type upper_bound limit is 1E(exa, 1e18)");
+            throw std::invalid_argument(
+                "Bucket exponential type upper_bound limit is 1E(exa, 1e18)");
         }
         if (ONE_EXA < bucket_lower_bound || MINUS_ONE_EXA > bucket_lower_bound)
         {
-            throw std::invalid_argument("Bucket exponential type lower_bound limit is -1E(exa, 1e18)");
+            throw std::invalid_argument(
+                "Bucket exponential type lower_bound limit is -1E(exa, 1e18)");
         }
 
         if (bucket_type_linear)
         {
             return _CheckBucketSyntaxLinearType(bucket_scale, bucket_lower_bound,
-                bucket_upper_bound, bucket_start_brace_has_equal, bucket_end_brace_has_equal);
+                bucket_upper_bound, bucket_start_brace_has_equal,
+                bucket_end_brace_has_equal);
         }
         else
         {
-            return _CheckBucketSyntaxExponentialType(bucket_scale, bucket_lower_bound,
-                bucket_upper_bound, bucket_start_brace_has_equal, bucket_end_brace_has_equal);
+            return _CheckBucketSyntaxExponentialType(bucket_scale,
+                bucket_lower_bound, bucket_upper_bound,
+                bucket_start_brace_has_equal, bucket_end_brace_has_equal);
         }
 
         return 0;
@@ -119,10 +123,12 @@ private:
             pow_pos = value.find("^");
             if (air::string_view::npos != value.find("^", pow_pos + 1))
             {
-                throw std::invalid_argument("Bucket range: only one power(^) is acceptable value");
+                throw std::invalid_argument(
+                    "Bucket range: only one power(^) is acceptable value");
             }
             int64_t base {_GetLongNumber(value.substr(0, pow_pos))};
-            int64_t exponent {_GetLongNumber(value.substr(pow_pos + 1, value.size() - pow_pos - 1))};
+            int64_t exponent {_GetLongNumber(
+                value.substr(pow_pos + 1, value.size() - pow_pos - 1))};
             if (0 == exponent)
             {
                 if (is_positive)
@@ -138,7 +144,8 @@ private:
             {
                 if (0 > exponent)
                 {
-                    throw std::invalid_argument("Bucket range: exponent has to be a positive value");
+                    throw std::invalid_argument(
+                        "Bucket range: exponent has to be a positive value");
                 }
 
                 result = 1;
@@ -163,12 +170,14 @@ private:
         {
             if ('.' == value[len_idx])
             {
-                throw std::invalid_argument("Bucket range: decimal point(.) is unaccepatable type");
+                throw std::invalid_argument(
+                    "Bucket range: decimal point(.) is unaccepatable type");
             }
             uint32_t num {static_cast<uint32_t>(value[len_idx]) - '0'};
             if (9 < num)
             {
-                throw std::invalid_argument("Bucket range: invalid value, number(^number) is accepatable value");
+                throw std::invalid_argument("Bucket range: invalid value, "
+                                            "number(^number) is accepatable value");
             }
             result += num * pow_of_ten;
             pow_of_ten *= 10;
@@ -185,7 +194,8 @@ private:
     }
 
     static constexpr int32_t
-    _CheckScale(air::string_view value, bool& bucket_type_linear, int64_t& bucket_scale)
+    _CheckScale(
+        air::string_view value, bool& bucket_type_linear, int64_t& bucket_scale)
     {
         if (air::string_view::npos == value.find("^"))
         {
@@ -202,22 +212,25 @@ private:
         {
             if (1 > bucket_scale || ONE_HUNDRED_PETA < bucket_scale)
             {
-                throw std::out_of_range("Bucket linear type's valid bucket range: 1 ~ 1e17");
+                throw std::out_of_range(
+                    "Bucket linear type's valid bucket range: 1 ~ 1e17");
             }
         }
         else
         {
             if (2 > bucket_scale || 10 < bucket_scale)
             {
-                throw std::out_of_range("Bucket exponential type's valid bucket range: 2^ ~ 10^");
+                throw std::out_of_range(
+                    "Bucket exponential type's valid bucket range: 2^ ~ 10^");
             }
         }
         return 0;
     }
 
     static constexpr int32_t
-    _CheckBounds(air::string_view value, int64_t& bucket_lower_bound, int64_t& bucket_upper_bound,
-        bool& bucket_start_brace_has_equal, bool& bucket_end_brace_has_equal)
+    _CheckBounds(air::string_view value, int64_t& bucket_lower_bound,
+        int64_t& bucket_upper_bound, bool& bucket_start_brace_has_equal,
+        bool& bucket_end_brace_has_equal)
     {
         if ('(' == value[0])
         {
@@ -229,7 +242,8 @@ private:
         }
         else
         {
-            throw std::invalid_argument("Bucket DataRange has to start with '[' or '(' brace");
+            throw std::invalid_argument(
+                "Bucket DataRange has to start with '[' or '(' brace");
         }
 
         if (')' == value[value.size() - 1])
@@ -242,7 +256,8 @@ private:
         }
         else
         {
-            throw std::invalid_argument("Bucket DataRange has to end with ']' or ')' brace");
+            throw std::invalid_argument(
+                "Bucket DataRange has to end with ']' or ')' brace");
         }
 
         std::size_t comma_pos {value.find(",")};
@@ -252,7 +267,8 @@ private:
         }
         air::string_view lower_bound {value.substr(1, comma_pos - 1)};
         lower_bound = Strip(lower_bound);
-        air::string_view upper_bound {value.substr(comma_pos + 1, value.size() - comma_pos - 2)};
+        air::string_view upper_bound {
+            value.substr(comma_pos + 1, value.size() - comma_pos - 2)};
         upper_bound = Strip(upper_bound);
 
         bucket_lower_bound = _GetLongNumber(lower_bound);
@@ -263,27 +279,33 @@ private:
 
     static constexpr int32_t
     _CheckBucketSyntaxLinearType(int64_t bucket_scale, int64_t bucket_lower_bound,
-        int64_t bucket_upper_bound, bool bucket_start_brace_has_equal, bool bucket_end_brace_has_equal)
+        int64_t bucket_upper_bound, bool bucket_start_brace_has_equal,
+        bool bucket_end_brace_has_equal)
     {
         if (!bucket_start_brace_has_equal)
         {
-            throw std::invalid_argument("Bucket linear type has to start widh '[' brace");
+            throw std::invalid_argument(
+                "Bucket linear type has to start widh '[' brace");
         }
         if (bucket_end_brace_has_equal)
         {
-            throw std::invalid_argument("Bucket linear type has to end with ')' brace");
+            throw std::invalid_argument(
+                "Bucket linear type has to end with ')' brace");
         }
         if (0 != bucket_lower_bound % bucket_scale)
         {
-            throw std::invalid_argument("Bucket linear type (lower_bound % scale) has to be 0");
+            throw std::invalid_argument(
+                "Bucket linear type (lower_bound % scale) has to be 0");
         }
         if (0 != bucket_upper_bound % bucket_scale)
         {
-            throw std::invalid_argument("Bucket linear type (upper_bound % scale) has to be 0");
+            throw std::invalid_argument(
+                "Bucket linear type (upper_bound % scale) has to be 0");
         }
         if (bucket_lower_bound >= bucket_upper_bound)
         {
-            throw std::invalid_argument("Bucket lower_bound is bigger than or equal upper_bound");
+            throw std::invalid_argument(
+                "Bucket lower_bound is bigger than or equal upper_bound");
         }
         if (20 < (bucket_upper_bound - bucket_lower_bound) / bucket_scale)
         {
@@ -294,57 +316,74 @@ private:
 
     static constexpr void
     _CheckBucketSyntaxExponentialTypeBrace(int64_t bucket_lower_bound,
-        int64_t bucket_upper_bound, bool bucket_start_brace_has_equal, bool bucket_end_brace_has_equal)
+        int64_t bucket_upper_bound, bool bucket_start_brace_has_equal,
+        bool bucket_end_brace_has_equal)
     {
         if (0 == bucket_lower_bound || 0 == bucket_upper_bound)
         {
-            throw std::invalid_argument("Bucket exponential type DataRange doesn't have 0 lower_bound or upper_bound");
+            throw std::invalid_argument("Bucket exponential type DataRange doesn't "
+                                        "have 0 lower_bound or upper_bound");
         }
         if (bucket_lower_bound >= bucket_upper_bound)
         {
-            throw std::invalid_argument("Bucket lower_bound is bigger than or equal upper_bound");
+            throw std::invalid_argument(
+                "Bucket lower_bound is bigger than or equal upper_bound");
         }
         if (0 < bucket_lower_bound)
         {
             if (!bucket_start_brace_has_equal)
             {
-                throw std::invalid_argument("Bucket exponential type: when lower_bound is positive, DataRange starts widh '[' brace");
+                throw std::invalid_argument(
+                    "Bucket exponential type: when lower_bound is positive, "
+                    "DataRange starts widh '[' brace");
             }
             if (bucket_end_brace_has_equal)
             {
-                throw std::invalid_argument("Bucket exponential type: when lower_bound is positive, DataRange ends with ')' brace");
+                throw std::invalid_argument(
+                    "Bucket exponential type: when lower_bound is positive, "
+                    "DataRange ends with ')' brace");
             }
         }
         if (0 > bucket_upper_bound)
         {
             if (bucket_start_brace_has_equal)
             {
-                throw std::invalid_argument("Bucket exponential type: when upper_bound is negative, DataRange starts widh '(' brace");
+                throw std::invalid_argument(
+                    "Bucket exponential type: when upper_bound is negative, "
+                    "DataRange starts widh '(' brace");
             }
             if (!bucket_end_brace_has_equal)
             {
-                throw std::invalid_argument("Bucket exponential type: when upper_bound is negative, DataRange ends with ']' brace");
+                throw std::invalid_argument(
+                    "Bucket exponential type: when upper_bound is negative, "
+                    "DataRange ends with ']' brace");
             }
         }
         if (0 > bucket_lower_bound && 0 < bucket_upper_bound)
         {
             if (bucket_start_brace_has_equal)
             {
-                throw std::invalid_argument("Bucket exponential type: when lower_bound is negative & upper_bound is positive, DataRange starts widh '(' brace");
+                throw std::invalid_argument(
+                    "Bucket exponential type: when lower_bound is negative & "
+                    "upper_bound is positive, DataRange starts widh '(' brace");
             }
             if (bucket_end_brace_has_equal)
             {
-                throw std::invalid_argument("Bucket exponential type: when lower_bound is negative & upper_bound is positive, DataRange ends widh ')' brace");
+                throw std::invalid_argument(
+                    "Bucket exponential type: when lower_bound is negative & "
+                    "upper_bound is positive, DataRange ends widh ')' brace");
             }
         }
     }
 
     static constexpr int32_t
-    _CheckBucketSyntaxExponentialType(int64_t bucket_scale, int64_t bucket_lower_bound,
-        int64_t bucket_upper_bound, bool bucket_start_brace_has_equal, bool bucket_end_brace_has_equal)
+    _CheckBucketSyntaxExponentialType(int64_t bucket_scale,
+        int64_t bucket_lower_bound, int64_t bucket_upper_bound,
+        bool bucket_start_brace_has_equal, bool bucket_end_brace_has_equal)
     {
-        _CheckBucketSyntaxExponentialTypeBrace(bucket_lower_bound, bucket_upper_bound,
-            bucket_start_brace_has_equal, bucket_end_brace_has_equal);
+        _CheckBucketSyntaxExponentialTypeBrace(bucket_lower_bound,
+            bucket_upper_bound, bucket_start_brace_has_equal,
+            bucket_end_brace_has_equal);
 
         int32_t bucket_start {0};
         if (1 == bucket_lower_bound)
@@ -361,7 +400,9 @@ private:
                 bucket_start++;
                 if (tmp_lower_bound > bucket_lower_bound)
                 {
-                    throw std::invalid_argument("Bucket exponential type lower_bound has to be a (-/+)scale^n");
+                    throw std::invalid_argument(
+                        "Bucket exponential type lower_bound has to be a "
+                        "(-/+)scale^n");
                 }
             }
         }
@@ -379,7 +420,9 @@ private:
                 bucket_start--;
                 if (tmp_lower_bound < bucket_lower_bound)
                 {
-                    throw std::invalid_argument("Bucket exponential type lower_bound has to be a (-/+)scale^n");
+                    throw std::invalid_argument(
+                        "Bucket exponential type lower_bound has to be a "
+                        "(-/+)scale^n");
                 }
             }
         }
@@ -399,7 +442,9 @@ private:
                 bucket_end++;
                 if (tmp_upper_bound > bucket_upper_bound)
                 {
-                    throw std::invalid_argument("Bucket exponential type upper_bound has to be a (-/+)scale^n");
+                    throw std::invalid_argument(
+                        "Bucket exponential type upper_bound has to be a "
+                        "(-/+)scale^n");
                 }
             }
         }
@@ -417,7 +462,9 @@ private:
                 bucket_end--;
                 if (tmp_upper_bound < bucket_upper_bound)
                 {
-                    throw std::invalid_argument("Bucket exponential type upper_bound has to be a (-/+)scale^n");
+                    throw std::invalid_argument(
+                        "Bucket exponential type upper_bound has to be a "
+                        "(-/+)scale^n");
                 }
             }
         }

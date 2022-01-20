@@ -31,13 +31,12 @@
 
 int
 input::Subject::Notify(uint32_t index, uint32_t type1, uint32_t type2,
-    uint32_t value1, uint32_t value2, int pid,
-    int cmd_type, int cmd_order)
+    uint32_t value1, uint32_t value2, int pid, int cmd_type, int cmd_order)
 {
     if (index < to_dtype(pi::InSubject::COUNT))
     {
-        arr_observer[index]->Update(type1, type2, value1, value2, pid, cmd_type,
-            cmd_order);
+        arr_observer[index]->Update(
+            type1, type2, value1, value2, pid, cmd_type, cmd_order);
         return 0;
     }
 
@@ -45,20 +44,19 @@ input::Subject::Notify(uint32_t index, uint32_t type1, uint32_t type2,
 }
 
 void
-input::InCommand::_NotifyToPolicy(uint32_t type2, uint32_t value1,
-    uint32_t value2, int pid, int64_t cmd_type, int cmd_order)
+input::InCommand::_NotifyToPolicy(uint32_t type2, uint32_t value1, uint32_t value2,
+    int pid, int64_t cmd_type, int cmd_order)
 {
     subject->Notify(to_dtype(pi::InSubject::TO_POLICY),
-        to_dtype(pi::Type1::INPUT_TO_POLICY), type2, value1, value2,
-        pid, cmd_type, cmd_order);
+        to_dtype(pi::Type1::INPUT_TO_POLICY), type2, value1, value2, pid, cmd_type,
+        cmd_order);
 }
 
 void
 input::InCommand::_CheckEnableCMD(void)
 {
     _NotifyToPolicy(to_dtype(pi::Type2::ENABLE_AIR), recv_msg.cmd_int_value1, 0,
-        static_cast<int>(recv_msg.pid), recv_msg.cmd_type,
-        recv_msg.cmd_order);
+        static_cast<int>(recv_msg.pid), recv_msg.cmd_type, recv_msg.cmd_order);
 }
 
 void
@@ -67,8 +65,8 @@ input::InCommand::_CheckSetStreamingIntervalCMD(void)
     uint32_t type2 = to_dtype(pi::Type2::SET_STREAMING_INTERVAL);
     uint32_t value1 = recv_msg.cmd_int_value1; // interval
     uint32_t value2 = 0;
-    _NotifyToPolicy(type2, value1, value2, recv_msg.pid, recv_msg.cmd_type,
-        recv_msg.cmd_order);
+    _NotifyToPolicy(
+        type2, value1, value2, recv_msg.pid, recv_msg.cmd_type, recv_msg.cmd_order);
 }
 
 void
@@ -98,20 +96,20 @@ input::InCommand::_SetEnableNodeValue(uint32_t* type2, uint32_t* value2)
 void
 input::InCommand::_CheckEnableNodeCMD(void)
 {
-    uint32_t type2{0};                         // command
+    uint32_t type2 {0};                        // command
     uint32_t value1 = recv_msg.cmd_int_value1; // bool
     uint32_t value2 = recv_msg.cmd_int_value2; // node_id range
     _SetEnableNodeValue(&type2, &value2);
-    _NotifyToPolicy(type2, value1, value2, recv_msg.pid, recv_msg.cmd_type,
-        recv_msg.cmd_order);
+    _NotifyToPolicy(
+        type2, value1, value2, recv_msg.pid, recv_msg.cmd_type, recv_msg.cmd_order);
 }
 
 void
 input::InCommand::_CheckInitNodeCMD(void)
 {
-    uint32_t value1{0};
-    uint32_t value2{0};
-    uint32_t type2{0};
+    uint32_t value1 {0};
+    uint32_t value2 {0};
+    uint32_t type2 {0};
 
     if (strcmp(recv_msg.cmd_str_value, "node") == 0)
     {
@@ -133,14 +131,14 @@ input::InCommand::_CheckInitNodeCMD(void)
         type2 = to_dtype(pi::Type2::INITIALIZE_NODE_ALL);
     }
 
-    _NotifyToPolicy(type2, value1, value2, recv_msg.pid, recv_msg.cmd_type,
-        recv_msg.cmd_order);
+    _NotifyToPolicy(
+        type2, value1, value2, recv_msg.pid, recv_msg.cmd_type, recv_msg.cmd_order);
 }
 
 void
 input::InCommand::_CheckSetSamplingRatioCMD(void)
 {
-    uint32_t type2{0};                         // command
+    uint32_t type2 {0};                        // command
     uint32_t value1 = recv_msg.cmd_int_value1; // ratio
     uint32_t value2 = {0};                     // node_id range
 
@@ -164,8 +162,8 @@ input::InCommand::_CheckSetSamplingRatioCMD(void)
         type2 = to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL);
     }
 
-    _NotifyToPolicy(type2, value1, value2, recv_msg.pid, recv_msg.cmd_type,
-        recv_msg.cmd_order);
+    _NotifyToPolicy(
+        type2, value1, value2, recv_msg.pid, recv_msg.cmd_type, recv_msg.cmd_order);
 }
 
 int

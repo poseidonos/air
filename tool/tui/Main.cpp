@@ -58,7 +58,8 @@ main()
         cli_handler.HandleCLI(event, tree, pid);
         viewer.Render(event, tree, pid);
 
-        usleep(10000); // 10ms sleep, This rate can stand large appending data(over 10MB) & busy AIR core utilization(over 80%)
+        usleep(10000); // 10ms sleep, This rate can stand large appending data(over
+                       // 10MB) & busy AIR core utilization(over 80%)
     }
 
     return 0;

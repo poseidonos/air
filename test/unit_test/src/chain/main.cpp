@@ -57,26 +57,25 @@ TEST_F(ChainManagerTest, RunThread)
 
     // make fake chains
     MockCoRHandler* mock_cor_handler = new MockCoRHandler();
-    chain_manager->AttachChain(mock_cor_handler,
-        to_dtype(pi::ChainHandler::INPUT));
-    chain_manager->AttachChain(mock_cor_handler,
-        to_dtype(pi::ChainHandler::POLICY));
-    chain_manager->AttachChain(mock_cor_handler,
-        to_dtype(pi::ChainHandler::COLLECTION));
-    chain_manager->AttachChain(mock_cor_handler,
-        to_dtype(pi::ChainHandler::OUTPUT));
-    chain_manager->AttachChain(mock_cor_handler,
-        to_dtype(pi::ChainHandler::PROCESS));
-    chain_manager->AttachChain(mock_cor_handler,
-        to_dtype(pi::ChainHandler::STREAM));
-    chain_manager->AttachChain(mock_cor_handler,
-        to_dtype(pi::ChainHandler::SWITCHGEAR));
-    chain_manager->AttachChain(mock_cor_handler,
-        to_dtype(pi::ChainHandler::PREPROCESS));
-    chain_manager->AttachChain(mock_cor_handler,
-        to_dtype(pi::ChainHandler::DETECT));
-    chain_manager->AttachChain(mock_cor_handler,
-        to_dtype(pi::ChainHandler::TRANSFER));
+    chain_manager->AttachChain(mock_cor_handler, to_dtype(pi::ChainHandler::INPUT));
+    chain_manager->AttachChain(
+        mock_cor_handler, to_dtype(pi::ChainHandler::POLICY));
+    chain_manager->AttachChain(
+        mock_cor_handler, to_dtype(pi::ChainHandler::COLLECTION));
+    chain_manager->AttachChain(
+        mock_cor_handler, to_dtype(pi::ChainHandler::OUTPUT));
+    chain_manager->AttachChain(
+        mock_cor_handler, to_dtype(pi::ChainHandler::PROCESS));
+    chain_manager->AttachChain(
+        mock_cor_handler, to_dtype(pi::ChainHandler::STREAM));
+    chain_manager->AttachChain(
+        mock_cor_handler, to_dtype(pi::ChainHandler::SWITCHGEAR));
+    chain_manager->AttachChain(
+        mock_cor_handler, to_dtype(pi::ChainHandler::PREPROCESS));
+    chain_manager->AttachChain(
+        mock_cor_handler, to_dtype(pi::ChainHandler::DETECT));
+    chain_manager->AttachChain(
+        mock_cor_handler, to_dtype(pi::ChainHandler::TRANSFER));
 
     // after 10ms (total: 10ms), trigger switch gear
     chain_manager->RunThread(0);
@@ -85,7 +84,8 @@ TEST_F(ChainManagerTest, RunThread)
     EXPECT_EQ(cli_task->GetDeadline(), (uint32_t)90);
     EXPECT_EQ(anlysis_task->GetDeadline(), (uint32_t)990);
 
-    // after 90ms(10ms(tick)+80ms(delay)) (total: 100ms), trigger switch gear, preprocess, cli
+    // after 90ms(10ms(tick)+80ms(delay)) (total: 100ms), trigger switch gear,
+    // preprocess, cli
     chain_manager->RunThread(8);
     EXPECT_EQ(switch_gear_task->GetDeadline(), (uint32_t)50);
     EXPECT_EQ(preprocess_task->GetDeadline(), (uint32_t)100);
@@ -97,7 +97,8 @@ TEST_F(ChainManagerTest, RunThread)
     EXPECT_EQ(switch_gear_task->GetDeadline(), (uint32_t)50);
     EXPECT_EQ(preprocess_task->GetDeadline(), (uint32_t)100);
     EXPECT_EQ(cli_task->GetDeadline(), (uint32_t)100);
-    EXPECT_EQ(anlysis_task->GetDeadline(), (uint32_t)3000); // after trigger, the period is updated
+    EXPECT_EQ(anlysis_task->GetDeadline(),
+        (uint32_t)3000); // after trigger, the period is updated
 }
 
 int

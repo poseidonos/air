@@ -29,7 +29,8 @@
 
 TEST_F(PreprocessorTest, Run)
 {
-    lib::Data* data = mock_node_manager.nda_map[123]->node[1]->GetUserDataByHashIndex(0, 0);
+    lib::Data* data =
+        mock_node_manager.nda_map[123]->node[1]->GetUserDataByHashIndex(0, 0);
     lib::LatencyData* lat_data_0 = static_cast<lib::LatencyData*>(data);
     lat_data_0->access = true;
     data = mock_node_manager.nda_map[123]->node[1]->GetUserDataByHashIndex(0, 1);

@@ -121,7 +121,7 @@ air::FileDetector::_UpdatePidMap(void)
         return;
     }
 
-    char sys_result[256]{
+    char sys_result[256] {
         0,
     };
     while (NULL != fgets(sys_result, 256, fp))
@@ -159,7 +159,7 @@ air::FileDetector::_UpdatePidStatus(void)
     for (auto& i : pid_map)
     {
         std::string pid_str = std::to_string(i.first);
-        std::string sys_cmd{"ps -e | grep " + pid_str};
+        std::string sys_cmd {"ps -e | grep " + pid_str};
 
         FILE* fp;
         fp = popen(sys_cmd.c_str(), "r");
@@ -168,7 +168,7 @@ air::FileDetector::_UpdatePidStatus(void)
             continue;
         }
 
-        char sys_result[512]{
+        char sys_result[512] {
             0,
         };
         if (NULL != fgets(sys_result, 512, fp))
@@ -190,7 +190,7 @@ air::FileDetector::_UpdatePidStatus(void)
 void
 air::FileDetector::_SelectPid(void)
 {
-    int number{1};
+    int number {1};
 
     std::cout << "please select one...\n";
     for (auto& i : pid_map)
@@ -204,7 +204,7 @@ air::FileDetector::_SelectPid(void)
 
     std::cout << ">> ";
 
-    int selected{0};
+    int selected {0};
     std::cin >> selected;
 
     number = 1;

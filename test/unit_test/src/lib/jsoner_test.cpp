@@ -22,12 +22,12 @@
  *   SOFTWARE.
  */
 
-#include "src/lib/json/Json.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <sstream>
+
+#include "src/lib/json/Json.h"
 
 TEST(JsonerTest, json)
 {
@@ -41,7 +41,8 @@ TEST(JsonerTest, json)
     std::stringstream stream_obj;
     stream_obj << obj2;
     std::string str = stream_obj.str();
-    EXPECT_EQ(0, str.compare("{\"bool\": true, \"int\": 123, \"str\": \"string\"}"));
+    EXPECT_EQ(
+        0, str.compare("{\"bool\": true, \"int\": 123, \"str\": \"string\"}"));
 }
 
 TEST(JsonerTest, json_clear)
@@ -79,19 +80,31 @@ TEST(JsonerTest, json_copy)
     std::stringstream stream_obj;
     stream_obj << obj;
     std::string str = stream_obj.str();
-    EXPECT_EQ(0, str.compare("{\"bool\": true, \"double_arr\": [4.44], \"int\": 123, \"int_arr\": [1, 2, 3], \"multi_arr\": [\"str\", 5, {\"dd\": 394.231}], \"obj\": {\"str2\": \"strstr\"}, \"str\": \"string\"}"));
+    EXPECT_EQ(0,
+        str.compare(
+            "{\"bool\": true, \"double_arr\": [4.44], \"int\": 123, \"int_arr\": "
+            "[1, 2, 3], \"multi_arr\": [\"str\", 5, {\"dd\": 394.231}], \"obj\": "
+            "{\"str2\": \"strstr\"}, \"str\": \"string\"}"));
 
     auto copy_obj = air::json_copy("obj");
     std::stringstream stream_copy_obj;
     stream_copy_obj << copy_obj;
     std::string copy_str = stream_copy_obj.str();
-    EXPECT_EQ(0, copy_str.compare("{\"bool\": true, \"double_arr\": [4.44], \"int\": 123, \"int_arr\": [1, 2, 3], \"multi_arr\": [\"str\", 5, {\"dd\": 394.231}], \"obj\": {\"str2\": \"strstr\"}, \"str\": \"string\"}"));
+    EXPECT_EQ(0,
+        copy_str.compare(
+            "{\"bool\": true, \"double_arr\": [4.44], \"int\": 123, \"int_arr\": "
+            "[1, 2, 3], \"multi_arr\": [\"str\", 5, {\"dd\": 394.231}], \"obj\": "
+            "{\"str2\": \"strstr\"}, \"str\": \"string\"}"));
 
     air::json_clear();
     std::stringstream stream_copy_obj2;
     stream_copy_obj2 << copy_obj;
     std::string copy_str2 = stream_copy_obj2.str();
-    EXPECT_EQ(0, copy_str2.compare("{\"bool\": true, \"double_arr\": [4.44], \"int\": 123, \"int_arr\": [1, 2, 3], \"multi_arr\": [\"str\", 5, {\"dd\": 394.231}], \"obj\": {\"str2\": \"strstr\"}, \"str\": \"string\"}"));
+    EXPECT_EQ(0,
+        copy_str2.compare(
+            "{\"bool\": true, \"double_arr\": [4.44], \"int\": 123, \"int_arr\": "
+            "[1, 2, 3], \"multi_arr\": [\"str\", 5, {\"dd\": 394.231}], \"obj\": "
+            "{\"str2\": \"strstr\"}, \"str\": \"string\"}"));
 
     copy_obj.Clear();
     std::stringstream stream_copy_obj3;

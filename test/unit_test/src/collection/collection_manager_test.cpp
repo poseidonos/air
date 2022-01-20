@@ -84,9 +84,15 @@ TEST_F(CollectionManagerTest, LogData)
 
 TEST_F(CollectionManagerTest, UpdateCollection)
 {
-    EXPECT_EQ(0, collection_manager->UpdateCollection(0, to_dtype(pi::Type2::ENABLE_AIR), 1, 0));
-    EXPECT_EQ(0, collection_manager->UpdateCollection(0, to_dtype(pi::Type2::ENABLE_AIR), 0, 0));
-    EXPECT_EQ(-1, collection_manager->UpdateCollection(0, to_dtype(pi::Type2::ENABLE_AIR), 99, 0));
+    EXPECT_EQ(0,
+        collection_manager->UpdateCollection(
+            0, to_dtype(pi::Type2::ENABLE_AIR), 1, 0));
+    EXPECT_EQ(0,
+        collection_manager->UpdateCollection(
+            0, to_dtype(pi::Type2::ENABLE_AIR), 0, 0));
+    EXPECT_EQ(-1,
+        collection_manager->UpdateCollection(
+            0, to_dtype(pi::Type2::ENABLE_AIR), 99, 0));
     EXPECT_EQ(-1, collection_manager->UpdateCollection(0, 99, 0, 0));
 
     collection_manager->Init();
@@ -103,13 +109,16 @@ TEST_F(CollectionManagerTest, UpdateCollection)
     EXPECT_EQ(128, perf_data->bandwidth);
 
     lib::AccData* acc_data = node_data->GetAccData(0, 0);
-    lib::AccPerformanceData* acc_perf_data = static_cast<lib::AccPerformanceData*>(acc_data);
+    lib::AccPerformanceData* acc_perf_data =
+        static_cast<lib::AccPerformanceData*>(acc_data);
     EXPECT_EQ(0, acc_perf_data->need_erase);
-    collection_manager->UpdateCollection(0, to_dtype(pi::Type2::INITIALIZE_NODE), 0, 0);
+    collection_manager->UpdateCollection(
+        0, to_dtype(pi::Type2::INITIALIZE_NODE), 0, 0);
     EXPECT_EQ(1, acc_perf_data->need_erase);
 
     // init node 5 (latency)
-    collection_manager->UpdateCollection(0, to_dtype(pi::Type2::INITIALIZE_NODE), 5, 0);
+    collection_manager->UpdateCollection(
+        0, to_dtype(pi::Type2::INITIALIZE_NODE), 5, 0);
 
     // init node 0,12
     node_data = node_data_array->node[0];
@@ -130,7 +139,8 @@ TEST_F(CollectionManagerTest, UpdateCollection)
 TEST_F(CollectionManagerTest, Observer)
 {
     collection::Observer* observer = new collection::Observer {collection_manager};
-    collection::CollectionCoRHandler* collection_cor_handler = new collection::CollectionCoRHandler {observer};
+    collection::CollectionCoRHandler* collection_cor_handler =
+        new collection::CollectionCoRHandler {observer};
     MockOutputObserver* mock_output_observer = new MockOutputObserver;
     collection_subject->Attach(mock_output_observer, 0);
 

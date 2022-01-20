@@ -1,14 +1,14 @@
 
+#include <air/Air_c.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <pthread.h>
-
-#include <air/Air_c.h>
 
 static int run = 1;
 
-void* test_func(void* data)
+void*
+test_func(void* data)
 {
     int key = 0;
 
@@ -24,7 +24,8 @@ void* test_func(void* data)
     }
 }
 
-int main(void)
+int
+main(void)
 {
     pthread_t thread;
     int thr_id;

@@ -26,21 +26,21 @@
 
 #include "fake_collection_manager.h"
 #include "fake_instance_manager.h"
-#include "fake_node_manager.h"
 #include "fake_node_data_array.h"
+#include "fake_node_manager.h"
 #include "src/config/ConfigInterface.h"
 
 class MockAIR : public AIR<true, true>
 {
 public:
-    MockAIR()
-    : AIR()
+    MockAIR(): AIR()
     {
     }
     void
     MockInit()
     {
-        fake_collection_manager = new FakeCollectionManager {nullptr, nullptr, nullptr, nullptr};
+        fake_collection_manager =
+            new FakeCollectionManager {nullptr, nullptr, nullptr, nullptr};
         AIR::collection_manager = fake_collection_manager;
 
         fake_instance_manager = new FakeInstanceManager {};

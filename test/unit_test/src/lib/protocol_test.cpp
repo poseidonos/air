@@ -29,13 +29,13 @@
 
 TEST(Protocol, ValueCheck)
 {
-    uint32_t value32{0x00000000};
+    uint32_t value32 {0x00000000};
     EXPECT_EQ(to_dtype(pi::Type1::INPUT_TO_POLICY), value32);
 
     value32 = 0x00010012;
     EXPECT_EQ(to_dtype(pi::Type2::INITIALIZE_NODE_WITH_RANGE), value32);
 
-    uint16_t value16{0x0001};
+    uint16_t value16 {0x0001};
     EXPECT_EQ(to_dtype(pi::Type2_Upper::COLLECTION), value16);
 
     value16 = 0x0106;
@@ -44,7 +44,7 @@ TEST(Protocol, ValueCheck)
     value32 = 5;
     EXPECT_EQ(to_dtype(pi::ChainHandler::STREAM), value32);
 
-    const uint32_t max_value{pi::k_max_subject_size};
+    const uint32_t max_value {pi::k_max_subject_size};
     EXPECT_GE(max_value, to_dtype(pi::InSubject::COUNT));
     EXPECT_GE(max_value, to_dtype(pi::PolicySubject::COUNT));
 }

@@ -96,12 +96,12 @@ public:
     }
 
 private:
-    bool air_build{true};
-    bool air_play{true};
-    uint32_t streaming_interval{1};
-    bool streaming_update{false};
-    uint32_t streaming_value{0};
-    uint32_t cpu_num{0};
+    bool air_build {true};
+    bool air_play {true};
+    uint32_t streaming_interval {1};
+    bool streaming_update {false};
+    uint32_t streaming_value {0};
+    uint32_t cpu_num {0};
 };
 
 class GlobalMetaGetter
@@ -149,7 +149,7 @@ public:
     }
 
 private:
-    GlobalMeta* global_meta{nullptr};
+    GlobalMeta* global_meta {nullptr};
 };
 
 } // namespace meta

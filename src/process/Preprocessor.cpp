@@ -49,28 +49,33 @@ process::Preprocessor::_GetStopOrFullData(void)
                 uint32_t filter_size = node_meta_getter->FilterSize(nid);
                 for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
                 {
-                    for (uint32_t filter_index = 0; filter_index < filter_size - 1; filter_index++)
+                    for (uint32_t filter_index = 0; filter_index < filter_size - 1;
+                         filter_index++)
                     {
                         lib::LatencyData* from = static_cast<lib::LatencyData*>(
-                            kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index));
+                            kv.second->node[nid]->GetUserDataByHashIndex(
+                                hash_index, filter_index));
                         if (lib::TimeLogState::STOP == from->start_state ||
                             lib::TimeLogState::FULL == from->start_state)
                         {
                             from->start_state = lib::TimeLogState::DONE;
                             uint64_t key {0};
-                            key = ((uint64_t)nid << 48) + ((uint64_t)hash_index << 32) +
+                            key = ((uint64_t)nid << 48) +
+                                ((uint64_t)hash_index << 32) +
                                 ((uint64_t)filter_index);
                             match_map[key].done_from.push_back(from);
                         }
 
                         lib::LatencyData* to = static_cast<lib::LatencyData*>(
-                            kv.second->node[nid]->GetUserDataByHashIndex(hash_index, filter_index + 1));
+                            kv.second->node[nid]->GetUserDataByHashIndex(
+                                hash_index, filter_index + 1));
                         if (lib::TimeLogState::STOP == to->end_state ||
                             lib::TimeLogState::FULL == to->end_state)
                         {
                             to->end_state = lib::TimeLogState::DONE;
                             uint64_t key {0};
-                            key = ((uint64_t)nid << 48) + ((uint64_t)hash_index << 32) +
+                            key = ((uint64_t)nid << 48) +
+                                ((uint64_t)hash_index << 32) +
                                 ((uint64_t)filter_index);
                             match_map[key].done_to.push_back(to);
                         }
@@ -145,7 +150,8 @@ process::Preprocessor::_MatchData(void)
                 lib::AccLatencyData* acc_data =
                     node_manager->GetAccLatData(nid, hash_index, filter_index);
 
-                uint64_t timelag = Timelag::GetDiff(timelog.timestamp, it_match->second);
+                uint64_t timelag =
+                    Timelag::GetDiff(timelog.timestamp, it_match->second);
                 data.timestamp_from.erase(it_match);
 
                 if (MAX_TIME > timelag)

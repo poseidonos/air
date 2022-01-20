@@ -79,28 +79,29 @@ public:
             uint64_t bucket_index {0};
             switch (hist_data->bucket_type)
             {
-            case lib::BucketType::LINEAR:
-                bucket_index = (value - hist_data->bucket_lower_bound) / hist_data->bucket_scale;
-                break;
-            case lib::BucketType::EXPONENTIAL:
-                bucket_index = hist_data->bucket_zero_index;
-                if (0 < value)
-                {
-                    while (value)
+                case lib::BucketType::LINEAR:
+                    bucket_index = (value - hist_data->bucket_lower_bound) /
+                        hist_data->bucket_scale;
+                    break;
+                case lib::BucketType::EXPONENTIAL:
+                    bucket_index = hist_data->bucket_zero_index;
+                    if (0 < value)
                     {
-                        value /= hist_data->bucket_scale;
-                        bucket_index++;
+                        while (value)
+                        {
+                            value /= hist_data->bucket_scale;
+                            bucket_index++;
+                        }
                     }
-                }
-                else if (0 > value)
-                {
-                    while (value)
+                    else if (0 > value)
                     {
-                        value /= hist_data->bucket_scale;
-                        bucket_index--;
+                        while (value)
+                        {
+                            value /= hist_data->bucket_scale;
+                            bucket_index--;
+                        }
                     }
-                }
-                break;
+                    break;
             }
             if (bucket_index < hist_data->bucket_size)
             {

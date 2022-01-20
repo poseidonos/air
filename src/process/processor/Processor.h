@@ -39,14 +39,14 @@ public:
     virtual ~Processor(void)
     {
     }
-    void StreamData(air::string_view& node_name_view, uint32_t tid, const char* tname,
-        node::NodeData* node_data, air::ProcessorType ptype, double time,
-        uint32_t index_size, uint32_t filter_size);
+    void StreamData(air::string_view& node_name_view, uint32_t tid,
+        const char* tname, node::NodeData* node_data, air::ProcessorType ptype,
+        double time, uint32_t index_size, uint32_t filter_size);
     void StreamData(air::string_view& node_name_view, lib::AccLatencyData* data,
         uint64_t hash_value, uint32_t filter_index);
 
 protected:
-    double lap_time{1.0f};
+    double lap_time {1.0f};
     struct JsonifyData
     {
         lib::Data* air_data;

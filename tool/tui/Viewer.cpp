@@ -91,7 +91,7 @@ air::Viewer::_Update(EventType type)
 bool
 air::Viewer::_CheckMovement(EventType type)
 {
-    bool result{false};
+    bool result {false};
 
     switch (type)
     {
@@ -115,7 +115,7 @@ air::Viewer::_CheckMovement(EventType type)
 bool
 air::Viewer::_CheckFilesize(void)
 {
-    bool result{false};
+    bool result {false};
     struct stat file_stat;
     int rc = stat(filename.c_str(), &file_stat);
     if (0 == rc)
@@ -153,7 +153,7 @@ air::Viewer::_CheckFilesize(void)
 void
 air::Viewer::_ClearWindow(void)
 {
-    int result{0};
+    int result {0};
     result = system("clear");
 
     if (-1 == result)
@@ -200,7 +200,7 @@ air::Viewer::_DrawHeadline(void)
 
     std::cout << "AIR TUI status: [";
     stream << head["play"];
-    std::string status{stream.str()};
+    std::string status {stream.str()};
     if (std::string::npos != status.find("true"))
     {
         std::cout << GREEN << "play" << RESET;
@@ -217,7 +217,7 @@ air::Viewer::_DrawHeadline(void)
     std::cout << "timestamp: ";
     stream.str("");
     stream << head["timestamp"];
-    std::string timestamp{stream.str()};
+    std::string timestamp {stream.str()};
 
     time_t time;
     struct tm* tm;
@@ -229,7 +229,8 @@ air::Viewer::_DrawHeadline(void)
     std::cout << ", pid: " << pid << std::endl;
     curr_row++;
 
-    std::string tip = "arrow up/down: movement, arrow right/left: unfold/fold, q(esc): quit, 1~9: interval, i: init, o: run, x: stop";
+    std::string tip = "arrow up/down: movement, arrow right/left: unfold/fold, "
+                      "q(esc): quit, 1~9: interval, i: init, o: run, x: stop";
 
     std::cout << tip.substr(0, ws_col) << std::endl;
     curr_row++;
@@ -260,7 +261,7 @@ air::Viewer::_DrawGroup(AConfig& tree)
             AGroup* NewGroup = new AGroup;
             stream.str("");
             stream << group_json[i.key]["group_id"];
-            std::string gid{stream.str()};
+            std::string gid {stream.str()};
             NewGroup->gid = std::stoi(gid);
             tree.group.insert({i.key, NewGroup});
         }
@@ -305,7 +306,7 @@ air::Viewer::_DrawGroup(AConfig& tree)
                 ANode* NewNode = new ANode;
                 stream.str("");
                 stream << nodes[node.key]["node_id"];
-                std::string nid{stream.str()};
+                std::string nid {stream.str()};
                 NewNode->nid = std::stoi(nid);
                 group_st.node.insert({node.key, NewNode});
             }
@@ -335,7 +336,7 @@ air::Viewer::_DrawNode(ANode& node, std::string name, JSONdoc& doc)
     std::stringstream stream;
     stream.str("");
     stream << doc["build"];
-    std::string str_build{stream.str()};
+    std::string str_build {stream.str()};
     if (std::string::npos != str_build.find("false"))
     {
         std::cout << "[.]..Node:" << name << std::endl;
@@ -345,7 +346,7 @@ air::Viewer::_DrawNode(ANode& node, std::string name, JSONdoc& doc)
 
     stream.str("");
     stream << doc["run"];
-    std::string str_run{stream.str()};
+    std::string str_run {stream.str()};
     if (std::string::npos != str_run.find("false"))
     {
         std::cout << GREEN << "[X]" << RESET;
@@ -379,8 +380,8 @@ air::Viewer::_DrawNode(ANode& node, std::string name, JSONdoc& doc)
 
     stream.str("");
     stream << doc["type"];
-    std::string str_node_type{stream.str()};
-    NodeType node_type{NodeType::NULLTYPE};
+    std::string str_node_type {stream.str()};
+    NodeType node_type {NodeType::NULLTYPE};
     if (std::string::npos != str_node_type.find("\"performance\""))
     {
         node_type = NodeType::PERFORMANCE;
@@ -582,7 +583,7 @@ air::Viewer::_DrawPerf(JSONdoc& doc, uint32_t remain_col)
         number = std::stod(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -595,7 +596,7 @@ air::Viewer::_DrawPerf(JSONdoc& doc, uint32_t remain_col)
         number = std::stod(stream.str());
         str += NumberToStrSIFmt(number, "B");
     }
-    catch(...)
+    catch (...)
     {
         str += "INV     ";
     }
@@ -623,7 +624,7 @@ air::Viewer::_DrawPerf(JSONdoc& doc, uint32_t remain_col)
         number = std::stod(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -636,7 +637,7 @@ air::Viewer::_DrawPerf(JSONdoc& doc, uint32_t remain_col)
         number = std::stod(stream.str());
         str += NumberToStrSIFmt(number, "B");
     }
-    catch(...)
+    catch (...)
     {
         str += "INV     ";
     }
@@ -661,7 +662,7 @@ air::Viewer::_DrawLat(JSONdoc& doc, uint32_t remain_col)
         number = std::stoull(stream.str());
         str += ULLToStrLatFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV  ";
     }
@@ -674,7 +675,7 @@ air::Viewer::_DrawLat(JSONdoc& doc, uint32_t remain_col)
         number = std::stoull(stream.str());
         str += ULLToStrLatFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV  ";
     }
@@ -687,7 +688,7 @@ air::Viewer::_DrawLat(JSONdoc& doc, uint32_t remain_col)
         number = std::stoull(stream.str());
         str += ULLToStrLatFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV  ";
     }
@@ -700,7 +701,7 @@ air::Viewer::_DrawLat(JSONdoc& doc, uint32_t remain_col)
         number = std::stod(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -713,7 +714,7 @@ air::Viewer::_DrawLat(JSONdoc& doc, uint32_t remain_col)
         number = std::stoull(stream.str());
         str += ULLToStrLatFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV  ";
     }
@@ -726,7 +727,7 @@ air::Viewer::_DrawLat(JSONdoc& doc, uint32_t remain_col)
         number = std::stoull(stream.str());
         str += ULLToStrLatFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV  ";
     }
@@ -739,7 +740,7 @@ air::Viewer::_DrawLat(JSONdoc& doc, uint32_t remain_col)
         number = std::stoull(stream.str());
         str += ULLToStrLatFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV  ";
     }
@@ -752,7 +753,7 @@ air::Viewer::_DrawLat(JSONdoc& doc, uint32_t remain_col)
         number = std::stod(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -777,7 +778,7 @@ air::Viewer::_DrawQueue(JSONdoc& doc, uint32_t remain_col)
         number = std::stod(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -790,7 +791,7 @@ air::Viewer::_DrawQueue(JSONdoc& doc, uint32_t remain_col)
         number = std::stod(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -803,7 +804,7 @@ air::Viewer::_DrawQueue(JSONdoc& doc, uint32_t remain_col)
         number = std::stod(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -816,7 +817,7 @@ air::Viewer::_DrawQueue(JSONdoc& doc, uint32_t remain_col)
         number = std::stod(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -841,7 +842,7 @@ air::Viewer::_DrawUtilization(JSONdoc& doc, uint32_t remain_col)
         number = std::stoull(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -863,7 +864,7 @@ air::Viewer::_DrawUtilization(JSONdoc& doc, uint32_t remain_col)
         number = std::stoull(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -897,7 +898,7 @@ air::Viewer::_DrawCount(JSONdoc& doc, uint32_t remain_col)
         number = std::stoll(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -910,7 +911,7 @@ air::Viewer::_DrawCount(JSONdoc& doc, uint32_t remain_col)
         number = std::stoll(stream.str());
         str += NumberToStrSIFmt(number);
     }
-    catch(...)
+    catch (...)
     {
         str += "INV    ";
     }
@@ -941,7 +942,8 @@ air::Viewer::_DrawHistogramUnit(JSONdoc& doc, uint32_t remain_col)
     {
         return;
     }
-    std::string str {"        Unit    value:(minimum/average/maximum) count:(underflow "};
+    std::string str {
+        "        Unit    value:(minimum/average/maximum) count:(underflow "};
     std::stringstream stream;
     uint64_t bucket_size;
     int64_t bucket_lower_bound;
@@ -967,11 +969,12 @@ air::Viewer::_DrawHistogramUnit(JSONdoc& doc, uint32_t remain_col)
 
     stream.str("");
     stream << doc["bucket_type"];
-    if(0 == stream.str().compare("\"linear\""))
+    if (0 == stream.str().compare("\"linear\""))
     {
         for (uint64_t bucket_index {0}; bucket_index <= bucket_size; bucket_index++)
         {
-            int64_t bucket_boundary {bucket_lower_bound + (int64_t)bucket_index * bucket_scale};
+            int64_t bucket_boundary {
+                bucket_lower_bound + (int64_t)bucket_index * bucket_scale};
             str += NumberToStrSIFmt(bucket_boundary, " ");
         }
     }
@@ -979,7 +982,8 @@ air::Viewer::_DrawHistogramUnit(JSONdoc& doc, uint32_t remain_col)
     {
         if (0 < bucket_lower_bound)
         {
-            for (uint64_t bucket_index {0}; bucket_index <= bucket_size; bucket_index++)
+            for (uint64_t bucket_index {0}; bucket_index <= bucket_size;
+                 bucket_index++)
             {
                 int64_t bucket_boundary {1};
                 int32_t exponent {(int32_t)bucket_index - bucket_zero_index - 1};
@@ -993,7 +997,8 @@ air::Viewer::_DrawHistogramUnit(JSONdoc& doc, uint32_t remain_col)
         }
         else if (0 > bucket_upper_bound)
         {
-            for (uint64_t bucket_index {0}; bucket_index <= bucket_size; bucket_index++)
+            for (uint64_t bucket_index {0}; bucket_index <= bucket_size;
+                 bucket_index++)
             {
                 int64_t bucket_boundary {1};
                 int32_t exponent {bucket_zero_index - (int32_t)bucket_index};
@@ -1008,7 +1013,8 @@ air::Viewer::_DrawHistogramUnit(JSONdoc& doc, uint32_t remain_col)
         }
         else
         {
-            for (uint64_t bucket_index {0}; bucket_index < bucket_size; bucket_index++)
+            for (uint64_t bucket_index {0}; bucket_index < bucket_size;
+                 bucket_index++)
             {
                 int64_t bucket_boundary {1};
                 if (bucket_zero_index > (int32_t)bucket_index)
@@ -1065,7 +1071,7 @@ air::Viewer::_DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col)
         number_int64 = std::stoll(stream.str());
         str += NumberToStrSIFmt(number_int64, " ");
     }
-    catch(...)
+    catch (...)
     {
         str += "     INV";
     }
@@ -1077,7 +1083,7 @@ air::Viewer::_DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col)
         number_int64 = std::stoll(stream.str());
         str += NumberToStrSIFmt(number_int64, " ");
     }
-    catch(...)
+    catch (...)
     {
         str += "     INV";
     }
@@ -1089,7 +1095,7 @@ air::Viewer::_DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col)
         number_int64 = std::stoll(stream.str());
         str += NumberToStrSIFmt(number_int64, " ");
     }
-    catch(...)
+    catch (...)
     {
         str += "     INV";
     }
@@ -1102,7 +1108,7 @@ air::Viewer::_DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col)
         number_uint64 = std::stoull(stream.str());
         str += NumberToStrSIFmt(number_uint64, " ");
     }
-    catch(...)
+    catch (...)
     {
         str += "     INV";
     }
@@ -1123,7 +1129,7 @@ air::Viewer::_DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col)
         number_uint64 = std::stoull(stream.str());
         str += NumberToStrSIFmt(number_uint64, " ");
     }
-    catch(...)
+    catch (...)
     {
         str += "     INV";
     }
@@ -1146,7 +1152,7 @@ air::Viewer::_DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col)
         number_int64 = std::stoll(stream.str());
         str += NumberToStrSIFmt(number_int64, " ");
     }
-    catch(...)
+    catch (...)
     {
         str += "     INV";
     }
@@ -1158,7 +1164,7 @@ air::Viewer::_DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col)
         number_int64 = std::stoll(stream.str());
         str += NumberToStrSIFmt(number_int64, " ");
     }
-    catch(...)
+    catch (...)
     {
         str += "     INV";
     }
@@ -1170,7 +1176,7 @@ air::Viewer::_DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col)
         number_int64 = std::stoll(stream.str());
         str += NumberToStrSIFmt(number_int64, " ");
     }
-    catch(...)
+    catch (...)
     {
         str += "     INV";
     }
@@ -1183,7 +1189,7 @@ air::Viewer::_DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col)
         number_uint64 = std::stoull(stream.str());
         str += NumberToStrSIFmt(number_uint64, " ");
     }
-    catch(...)
+    catch (...)
     {
         str += "     INV";
     }
@@ -1204,7 +1210,7 @@ air::Viewer::_DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col)
         number_uint64 = std::stoull(stream.str());
         str += NumberToStrSIFmt(number_uint64, " ");
     }
-    catch(...)
+    catch (...)
     {
         str += "     INV";
     }

@@ -44,7 +44,7 @@ namespace node
 struct NodeDataArray
 {
     NodeData* node[cfg::GetSentenceCount(config::ParagraphType::NODE)];
-    std::string tname{NULL};
+    std::string tname {NULL};
 };
 
 class NodeManager
@@ -127,9 +127,12 @@ public:
 private:
     meta::GlobalMetaGetter* global_meta_getter {nullptr};
     meta::NodeMetaGetter* node_meta_getter {nullptr};
-    lib::AccLatencyData*** acc_lat_data {nullptr, };
+    lib::AccLatencyData*** acc_lat_data {
+        nullptr,
+    };
     NodeInitializer node_initializer;
-    const uint32_t MAX_NID_SIZE {cfg::GetSentenceCount(config::ParagraphType::NODE)};
+    const uint32_t MAX_NID_SIZE {
+        cfg::GetSentenceCount(config::ParagraphType::NODE)};
 };
 
 } // namespace node

@@ -114,9 +114,10 @@ process::ProcessManager::StreamData(void)
         air::ProcessorType type = node_meta_getter->ProcessorType(i);
         if (air::ProcessorType::PROCESSORTYPE_NULL != type)
         {
-            air::string_view node_name_view = cfg::GetSentenceName(config::ParagraphType::NODE, i);
-            air::string_view group_name_view =
-                cfg::GetStrValue(config::ParagraphType::NODE, "Group", node_name_view);
+            air::string_view node_name_view =
+                cfg::GetSentenceName(config::ParagraphType::NODE, i);
+            air::string_view group_name_view = cfg::GetStrValue(
+                config::ParagraphType::NODE, "Group", node_name_view);
 
             _AddNodeInfo(group_name_view, node_name_view, i, type);
         }
@@ -129,13 +130,15 @@ process::ProcessManager::_AddGroupInfo(air::JSONdoc& doc)
     uint32_t group_size = cfg::GetSentenceCount(config::ParagraphType::GROUP);
     for (uint32_t i = 0; i < group_size; i++)
     {
-        int32_t group_name_leng = cfg::GetSentenceName(config::ParagraphType::GROUP, i).size();
-        std::string group_name(cfg::GetSentenceName(config::ParagraphType::GROUP, i).data(),
+        int32_t group_name_leng =
+            cfg::GetSentenceName(config::ParagraphType::GROUP, i).size();
+        std::string group_name(
+            cfg::GetSentenceName(config::ParagraphType::GROUP, i).data(),
             group_name_leng);
 
         auto& group_obj = air::json(group_name);
-        int32_t group_id = cfg::GetSentenceIndex(
-            config::ParagraphType::GROUP, cfg::GetSentenceName(config::ParagraphType::GROUP, i));
+        int32_t group_id = cfg::GetSentenceIndex(config::ParagraphType::GROUP,
+            cfg::GetSentenceName(config::ParagraphType::GROUP, i));
         group_obj["group_id"] = {group_id};
         group_obj["node"];
         doc["group"][group_name] = {group_obj};
@@ -155,9 +158,8 @@ process::ProcessManager::_AddNodeInfo(air::string_view& group_name_view,
 
     auto& node_obj = air::json(node_name);
     node_obj["node_id"] = {nid};
-    bool node_build =
-        (bool)cfg::GetIntValue(config::ParagraphType::NODE, "Build",
-            cfg::GetSentenceName(config::ParagraphType::NODE, nid));
+    bool node_build = (bool)cfg::GetIntValue(config::ParagraphType::NODE, "Build",
+        cfg::GetSentenceName(config::ParagraphType::NODE, nid));
     node_obj["build"] = {node_build};
     node_obj["run"] = {node_meta_getter->Run(nid)};
     switch (type)
@@ -210,7 +212,8 @@ process::ProcessManager::_AddNodeInfo(air::string_view& group_name_view,
                     }
                 }
 
-                for (uint32_t filter_index = 0; filter_index < filter_size - 1; filter_index++)
+                for (uint32_t filter_index = 0; filter_index < filter_size - 1;
+                     filter_index++)
                 {
                     processor[nid]->StreamData(node_name_view,
                         node_manager->GetAccLatData(nid, hash_index, filter_index),
@@ -224,8 +227,9 @@ process::ProcessManager::_AddNodeInfo(air::string_view& group_name_view,
             {
                 node::NodeDataArray* arr = it.second;
                 node::NodeData* node_data = arr->node[nid];
-                processor[nid]->StreamData(node_name_view, it.first, arr->tname.c_str(),
-                    node_data, type, time_unit, index_size, filter_size);
+                processor[nid]->StreamData(node_name_view, it.first,
+                    arr->tname.c_str(), node_data, type, time_unit, index_size,
+                    filter_size);
             }
         }
     }

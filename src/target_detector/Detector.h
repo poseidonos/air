@@ -43,7 +43,7 @@ public:
     void Process(void);
 
 private:
-    node::NodeManager* node_manager{nullptr};
+    node::NodeManager* node_manager {nullptr};
     void _CreateNodeDataArray(uint32_t tid);
     void _DeleteNodeDataArray(void);
 };

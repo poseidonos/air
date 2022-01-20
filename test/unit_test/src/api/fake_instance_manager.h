@@ -31,8 +31,7 @@ air::InstanceManager::Deactivate()
 class FakeInstanceManager : public air::InstanceManager
 {
 public:
-    FakeInstanceManager()
-    : air::InstanceManager()
+    FakeInstanceManager(): air::InstanceManager()
     {
     }
 

@@ -32,12 +32,12 @@ int
 main(int argc, char* argv[])
 {
     int pid = getpid();
-    air::CliResult* cli_result = new air::CliResult{};
-    air::CliSend* cli_send = new air::CliSend{cli_result, pid};
-    air::CliRecv* cli_recv = new air::CliRecv{cli_result, pid};
+    air::CliResult* cli_result = new air::CliResult {};
+    air::CliSend* cli_send = new air::CliSend {cli_result, pid};
+    air::CliRecv* cli_recv = new air::CliRecv {cli_result, pid};
 
-    int num_cmd{0};
-    int target_pid{-1};
+    int num_cmd {0};
+    int target_pid {-1};
 
     num_cmd = cli_send->Send(argc, argv, target_pid);
 

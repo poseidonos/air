@@ -46,21 +46,27 @@
 #include "src/object/Instance.h"
 #include "src/transfer/Task.h"
 
-#define air_initialize(...) \
-    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), true>::Initialize(__VA_ARGS__)
-#define air_activate() \
-    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), true>::Activate()
-#define air_deactivate() \
-    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), true>::Deactivate()
-#define air_finalize() \
-    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), true>::Finalize()
+#define air_initialize(...)                                           \
+    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), \
+        true>::Initialize(__VA_ARGS__)
+#define air_activate()                                                \
+    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), \
+        true>::Activate()
+#define air_deactivate()                                              \
+    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), \
+        true>::Deactivate()
+#define air_finalize()                                                \
+    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"), \
+        true>::Finalize()
 
-#define airlog(node_name, filter_item, node_index, data)                                        \
-    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"),                           \
-        cfg::GetIntValue(config::ParagraphType::NODE, "Build", node_name)>                      \
-        ::LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, node_name),                \
-            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",                             \
-            cfg::GetStrValue(config::ParagraphType::NODE, "Filter", node_name), filter_item),   \
+#define airlog(node_name, filter_item, node_index, data)                       \
+    AIR<cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"),          \
+        cfg::GetIntValue(config::ParagraphType::NODE, "Build", node_name)>::   \
+        LogData<cfg::GetSentenceIndex(config::ParagraphType::NODE, node_name), \
+            cfg::GetIntValue(config::ParagraphType::FILTER, "Item",            \
+                cfg::GetStrValue(                                              \
+                    config::ParagraphType::NODE, "Filter", node_name),         \
+                filter_item),                                                  \
             cfg::GetNodeType(node_name)>(node_index, data)
 
 // Primary template
@@ -76,7 +82,8 @@ public:
     template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
         air::ProcessorType enable = air::ProcessorType::PROCESSORTYPE_NULL>
     static void LogData(uint64_t node_index, uint64_t value);
-    static void LogData(uint32_t node_id, uint32_t filter_index, uint64_t node_index, uint64_t value);
+    static void LogData(uint32_t node_id, uint32_t filter_index,
+        uint64_t node_index, uint64_t value);
 };
 
 // AIR build : true && Node build : true
@@ -120,7 +127,8 @@ public:
     }
 
     template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
-        typename std::enable_if<air::ProcessorType::PERFORMANCE == node_type, air::ProcessorType>::type = node_type>
+        typename std::enable_if<air::ProcessorType::PERFORMANCE == node_type,
+            air::ProcessorType>::type = node_type>
     static void
     LogData(uint64_t node_index, uint64_t value)
     {
@@ -131,7 +139,8 @@ public:
     }
 
     template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
-        typename std::enable_if<air::ProcessorType::LATENCY == node_type, air::ProcessorType>::type = node_type>
+        typename std::enable_if<air::ProcessorType::LATENCY == node_type,
+            air::ProcessorType>::type = node_type>
     static void
     LogData(uint64_t node_index, uint64_t value)
     {
@@ -142,7 +151,8 @@ public:
     }
 
     template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
-        typename std::enable_if<air::ProcessorType::QUEUE == node_type, air::ProcessorType>::type = node_type>
+        typename std::enable_if<air::ProcessorType::QUEUE == node_type,
+            air::ProcessorType>::type = node_type>
     static void
     LogData(uint64_t node_index, uint64_t value)
     {
@@ -153,7 +163,8 @@ public:
     }
 
     template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
-        typename std::enable_if<air::ProcessorType::UTILIZATION == node_type, air::ProcessorType>::type = node_type>
+        typename std::enable_if<air::ProcessorType::UTILIZATION == node_type,
+            air::ProcessorType>::type = node_type>
     static void
     LogData(uint64_t node_index, uint64_t value)
     {
@@ -164,7 +175,8 @@ public:
     }
 
     template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
-        typename std::enable_if<air::ProcessorType::COUNT == node_type, air::ProcessorType>::type = node_type>
+        typename std::enable_if<air::ProcessorType::COUNT == node_type,
+            air::ProcessorType>::type = node_type>
     static void
     LogData(uint64_t node_index, uint64_t value)
     {
@@ -175,18 +187,21 @@ public:
     }
 
     template<int32_t node_id, int32_t filter_index, air::ProcessorType node_type,
-        typename std::enable_if<air::ProcessorType::HISTOGRAM == node_type, air::ProcessorType>::type = node_type>
+        typename std::enable_if<air::ProcessorType::HISTOGRAM == node_type,
+            air::ProcessorType>::type = node_type>
     static void
     LogData(uint64_t node_index, uint64_t value)
     {
         static_assert(-1 != node_id, "Invalid Node");
         static_assert(-1 != filter_index, "Invalid Filter Item");
 
-        histogram_writer.LogData(_GetData(node_id, filter_index, node_index), value);
+        histogram_writer.LogData(
+            _GetData(node_id, filter_index, node_index), value);
     }
 
     static void
-    LogData(uint32_t node_id, uint32_t filter_index, uint64_t node_index, uint64_t value)
+    LogData(uint32_t node_id, uint32_t filter_index, uint64_t node_index,
+        uint64_t value)
     {
         if ((nullptr == collection_manager) ||
             (false == collection_manager->IsLog(node_id)))
@@ -202,7 +217,8 @@ public:
         }
         if (nullptr != node_data_array)
         {
-            collection_manager->LogData(node_id, filter_index, node_data_array, node_index, value);
+            collection_manager->LogData(
+                node_id, filter_index, node_data_array, node_index, value);
         }
     }
 
@@ -255,7 +271,8 @@ public:
     {
     }
     static void
-    LogData(uint32_t node_id, uint32_t filter_index, uint64_t node_index, uint64_t value)
+    LogData(uint32_t node_id, uint32_t filter_index, uint64_t node_index,
+        uint64_t value)
     {
     }
 };
@@ -287,12 +304,12 @@ public:
     {
     }
     static void
-    LogData(uint32_t node_id, uint32_t filter_index, uint64_t node_index, uint64_t value)
+    LogData(uint32_t node_id, uint32_t filter_index, uint64_t node_index,
+        uint64_t value)
     {
     }
 };
 
-void
-air_request_data(transfer::node_list nodes, transfer::task_unit&& function);
+void air_request_data(transfer::node_list nodes, transfer::task_unit&& function);
 
 #endif // AIR_H

@@ -33,8 +33,7 @@ namespace stream
 class StreamCoRHandler : public lib_design::AbstractCoRHandler
 {
 public:
-    explicit StreamCoRHandler(Stream* new_stream)
-    : stream(new_stream)
+    explicit StreamCoRHandler(Stream* new_stream): stream(new_stream)
     {
     }
     virtual ~StreamCoRHandler(void)
@@ -47,7 +46,7 @@ public:
     }
 
 private:
-    Stream* stream{nullptr};
+    Stream* stream {nullptr};
 };
 
 } // namespace stream

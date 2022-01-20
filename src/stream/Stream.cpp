@@ -47,7 +47,7 @@ stream::Stream::SendPacket(void)
     // ate : at end, output position starts at the end of the file.
     // export_file.open("tmp.json", std::ofstream::out | std::ofstream::app);
 
-    std::string filename{"/tmp/air_"};
+    std::string filename {"/tmp/air_"};
     time_t curr_time = time(NULL);
     struct tm curr_tm;
     localtime_r(&curr_time, &curr_tm);

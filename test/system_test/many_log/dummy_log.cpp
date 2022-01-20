@@ -1,11 +1,10 @@
 #include "test/system_test/many_log/dummy_log.h"
 
+#include <air/Air.h>
 #include <pthread.h>
 #include <unistd.h>
 
 #include <iostream>
-
-#include <air/Air.h>
 
 bool DummyLog::run = true;
 

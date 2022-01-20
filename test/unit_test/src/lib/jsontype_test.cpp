@@ -22,13 +22,13 @@
  *   SOFTWARE.
  */
 
-#include "src/lib/json/Json.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <fstream>
 #include <iostream>
+
+#include "src/lib/json/Json.h"
 
 TEST(JsontypeTest, NumberTypeValue)
 {
@@ -213,7 +213,9 @@ TEST(JsontypeTest, ArrayTypeValue)
     std::getline(read_file, read_line);
     read_file.close();
 
-    EXPECT_EQ(0, read_line.compare("{\"arr1\": [1, 2.2, 3.3, null], \"arr2\": [\"a\", \"b\", \"c\", \"def\", true, false]}"));
+    EXPECT_EQ(0,
+        read_line.compare("{\"arr1\": [1, 2.2, 3.3, null], \"arr2\": [\"a\", "
+                          "\"b\", \"c\", \"def\", true, false]}"));
 }
 
 TEST(JsontypeTest, ObjectTypeValue)
@@ -242,5 +244,7 @@ TEST(JsontypeTest, ObjectTypeValue)
     std::getline(read_file, read_line);
     read_file.close();
 
-    EXPECT_EQ(0, read_line.compare("{\"obj_item\": \"item1\", \"sub_1\": {}, \"sub_2\": {\"s2_item\": \"itemS2\"}}"));
+    EXPECT_EQ(0,
+        read_line.compare("{\"obj_item\": \"item1\", \"sub_1\": {}, \"sub_2\": "
+                          "{\"s2_item\": \"itemS2\"}}"));
 }

@@ -78,7 +78,8 @@ node::NodeManager::CreateNodeDataArray(uint32_t tid)
             case (air::ProcessorType::COUNT):
             case (air::ProcessorType::HISTOGRAM):
                 new_node_data_array->node[i] =
-                    new NodeData(type, node_meta_getter->IndexSize(i), node_meta_getter->FilterSize(i));
+                    new NodeData(type, node_meta_getter->IndexSize(i),
+                        node_meta_getter->FilterSize(i));
                 break;
             default:
                 new_node_data_array->node[i] = nullptr;
@@ -118,9 +119,9 @@ node::NodeManager::CanDeleteNodeDataArray(NodeDataArray* node_data_array)
 {
     for (uint32_t i = 0; i < MAX_NID_SIZE; i++)
     {
-        node::NodeData* node_data{nullptr};
-        lib::Data* air_data{nullptr};
-        lib::Data* user_data{nullptr};
+        node::NodeData* node_data {nullptr};
+        lib::Data* air_data {nullptr};
+        lib::Data* user_data {nullptr};
 
         node_data = node_data_array->node[i];
         if (nullptr != node_data)
@@ -129,12 +130,14 @@ node::NodeManager::CanDeleteNodeDataArray(NodeDataArray* node_data_array)
             const uint32_t filter_size = node_meta_getter->FilterSize(i);
             for (uint32_t hash_idx = 0; hash_idx < index_size; hash_idx++)
             {
-                for (uint32_t filter_idx = 0; filter_idx < filter_size; filter_idx++)
+                for (uint32_t filter_idx = 0; filter_idx < filter_size;
+                     filter_idx++)
                 {
                     if (air::ProcessorType::LATENCY ==
                         node_meta_getter->ProcessorType(i))
                     {
-                        user_data = node_data->GetUserDataByHashIndex(hash_idx, filter_idx);
+                        user_data =
+                            node_data->GetUserDataByHashIndex(hash_idx, filter_idx);
                         if (1 == user_data->access)
                         {
                             return false;
@@ -143,7 +146,8 @@ node::NodeManager::CanDeleteNodeDataArray(NodeDataArray* node_data_array)
                     else
                     {
                         air_data = node_data->GetAirData(hash_idx, filter_idx);
-                        user_data = node_data->GetUserDataByHashIndex(hash_idx, filter_idx);
+                        user_data =
+                            node_data->GetUserDataByHashIndex(hash_idx, filter_idx);
                         if ((1 == air_data->access) || (1 == user_data->access))
                         {
                             return false;
@@ -171,7 +175,8 @@ node::NodeManager::Init(void)
 
             for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
             {
-                acc_lat_data[nid][hash_index] = new lib::AccLatencyData[filter_size];
+                acc_lat_data[nid][hash_index] =
+                    new lib::AccLatencyData[filter_size];
             }
         }
     }

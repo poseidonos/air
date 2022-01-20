@@ -29,35 +29,35 @@
 
 TEST_F(CastingTest, to_dtype)
 {
-    uint32_t num_u32{2};
+    uint32_t num_u32 {2};
     EXPECT_EQ(num_u32, to_dtype(TypeUINT32_T::NUM_TWO));
     num_u32 = 0;
     EXPECT_EQ(num_u32, to_dtype(TypeUINT32_T::NUM_ZERO));
     EXPECT_NE(num_u32, to_dtype(TypeUINT32_T::NUM_ONE));
     EXPECT_LT(num_u32, to_dtype(TypeUINT32_T::NUM_ONE));
 
-    uint64_t num_u64{2};
+    uint64_t num_u64 {2};
     EXPECT_EQ(num_u64, to_dtype(TypeUINT64_T::NUM_TWO));
     num_u64 = 0;
     EXPECT_EQ(num_u64, to_dtype(TypeUINT64_T::NUM_ZERO));
     EXPECT_NE(num_u64, to_dtype(TypeUINT64_T::NUM_ONE));
     EXPECT_LT(num_u64, to_dtype(TypeUINT64_T::NUM_ONE));
 
-    int num_i{2};
+    int num_i {2};
     EXPECT_EQ(num_i, to_dtype(TypeINT::NUM_POSITIVE_TWO));
     num_i = -1;
     EXPECT_EQ(num_i, to_dtype(TypeINT::NUM_NEGATIVE_ONE));
     EXPECT_NE(num_i, to_dtype(TypeINT::NUM_POSITIVE_ONE));
     EXPECT_GT(num_i, to_dtype(TypeINT::NUM_NEGATIVE_TWO));
 
-    unsigned int num_ui{2};
+    unsigned int num_ui {2};
     EXPECT_EQ(num_ui, to_dtype(TypeUINT::NUM_TWO));
     num_ui = 0;
     EXPECT_EQ(num_ui, to_dtype(TypeUINT::NUM_ZERO));
     EXPECT_NE(num_ui, to_dtype(TypeUINT::NUM_ONE));
     EXPECT_LT(num_ui, to_dtype(TypeUINT::NUM_ONE));
 
-    bool b{false};
+    bool b {false};
     EXPECT_EQ(b, to_dtype(TypeBOOL::BOOL_FALSE));
     b = true;
     EXPECT_EQ(b, to_dtype(TypeBOOL::BOOL_TRUE));

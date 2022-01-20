@@ -48,7 +48,7 @@ public:
     virtual void Handle(void);
 
 private:
-    OutputManager* output_manager{nullptr};
+    OutputManager* output_manager {nullptr};
 };
 
 } // namespace output

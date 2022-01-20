@@ -39,8 +39,8 @@ public:
     }
 
 private:
-    bool run[7]{
+    bool run[7] {
         false,
     };
-    uint32_t group_id[7]{0, 1, 0, 0, 1, 1, 1};
+    uint32_t group_id[7] {0, 1, 0, 0, 1, 1, 1};
 };

@@ -38,7 +38,9 @@ output::OutputManager::HandleMsg(void)
         num_try++;
         lib::MsgEntry entry = msg.front();
 
-        if (0 == _SendCompletionMsg(entry.value1, entry.pid, entry.cmd_type, entry.cmd_order))
+        if (0 ==
+            _SendCompletionMsg(
+                entry.value1, entry.pid, entry.cmd_type, entry.cmd_order))
         {
             msg.pop();
             num_send++;
@@ -66,10 +68,11 @@ output::OutputManager::HandleMsg(void)
 }
 
 int
-output::OutputManager::_SendCompletionMsg(uint32_t value1, int pid,
-    int cmd_type, int cmd_order)
+output::OutputManager::_SendCompletionMsg(
+    uint32_t value1, int pid, int cmd_type, int cmd_order)
 {
-    return out_command->Send(pid, static_cast<int>(value1) * -1, cmd_type, cmd_order);
+    return out_command->Send(
+        pid, static_cast<int>(value1) * -1, cmd_type, cmd_order);
 }
 
 std::string

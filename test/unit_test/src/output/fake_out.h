@@ -37,7 +37,7 @@ public:
             return 0;
         }
     }
-    bool fail_on{false};
-    bool sequential_fail{false};
-    int num_called{0};
+    bool fail_on {false};
+    bool sequential_fail {false};
+    int num_called {0};
 };
