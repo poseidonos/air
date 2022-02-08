@@ -68,7 +68,7 @@ collection::SwitchGear::_CheckDeadline(lib::Data* data)
         lat_data->start_deadline--;
         if (0 >= lat_data->start_deadline)
         {
-            lat_data->start_token = lib::LAT_TOKEN_SIZE;
+            lat_data->start_token = lat_data->start_token_size;
             lat_data->start_state = lib::TimeLogState::RUN;
         }
     }
@@ -78,7 +78,6 @@ collection::SwitchGear::_CheckDeadline(lib::Data* data)
         if (-9 > lat_data->start_deadline)
         {
             lat_data->start_state = lib::TimeLogState::STOP;
-            lat_data->access = false;
         }
     }
 
@@ -87,7 +86,7 @@ collection::SwitchGear::_CheckDeadline(lib::Data* data)
         lat_data->end_deadline--;
         if (0 >= lat_data->end_deadline)
         {
-            lat_data->end_token = lib::LAT_TOKEN_SIZE;
+            lat_data->end_token = lat_data->end_token_size;
             lat_data->end_state = lib::TimeLogState::RUN;
         }
     }
@@ -97,7 +96,6 @@ collection::SwitchGear::_CheckDeadline(lib::Data* data)
         if (-9 > lat_data->end_deadline)
         {
             lat_data->end_state = lib::TimeLogState::STOP;
-            lat_data->access = false;
         }
     }
 }

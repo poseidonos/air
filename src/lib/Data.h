@@ -37,7 +37,6 @@ namespace lib
 const uint32_t IDLE_THRESHOLD {5};
 const uint32_t MAX_PACKET_CNT_SIZE {10};
 const uint32_t TIMELAG_SIZE {100};
-const int32_t LAT_TOKEN_SIZE {1000};
 
 struct Data
 {
@@ -91,11 +90,13 @@ struct LatencyData : public Data
     std::vector<struct TimeLog> start_v;
     TimeLogState start_state {TimeLogState::IDLE};
     int32_t start_token {0};
+    int32_t start_token_size {static_cast<int32_t>(TIMELAG_SIZE)};
     int32_t start_deadline {-45};
 
     std::vector<struct TimeLog> end_v;
     TimeLogState end_state {TimeLogState::IDLE};
     int32_t end_token {0};
+    int32_t end_token_size {static_cast<int32_t>(TIMELAG_SIZE)};
     int32_t end_deadline {-45};
 };
 

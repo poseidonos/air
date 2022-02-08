@@ -47,12 +47,14 @@ public:
 
 private:
     void _ResetTiming(lib::LatencyData* curr_data, lib::LatencyData* next_data,
-        int32_t time_value);
+        int32_t time_value, uint32_t sampled_count);
     std::random_device rand_device;
     std::default_random_engine rand_engine {rand_device()};
     std::uniform_int_distribution<int32_t> dist {1, 10};
     const uint32_t MAX_NID_SIZE {
         cfg::GetSentenceCount(config::ParagraphType::NODE)};
+    const int32_t MIN_TOKEN {static_cast<int32_t>(lib::TIMELAG_SIZE)};
+    const int32_t MAX_TOKEN {10 * static_cast<int32_t>(lib::TIMELAG_SIZE)};
 };
 
 } // namespace process

@@ -157,7 +157,6 @@ process::LatencyProcessor::_InitData(lib::Data* air_data, lib::AccData* acc_data
     acc_lat_data->median = 0;
     acc_lat_data->lower_quartile = 0;
     acc_lat_data->upper_quartile = 0;
-    acc_lat_data->sample_count = 0;
     for (uint32_t i {0}; i < lib::TIMELAG_SIZE; i++)
     {
         acc_lat_data->timelag[i] = 0;
