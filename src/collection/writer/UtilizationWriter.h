@@ -49,7 +49,7 @@ public:
         lib::UtilizationData* util_data = static_cast<lib::UtilizationData*>(data);
         util_data->access = true;
 
-        util_data->usage += usage;
+        util_data->period_usage += usage;
     }
     int
     SetSamplingRate(uint32_t rate) override

@@ -58,5 +58,5 @@ TEST_F(PreprocessorTest, Run)
     EXPECT_EQ(lib::TimeLogState::DONE, lat_data_0->start_state);
     EXPECT_EQ(lib::TimeLogState::DONE, lat_data_1->end_state);
     lib::AccLatencyData* acc_data = mock_node_manager.GetAccLatData(1, 0, 0);
-    EXPECT_EQ(1, acc_data->sample_count);
+    EXPECT_EQ(1, acc_data->period_sample_count);
 }

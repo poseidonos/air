@@ -63,8 +63,8 @@ TEST_F(CollectionManagerTest, LogData)
     collection_manager->LogData(0, 0, node_data_array, 0, 128);
     lib::Data* data = node_data->GetUserDataByHashIndex(0, 0);
     lib::PerformanceData* perf_data = static_cast<lib::PerformanceData*>(data);
-    EXPECT_EQ(1, perf_data->iops);
-    EXPECT_EQ(128, perf_data->bandwidth);
+    EXPECT_EQ(1, perf_data->period_iops);
+    EXPECT_EQ(128, perf_data->period_bandwidth);
 
     collection_manager->LogData(0, 0, node_data_array, 1, 128);
     collection_manager->LogData(0, 0, node_data_array, 2, 256);
@@ -72,12 +72,12 @@ TEST_F(CollectionManagerTest, LogData)
 
     data = node_data->GetUserDataByHashIndex(1, 0);
     perf_data = static_cast<lib::PerformanceData*>(data);
-    EXPECT_EQ(1, perf_data->iops);
-    EXPECT_EQ(128, perf_data->bandwidth);
+    EXPECT_EQ(1, perf_data->period_iops);
+    EXPECT_EQ(128, perf_data->period_bandwidth);
     data = node_data->GetUserDataByHashIndex(2, 0);
     perf_data = static_cast<lib::PerformanceData*>(data);
-    EXPECT_EQ(1, perf_data->iops);
-    EXPECT_EQ(256, perf_data->bandwidth);
+    EXPECT_EQ(1, perf_data->period_iops);
+    EXPECT_EQ(256, perf_data->period_bandwidth);
     data = node_data->GetUserDataByHashIndex(3, 0);
     EXPECT_EQ(nullptr, data);
 }
@@ -105,8 +105,8 @@ TEST_F(CollectionManagerTest, UpdateCollection)
     collection_manager->LogData(0, 0, node_data_array, 0, 128);
     lib::Data* data = node_data->GetUserDataByHashIndex(0, 0);
     lib::PerformanceData* perf_data = static_cast<lib::PerformanceData*>(data);
-    EXPECT_EQ(1, perf_data->iops);
-    EXPECT_EQ(128, perf_data->bandwidth);
+    EXPECT_EQ(1, perf_data->period_iops);
+    EXPECT_EQ(128, perf_data->period_bandwidth);
 
     lib::AccData* acc_data = node_data->GetAccData(0, 0);
     lib::AccPerformanceData* acc_perf_data =
@@ -125,15 +125,15 @@ TEST_F(CollectionManagerTest, UpdateCollection)
     collection_manager->LogData(0, 0, node_data_array, 0, 128);
     data = node_data->GetUserDataByHashIndex(0, 0);
     perf_data = static_cast<lib::PerformanceData*>(data);
-    EXPECT_EQ(2, perf_data->iops);
-    EXPECT_EQ(256, perf_data->bandwidth); // not initialized yet
+    EXPECT_EQ(2, perf_data->period_iops);
+    EXPECT_EQ(256, perf_data->period_bandwidth); // not initialized yet
 
     node_data = node_data_array->node[12];
     collection_manager->LogData(12, 0, node_data_array, 0, 128);
     data = node_data->GetUserDataByHashIndex(0, 0);
     lib::QueueData* queue_data = static_cast<lib::QueueData*>(data);
-    EXPECT_EQ(128, queue_data->sum_depth);
-    EXPECT_EQ(1, queue_data->num_req);
+    EXPECT_EQ(128, queue_data->period_qd_sum);
+    EXPECT_EQ(1, queue_data->period_num_req);
 }
 
 TEST_F(CollectionManagerTest, Observer)
@@ -157,16 +157,16 @@ TEST_F(CollectionManagerTest, Observer)
     lib::AccData* acc_data = node_data->GetAccData(0, 0);
     lib::AccPerformanceData* acc_perf_data =
         static_cast<lib::AccPerformanceData*>(acc_data);
-    EXPECT_EQ(1, perf_data->iops);
-    EXPECT_EQ(128, perf_data->bandwidth);
+    EXPECT_EQ(1, perf_data->period_iops);
+    EXPECT_EQ(128, perf_data->period_bandwidth);
     EXPECT_EQ(0, acc_perf_data->need_erase);
 
     // handle init msg
     collection_cor_handler->HandleRequest();
 
     // handle error
-    EXPECT_EQ(1, perf_data->iops);
-    EXPECT_EQ(128, perf_data->bandwidth); // not initialized yet
+    EXPECT_EQ(1, perf_data->period_iops);
+    EXPECT_EQ(128, perf_data->period_bandwidth); // not initialized yet
     EXPECT_EQ(1, acc_perf_data->need_erase);
 
     observer->Update(0, to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL), 0, 0, 0, 0, 0);

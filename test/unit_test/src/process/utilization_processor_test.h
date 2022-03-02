@@ -22,53 +22,34 @@
  *   SOFTWARE.
  */
 
-#ifndef AIR_COLLECTION_PERFORMANCE_WRITER_H
-#define AIR_COLLECTION_PERFORMANCE_WRITER_H
+#ifndef AIR_UTILIZATION_PROCESSOR_TEST_H
+#define AIR_UTILIZATION_PROCESSOR_TEST_H
 
-#include "src/collection/writer/Writer.h"
-#include "src/lib/Data.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-namespace collection
-{
-class PerformanceWriter : public Writer
+#include "src/data_structure/NodeData.h"
+#include "src/lib/json/Json.h"
+#include "src/process/processor/UtilizationProcessor.h"
+
+class UtilizationProcessorTest : public ::testing::Test
 {
 public:
-    virtual ~PerformanceWriter(void)
-    {
-    }
-    inline void
-    LogData(lib::Data* data, uint64_t io_size) override
-    {
-        if (nullptr == data)
-        {
-            return;
-        }
-        lib::PerformanceData* perf_data = static_cast<lib::PerformanceData*>(data);
-        perf_data->access = true;
+    process::UtilizationProcessor util_processor;
+    node::NodeData* util_data {nullptr};
 
-        perf_data->period_iops++;
-        perf_data->period_bandwidth += io_size;
-
-        auto entry = perf_data->period_packet_cnt.find(io_size);
-        if (entry != perf_data->period_packet_cnt.end())
-        {
-            entry->second++;
-        }
-        else
-        {
-            if (lib::MAX_PACKET_CNT_SIZE > perf_data->period_packet_cnt.size())
-            {
-                perf_data->period_packet_cnt.insert({io_size, 1});
-            }
-        }
-    }
-    int
-    SetSamplingRate(uint32_t rate) override
+protected:
+    void
+    SetUp() override
     {
-        return 0;
+        util_data = new node::NodeData {air::ProcessorType::UTILIZATION, 2, 2};
+    }
+    void
+    TearDown() override
+    {
+        delete util_data;
+        air::json_clear();
     }
 };
 
-} // namespace collection
-
-#endif // AIR_COLLECTION_PERFORMANCE_WRITER_H
+#endif // AIR_UTILIZATION_PROCESSOR_TEST_H

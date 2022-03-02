@@ -116,5 +116,5 @@ TEST_F(NodeManagerTest, GetAccLatSeqData)
     lib::AccLatencyData* seq_data = node_manager->GetAccLatData(0, 0, 0);
     EXPECT_EQ(nullptr, seq_data);
     seq_data = node_manager->GetAccLatData(1, 0, 0);
-    EXPECT_EQ(0, seq_data->sample_count);
+    EXPECT_EQ(0, seq_data->period_sample_count);
 }

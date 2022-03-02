@@ -33,23 +33,23 @@ TEST_F(WriterTest, PerformanceWriter_LogData)
     lib::PerformanceData* perf_data {static_cast<lib::PerformanceData*>(data)};
 
     performance_writer->LogData(data, 512);
-    EXPECT_EQ(1, perf_data->iops);
-    EXPECT_EQ(512, perf_data->bandwidth);
+    EXPECT_EQ(1, perf_data->period_iops);
+    EXPECT_EQ(512, perf_data->period_bandwidth);
 
     performance_writer->LogData(data, 1024);
-    EXPECT_EQ(2, perf_data->iops);
-    EXPECT_EQ(1536, perf_data->bandwidth);
+    EXPECT_EQ(2, perf_data->period_iops);
+    EXPECT_EQ(1536, perf_data->period_bandwidth);
 
     performance_writer->LogData(data, 2048);
-    EXPECT_EQ(3, perf_data->packet_cnt.size());
-    EXPECT_EQ(1, perf_data->packet_cnt[2048]);
+    EXPECT_EQ(3, perf_data->period_packet_cnt.size());
+    EXPECT_EQ(1, perf_data->period_packet_cnt[2048]);
 
     for (uint32_t i = 0; i < 100; i++)
     {
         performance_writer->LogData(data, i);
     }
 
-    EXPECT_EQ(lib::MAX_PACKET_CNT_SIZE, perf_data->packet_cnt.size());
+    EXPECT_EQ(lib::MAX_PACKET_CNT_SIZE, perf_data->period_packet_cnt.size());
 
     delete data;
 }
@@ -137,8 +137,8 @@ TEST_F(WriterTest, QueueWriter_LogData)
     lib::QueueData* queue_data {static_cast<lib::QueueData*>(data)};
 
     queue_writer->LogData(data, 10);
-    EXPECT_EQ(10, queue_data->sum_depth);
-    EXPECT_EQ(1, queue_data->num_req);
+    EXPECT_EQ(10, queue_data->period_qd_sum);
+    EXPECT_EQ(1, queue_data->period_num_req);
 
     delete data;
 }
@@ -228,10 +228,10 @@ TEST_F(WriterTest, CountWriter_LogData)
     count_writer->LogData(data, -1);
     count_writer->LogData(data, -10000);
 
-    EXPECT_EQ(10, count_data->count_positive);
-    EXPECT_EQ(1, count_data->num_req_positive);
-    EXPECT_EQ(11111, count_data->count_negative);
-    EXPECT_EQ(5, count_data->num_req_negative);
+    EXPECT_EQ(10, count_data->period_count_positive);
+    EXPECT_EQ(1, count_data->period_num_req_positive);
+    EXPECT_EQ(11111, count_data->period_count_negative);
+    EXPECT_EQ(5, count_data->period_num_req_negative);
 
     delete data;
 }
@@ -262,7 +262,7 @@ TEST_F(WriterTest, UtilizationWriter_LogData)
     lib::UtilizationData* util_data {static_cast<lib::UtilizationData*>(data)};
 
     util_writer->LogData(data, 10);
-    EXPECT_EQ(10, util_data->usage);
+    EXPECT_EQ(10, util_data->period_usage);
 
     delete data;
 }

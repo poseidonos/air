@@ -68,7 +68,8 @@ process::TimingDistributor::SetTiming(
                             timing_map.insert({key, value});
                         }
 
-                        _ResetTiming(from, to, timing_map[key], acc->sample_count);
+                        _ResetTiming(
+                            from, to, timing_map[key], acc->period_sample_count);
                     }
                 }
             }
@@ -88,7 +89,7 @@ process::TimingDistributor::SetTiming(
                 {
                     lib::AccLatencyData* acc =
                         node_manager->GetAccLatData(nid, hash_index, filter_index);
-                    acc->sample_count = 0;
+                    acc->period_sample_count = 0;
                 }
             }
         }

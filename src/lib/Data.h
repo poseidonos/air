@@ -56,16 +56,16 @@ struct AccData
 
 struct PerformanceData : public Data
 {
-    uint64_t bandwidth {0};
-    uint32_t iops {0};
-    std::map<uint32_t, uint32_t> packet_cnt;
+    uint64_t period_bandwidth {0};
+    uint32_t period_iops {0};
+    std::map<uint32_t, uint32_t> period_packet_cnt;
 };
 
 struct AccPerformanceData : public AccData
 {
-    uint64_t bandwidth_avg {0};
-    uint32_t iops_avg {0};
-    double time_spent {0};
+    uint64_t cumulation_bandwidth {0};
+    uint32_t cumulation_iops {0};
+    double duration_second {0};
 };
 
 enum class TimeLogState : uint32_t
@@ -102,21 +102,22 @@ struct LatencyData : public Data
 
 struct AccLatencyData : public AccData
 {
-    uint32_t mean {0};
-    uint32_t min {0};
-    uint32_t max {0};
-    uint32_t median {0};
-    uint32_t lower_quartile {0};
-    uint32_t upper_quartile {0};
-    uint32_t sample_count {0};
+    uint32_t period_mean {0};
+    uint32_t period_min {0};
+    uint32_t period_max {0};
+    uint32_t period_median {0};
+    uint32_t period_lower_quartile {0};
+    uint32_t period_upper_quartile {0};
+    uint32_t period_sample_count {0};
 
-    uint32_t total_mean {0};
-    uint32_t total_min {0};
-    uint32_t total_max {0};
-    uint32_t total_median {0};
-    uint32_t total_lower_quartile {0};
-    uint32_t total_upper_quartile {0};
-    uint64_t total_sample_count {0};
+    uint32_t cumulation_mean {0};
+    uint32_t cumulation_min {0};
+    uint32_t cumulation_max {0};
+    uint32_t cumulation_median {0};
+    uint32_t cumulation_lower_quartile {0};
+    uint32_t cumulation_upper_quartile {0};
+    uint64_t cumulation_sample_count {0};
+
     uint32_t overflow_warning {0};
 
     uint64_t timelag[TIMELAG_SIZE] {
@@ -126,11 +127,11 @@ struct AccLatencyData : public AccData
 
 struct QueueData : public Data
 {
-    uint32_t num_req {0};
-    uint64_t sum_depth {0};
-    float depth_period_avg {0.0};
-    uint64_t depth_period_max {0};
-    uint32_t dummy_u32 {0};
+    double period_qd_avg {0.0};
+    uint32_t period_qd_max {0};
+    uint32_t period_num_req {0};
+    uint64_t period_qd_sum {0};
+
     uint32_t logging_point {0};
     uint32_t num_called {0};
     uint32_t sampling_rate {0};
@@ -141,37 +142,37 @@ struct QueueData : public Data
 
 struct AccQueueData : public AccData
 {
-    uint32_t depth_total_max {0};
-    uint32_t total_num_req {0};
-    double depth_total_avg {0.0};
+    double cumulation_qd_avg {0.0};
+    uint32_t cumulation_qd_max {0};
+    uint32_t cumulation_num_req {0};
 };
 
 struct UtilizationData : public Data
 {
-    uint64_t usage {0};
+    uint64_t period_usage {0};
 };
 
 struct AccUtilizationData : public AccData
 {
-    uint64_t total_usage {0};
+    uint64_t cumulation_usage {0};
 };
 
 struct CountData : public Data
 {
-    uint64_t count_positive {0};
-    uint64_t count_negative {0};
-    uint64_t num_req_positive {0};
-    uint64_t num_req_negative {0};
-    uint64_t count {0};
-    uint32_t negative {0};
+    uint64_t period_count_positive {0};
+    uint64_t period_count_negative {0};
+    uint64_t period_num_req_positive {0};
+    uint64_t period_num_req_negative {0};
+    uint64_t period_count {0};
+    uint32_t period_negative {0};
 };
 
 struct AccCountData : public AccData
 {
-    uint64_t total_count {0};
-    uint64_t total_num_req_positive {0};
-    uint64_t total_num_req_negative {0};
-    uint32_t negative {0};
+    uint64_t cumulation_count {0};
+    uint64_t cumulation_num_req_positive {0};
+    uint64_t cumulation_num_req_negative {0};
+    uint32_t cumulation_negative {0};
 };
 
 enum class BucketType : uint32_t

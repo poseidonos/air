@@ -51,13 +51,13 @@ public:
 
         if (MAX_INT64_VALUE < value)
         {
-            count_data->count_negative += ((NEGATIVE_ONE - value) + 1);
-            count_data->num_req_negative += 1;
+            count_data->period_count_negative += ((NEGATIVE_ONE - value) + 1);
+            count_data->period_num_req_negative += 1;
         }
         else
         {
-            count_data->count_positive += value;
-            count_data->num_req_positive += 1;
+            count_data->period_count_positive += value;
+            count_data->period_num_req_positive += 1;
         }
     }
     int

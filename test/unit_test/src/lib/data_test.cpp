@@ -32,23 +32,23 @@ TEST_F(DataTest, QueueData)
     bool b {false};
     uint64_t value {0xFF00EE00DD00CA00};
     EXPECT_EQ(b, queue_data->access);
-    EXPECT_EQ(value, queue_data->sum_depth);
-    EXPECT_LT(3.0f, queue_data->depth_period_avg);
+    EXPECT_EQ(value, queue_data->period_qd_sum);
+    EXPECT_LT(3.2, queue_data->period_qd_avg);
 }
 
 TEST_F(DataTest, LatencyData)
 {
     uint32_t value {0};
-    EXPECT_EQ(value, lat_data->min);
+    EXPECT_EQ(value, lat_data->period_min);
 
     value = 0x0000FEAD;
-    EXPECT_EQ(value, lat_data->max);
+    EXPECT_EQ(value, lat_data->period_max);
 }
 
 TEST_F(DataTest, PerformanceData)
 {
     EXPECT_EQ(false, perf_data->access);
-    EXPECT_EQ(100, perf_data->iops);
+    EXPECT_EQ(100, perf_data->period_iops);
 }
 
 TEST_F(DataTest, HistogramData)

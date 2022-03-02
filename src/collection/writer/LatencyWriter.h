@@ -81,23 +81,25 @@ public:
     inline bool
     AddTimelag(lib::AccLatencyData* lat_data, uint64_t timelag)
     {
-        if (nullptr == lat_data || lib::TIMELAG_SIZE <= lat_data->sample_count)
+        if (nullptr == lat_data ||
+            lib::TIMELAG_SIZE <= lat_data->period_sample_count)
         {
             return false;
         }
 
-        if (timelag > lat_data->max)
+        if (timelag > lat_data->period_max)
         {
-            lat_data->max = timelag;
+            lat_data->period_max = timelag;
         }
 
-        if ((0 != timelag) && ((0 == lat_data->min) || (timelag < lat_data->min)))
+        if ((0 != timelag) &&
+            ((0 == lat_data->period_min) || (timelag < lat_data->period_min)))
         {
-            lat_data->min = timelag;
+            lat_data->period_min = timelag;
         }
 
-        lat_data->timelag[lat_data->sample_count] = timelag;
-        lat_data->sample_count++;
+        lat_data->timelag[lat_data->period_sample_count] = timelag;
+        lat_data->period_sample_count++;
 
         return true;
     }

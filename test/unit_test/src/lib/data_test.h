@@ -22,6 +22,9 @@
  *   SOFTWARE.
  */
 
+#ifndef AIR_DATA_TEST_H
+#define AIR_DATA_TEST_H
+
 #include <gmock/gmock.h>
 
 #include "src/lib/Data.h"
@@ -75,13 +78,15 @@ protected:
     void
     SetUp() override
     {
-        perf_data->iops = 100;
-        lat_data->max = 0x0000FEAD;
-        queue_data->sum_depth = 0xFF00EE00DD00CA00;
-        queue_data->depth_period_avg = 3.21f;
+        perf_data->period_iops = 100;
+        lat_data->period_max = 0x0000FEAD;
+        queue_data->period_qd_sum = 0xFF00EE00DD00CA00;
+        queue_data->period_qd_avg = 3.21;
     }
     void
     TearDown() override
     {
     }
 };
+
+#endif // AIR_DATA_TEST_H

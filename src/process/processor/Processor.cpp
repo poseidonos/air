@@ -71,7 +71,7 @@ process::Processor::StreamData(air::string_view& node_name_view,
         return;
     }
 
-    if (0 != data->sample_count || 0 != data->total_sample_count)
+    if (0 != data->period_sample_count || 0 != data->cumulation_sample_count)
     {
         _ProcessData(nullptr, data);
         _JsonifyData(

@@ -220,11 +220,10 @@ process::HistogramProcessor::_ProcessData(
 void
 process::HistogramProcessor::_JsonifyData(struct JsonifyData data)
 {
+    std::string node_name;
     lib::HistogramData* air_hist_data {
         static_cast<lib::HistogramData*>(data.air_data)};
-    lib::AccHistogramData* acc_hist_data {
-        static_cast<lib::AccHistogramData*>(data.acc_data)};
-    std::string node_name;
+
     node_name.assign(data.node_name_view.data(), data.node_name_view.size());
     std::string node_obj_name {node_name + "_" + std::to_string(data.tid) +
         "_histogram_" + std::to_string(data.hash_value) + "_" +
@@ -232,7 +231,9 @@ process::HistogramProcessor::_JsonifyData(struct JsonifyData data)
     std::string filter_item =
         cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index);
 
-    auto& node = air::json(node_name);
+    lib::AccHistogramData* acc_hist_data {
+        static_cast<lib::AccHistogramData*>(data.acc_data)};
+
     auto& node_obj = air::json(node_obj_name);
 
     node_obj["target_id"] = {data.tid};
@@ -281,6 +282,7 @@ process::HistogramProcessor::_JsonifyData(struct JsonifyData data)
     }
     node_obj["cumulation"] = {node_obj_cumulation};
 
+    auto& node = air::json(node_name);
     node["objs"] += {node_obj};
 }
 

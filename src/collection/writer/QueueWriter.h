@@ -56,11 +56,11 @@ public:
             return;
         }
         queue_data->access = true;
-        queue_data->sum_depth += q_depth;
-        queue_data->num_req++;
-        if (queue_data->depth_period_max < q_depth)
+        queue_data->period_qd_sum += q_depth;
+        queue_data->period_num_req++;
+        if (queue_data->period_qd_max < q_depth)
         {
-            queue_data->depth_period_max = q_depth;
+            queue_data->period_qd_max = q_depth;
         }
     }
     int

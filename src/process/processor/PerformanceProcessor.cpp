@@ -39,59 +39,65 @@ process::PerformanceProcessor::_ProcessData(
 
     if (lap_time > 0.0)
     {
-        perf_data->iops = (double)perf_data->iops / lap_time;
-        perf_data->bandwidth = (double)perf_data->bandwidth / lap_time;
+        perf_data->period_iops = (double)perf_data->period_iops / lap_time;
+        perf_data->period_bandwidth =
+            (double)perf_data->period_bandwidth / lap_time;
 
-        double common_divisor {acc_perf_data->time_spent + lap_time};
+        double common_divisor {acc_perf_data->duration_second + lap_time};
 
-        acc_perf_data->iops_avg = ((double)acc_perf_data->iops_avg /
-                                      common_divisor * acc_perf_data->time_spent) +
-            ((double)perf_data->iops / common_divisor * lap_time);
+        acc_perf_data->cumulation_iops =
+            ((double)acc_perf_data->cumulation_iops / common_divisor *
+                acc_perf_data->duration_second) +
+            ((double)perf_data->period_iops / common_divisor * lap_time);
 
-        acc_perf_data->bandwidth_avg =
-            ((double)acc_perf_data->bandwidth_avg / common_divisor *
-                acc_perf_data->time_spent) +
-            ((double)perf_data->bandwidth / common_divisor * lap_time);
+        acc_perf_data->cumulation_bandwidth =
+            ((double)acc_perf_data->cumulation_bandwidth / common_divisor *
+                acc_perf_data->duration_second) +
+            ((double)perf_data->period_bandwidth / common_divisor * lap_time);
     }
-    acc_perf_data->time_spent += lap_time;
+    acc_perf_data->duration_second += lap_time;
 }
 
 void
 process::PerformanceProcessor::_JsonifyData(struct JsonifyData data)
 {
+    std::string node_name;
     lib::PerformanceData* perf_data {
         static_cast<lib::PerformanceData*>(data.air_data)};
-    std::string node_name;
+
     node_name.assign(data.node_name_view.data(), data.node_name_view.size());
-    auto& node = air::json(node_name);
-    lib::AccPerformanceData* acc_perf_data {
-        static_cast<lib::AccPerformanceData*>(data.acc_data)};
-
-    auto& node_obj = air::json(node_name + "_" + std::to_string(data.tid) +
+    std::string node_obj_name {node_name + "_" + std::to_string(data.tid) +
         "_perf_" + std::to_string(data.hash_value) + "_" +
-        std::to_string(data.filter_index));
+        std::to_string(data.filter_index)};
 
-    std::string filter_item {
-        cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index)};
-
+    auto& node_obj = air::json(node_obj_name);
+    node_obj["target_name"] = {data.tname};
     node_obj["index"] = {data.hash_value};
     node_obj["target_id"] = {data.tid};
-    node_obj["target_name"] = {data.tname};
+    std::string filter_item {
+        cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index)};
     node_obj["filter"] = {filter_item};
 
-    node_obj["iops"] = {perf_data->iops};
-    node_obj["bw"] = {perf_data->bandwidth};
-    uint32_t cnt {1};
-    for (const auto& pair : perf_data->packet_cnt)
+    auto& node_obj_period = air::json(node_obj_name + "_period");
+    node_obj_period["iops"] = {perf_data->period_iops};
+    node_obj_period["bw"] = {perf_data->period_bandwidth};
+    for (const auto& pair : perf_data->period_packet_cnt)
     {
-        node_obj["cnt_" + std::to_string(cnt)] = {std::to_string(pair.first) +
-            "(sz)-" + std::to_string(pair.second) + "(cnt)"};
-        cnt++;
+        auto& node_obj_period_cnt =
+            air::json(node_obj_name + "_period_cnt_" + std::to_string(pair.first));
+        node_obj_period_cnt[std::to_string(pair.first)] = {pair.second};
+        node_obj_period["count"] += {node_obj_period_cnt};
     }
+    node_obj["period"] = {node_obj_period};
 
-    node_obj["iops_avg"] = {acc_perf_data->iops_avg};
-    node_obj["bw_avg"] = {acc_perf_data->bandwidth_avg};
+    auto& node_obj_cumulation = air::json(node_obj_name + "_cumulation");
+    lib::AccPerformanceData* acc_perf_data {
+        static_cast<lib::AccPerformanceData*>(data.acc_data)};
+    node_obj_cumulation["iops"] = {acc_perf_data->cumulation_iops};
+    node_obj_cumulation["bw"] = {acc_perf_data->cumulation_bandwidth};
+    node_obj["cumulation"] = {node_obj_cumulation};
 
+    auto& node = air::json(node_name);
     node["objs"] += {node_obj};
 }
 
@@ -104,15 +110,15 @@ process::PerformanceProcessor::_InitData(
     lib::PerformanceData* perf_data {static_cast<lib::PerformanceData*>(air_data)};
 
     perf_data->access = 0;
-    perf_data->bandwidth = 0;
-    perf_data->iops = 0;
-    perf_data->packet_cnt.clear();
+    perf_data->period_bandwidth = 0;
+    perf_data->period_iops = 0;
+    perf_data->period_packet_cnt.clear();
 
     if (0 != acc_perf_data->need_erase)
     {
-        acc_perf_data->bandwidth_avg = 0;
-        acc_perf_data->iops_avg = 0;
-        acc_perf_data->time_spent = 0.0;
+        acc_perf_data->cumulation_bandwidth = 0;
+        acc_perf_data->cumulation_iops = 0;
+        acc_perf_data->duration_second = 0.0;
         acc_perf_data->need_erase = 0;
     }
 }

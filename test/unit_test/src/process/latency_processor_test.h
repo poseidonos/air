@@ -22,34 +22,20 @@
  *   SOFTWARE.
  */
 
-#include "mock_global_meta_getter.h"
-#include "mock_node_manager.h"
-#include "mock_node_meta_getter.h"
-#include "src/data_structure/NodeData.h"
-#include "src/process/processor/CountProcessor.h"
-#include "src/process/processor/HistogramProcessor.h"
-#include "src/process/processor/PerformanceProcessor.h"
-#include "src/process/processor/QueueProcessor.h"
-#include "src/process/processor/UtilizationProcessor.h"
+#ifndef AIR_LATENCY_PROCESSOR_TEST_H
+#define AIR_LATENCY_PROCESSOR_TEST_H
 
-using ::testing::_;
-using ::testing::Invoke;
-using ::testing::NiceMock;
-using ::testing::Return;
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-class ProcessorTest : public ::testing::Test
+#include "src/lib/json/Json.h"
+#include "src/process/processor/LatencyProcessor.h"
+
+class LatencyProcessorTest : public ::testing::Test
 {
 public:
-    process::PerformanceProcessor perf_processor;
-    node::NodeData perf_data {air::ProcessorType::PERFORMANCE, 32, 32};
-    process::QueueProcessor queue_processor;
-    node::NodeData queue_data {air::ProcessorType::QUEUE, 32, 32};
-    process::UtilizationProcessor util_processor;
-    node::NodeData util_data {air::ProcessorType::UTILIZATION, 32, 32};
-    process::CountProcessor count_processor;
-    node::NodeData count_data {air::ProcessorType::COUNT, 32, 32};
-    process::HistogramProcessor histogram_processor;
-    node::NodeData histogram_data {air::ProcessorType::HISTOGRAM, 32, 32};
+    process::LatencyProcessor lat_processor;
+    lib::AccLatencyData acc_data;
 
 protected:
     void
@@ -59,5 +45,8 @@ protected:
     void
     TearDown() override
     {
+        air::json_clear();
     }
 };
+
+#endif // AIR_LATENCY_PROCESSOR_TEST_H

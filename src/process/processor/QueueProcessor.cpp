@@ -35,42 +35,41 @@ process::QueueProcessor::_ProcessData(lib::Data* air_data, lib::AccData* acc_dat
     lib::QueueData* air_queue_data {static_cast<lib::QueueData*>(air_data)};
     lib::AccQueueData* acc_queue_data {static_cast<lib::AccQueueData*>(acc_data)};
 
-    if (air_queue_data->num_req > 0)
+    if (air_queue_data->period_num_req > 0)
     {
-        air_queue_data->depth_period_avg =
-            (float)air_queue_data->sum_depth / air_queue_data->num_req;
+        air_queue_data->period_qd_avg =
+            (double)air_queue_data->period_qd_sum / air_queue_data->period_num_req;
     }
-    if (acc_queue_data->depth_total_max < air_queue_data->depth_period_max)
+    if (acc_queue_data->cumulation_qd_max < air_queue_data->period_qd_max)
     {
-        acc_queue_data->depth_total_max = air_queue_data->depth_period_max;
+        acc_queue_data->cumulation_qd_max = air_queue_data->period_qd_max;
     }
 
-    uint32_t prev_total_num_req {acc_queue_data->total_num_req};
-    acc_queue_data->total_num_req += air_queue_data->num_req;
+    uint32_t prev_total_num_req {acc_queue_data->cumulation_num_req};
+    acc_queue_data->cumulation_num_req += air_queue_data->period_num_req;
 
-    if (0 != acc_queue_data->total_num_req)
+    if (0 != acc_queue_data->cumulation_num_req)
     {
-        acc_queue_data->depth_total_avg =
-            (acc_queue_data->depth_total_avg / acc_queue_data->total_num_req) *
+        acc_queue_data->cumulation_qd_avg =
+            (acc_queue_data->cumulation_qd_avg /
+                acc_queue_data->cumulation_num_req) *
                 prev_total_num_req +
-            (air_queue_data->depth_period_avg / acc_queue_data->total_num_req) *
-                air_queue_data->num_req;
+            (air_queue_data->period_qd_avg / acc_queue_data->cumulation_num_req) *
+                air_queue_data->period_num_req;
     }
 }
 
 void
 process::QueueProcessor::_JsonifyData(struct JsonifyData data)
 {
-    lib::AccQueueData* acc_queue_data {
-        static_cast<lib::AccQueueData*>(data.acc_data)};
     std::string node_name;
-    node_name.assign(data.node_name_view.data(), data.node_name_view.size());
-    auto& node = air::json(node_name);
     lib::QueueData* air_queue_data {static_cast<lib::QueueData*>(data.air_data)};
 
-    auto& node_obj = air::json(node_name + "_" + std::to_string(data.tid) +
+    node_name.assign(data.node_name_view.data(), data.node_name_view.size());
+    std::string node_obj_name {node_name + "_" + std::to_string(data.tid) +
         "_queue_" + std::to_string(data.hash_value) + "_" +
-        std::to_string(data.filter_index));
+        std::to_string(data.filter_index)};
+    auto& node_obj = air::json(node_obj_name);
 
     std::string filter_item {
         cfg::GetItemStrWithNodeName(data.node_name_view, data.filter_index)};
@@ -80,13 +79,21 @@ process::QueueProcessor::_JsonifyData(struct JsonifyData data)
     node_obj["index"] = {data.hash_value};
     node_obj["target_name"] = {data.tname};
 
-    node_obj["num_req"] = {air_queue_data->num_req};
-    node_obj["depth_period_avg"] = {air_queue_data->depth_period_avg};
-    node_obj["depth_period_max"] = {air_queue_data->depth_period_max};
+    auto& node_obj_period = air::json(node_obj_name + "_period");
+    node_obj_period["num_req"] = {air_queue_data->period_num_req};
+    node_obj_period["qd_avg"] = {air_queue_data->period_qd_avg};
+    node_obj_period["qd_max"] = {air_queue_data->period_qd_max};
+    node_obj["period"] = {node_obj_period};
 
-    node_obj["depth_total_avg"] = {acc_queue_data->depth_total_avg};
-    node_obj["depth_total_max"] = {acc_queue_data->depth_total_max};
+    auto& node_obj_cumulation = air::json(node_obj_name + "_cumulation");
+    lib::AccQueueData* acc_queue_data {
+        static_cast<lib::AccQueueData*>(data.acc_data)};
+    node_obj_cumulation["num_req"] = {acc_queue_data->cumulation_num_req};
+    node_obj_cumulation["qd_avg"] = {acc_queue_data->cumulation_qd_avg};
+    node_obj_cumulation["qd_max"] = {acc_queue_data->cumulation_qd_max};
+    node_obj["cumulation"] = {node_obj_cumulation};
 
+    auto& node = air::json(node_name);
     node["objs"] += {node_obj};
 }
 
@@ -97,16 +104,16 @@ process::QueueProcessor::_InitData(lib::Data* air_data, lib::AccData* acc_data)
     lib::QueueData* air_queue_data {static_cast<lib::QueueData*>(air_data)};
 
     air_queue_data->access = 0;
-    air_queue_data->num_req = 0;
-    air_queue_data->sum_depth = 0;
-    air_queue_data->depth_period_avg = 0.0;
-    air_queue_data->depth_period_max = 0;
+    air_queue_data->period_num_req = 0;
+    air_queue_data->period_qd_sum = 0;
+    air_queue_data->period_qd_avg = 0.0;
+    air_queue_data->period_qd_max = 0;
 
     if (0 != acc_queue_data->need_erase)
     {
-        acc_queue_data->depth_total_max = 0;
-        acc_queue_data->total_num_req = 0;
-        acc_queue_data->depth_total_avg = 0.0;
+        acc_queue_data->cumulation_qd_max = 0;
+        acc_queue_data->cumulation_num_req = 0;
+        acc_queue_data->cumulation_qd_avg = 0.0;
         acc_queue_data->need_erase = 0;
     }
 }

@@ -22,11 +22,15 @@
  *   SOFTWARE.
  */
 
+#ifndef AIR_PREPROCESSOR_TEST_H
+#define AIR_PREPROCESSOR_TEST_H
+
 #include <utility>
 
 #include "mock_global_meta_getter.h"
 #include "mock_node_manager.h"
 #include "mock_node_meta_getter.h"
+#include "src/config/ConfigInterface.h"
 #include "src/process/Preprocessor.h"
 
 using ::testing::_;
@@ -90,6 +94,12 @@ protected:
             new node::NodeData(air::ProcessorType::QUEUE, 32, 32);
         node_data_array->node[6] =
             new node::NodeData(air::ProcessorType::QUEUE, 32, 32);
+        const uint32_t MAX_NID_SIZE {
+            cfg::GetSentenceCount(config::ParagraphType::NODE)};
+        for (uint32_t nid {7}; nid < MAX_NID_SIZE; nid++)
+        {
+            node_data_array->node[nid] = nullptr;
+        }
         mock_node_manager.nda_map.insert(std::make_pair(123, node_data_array));
         ON_CALL(mock_node_manager, GetAccLatData(_, _, _))
             .WillByDefault(Invoke(
@@ -102,3 +112,5 @@ protected:
     {
     }
 };
+
+#endif // AIR_PREPROCESSOR_TEST_H
