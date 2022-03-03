@@ -33,6 +33,12 @@
 
 namespace air
 {
+enum class ViewMode : int
+{
+    OFFLINE,
+    ONLINE,
+};
+
 enum class NodeType : int
 {
     NULLTYPE,
@@ -47,16 +53,17 @@ enum class NodeType : int
 class Viewer
 {
 public:
-    void Render(EventData data, AConfig& tree, int pid);
+    void Render(ViewMode view_mode, AConfig& tree, std::string& json_string,
+        int64_t current_page_index, int64_t maximum_page_index, int pid = -1,
+        bool pause = false);
 
 private:
-    void _SetFilename(int pid);
-    bool _Update(EventType type);
-    bool _CheckMovement(EventType type);
-    bool _CheckFilesize(void);
     void _ClearWindow(void);
-    void _Draw(AConfig& tree);
-    void _DrawHeadline(void);
+    void _Draw(ViewMode view_mode, AConfig& tree, std::string& json_string,
+        int64_t current_page_index, int64_t maximum_page_index, int pid,
+        bool pause);
+    void _DrawHeadline(ViewMode view_mode, int64_t current_page_index,
+        int64_t maximum_page_index, int pid, bool pause);
     void _DrawGroup(AConfig& tree);
     void _DrawNode(ANode& tree, std::string name, JSONdoc& doc);
     void _SumData(JSONdoc& doc, NodeType type);
@@ -72,21 +79,16 @@ private:
     void _DrawHistogramPeriod(JSONdoc& doc, uint32_t remain_col);
     void _DrawHistogramCumulation(JSONdoc& doc, uint32_t remain_col);
 
-    std::string filename {""};
-    int file_size {0};
-    int prev_file_size {0};
-    int printed_pos {0};
-    bool file_update {false};
-    int pid {-1};
+    uint64_t sum_perf_period_iops {0};
+    uint64_t sum_perf_period_bw {0};
+    uint64_t sum_perf_cumulation_iops {0};
+    uint64_t sum_perf_cumulation_bw {0};
+    uint64_t sum_util_period_usage {0};
+    uint64_t sum_util_cumulation_usage {0};
 
-    uint64_t sum_iops;
-    uint64_t sum_bw;
-    uint64_t sum_util_usage;
-    uint64_t sum_util_total_usage;
-
-    uint32_t ws_row;
-    uint32_t ws_col;
-    uint32_t curr_row;
+    uint32_t ws_row {0};
+    uint32_t ws_col {0};
+    uint32_t curr_row {0};
 };
 
 } // namespace air

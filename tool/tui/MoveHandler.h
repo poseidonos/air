@@ -33,7 +33,7 @@ namespace air
 class MoveHandler
 {
 public:
-    void HandleMove(EventData data, AConfig& tree);
+    void HandleMove(EventType type, AConfig& tree);
 
 private:
     void _MoveUp(AConfig& tree);

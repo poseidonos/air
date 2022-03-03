@@ -22,41 +22,42 @@
  *   SOFTWARE.
  */
 
-#ifndef AIR_TUI_FILE_DETECTOR_H
-#define AIR_TUI_FILE_DETECTOR_H
+#ifndef AIR_TUI_OPTION_H
+#define AIR_TUI_OPTION_H
 
-#include <map>
+#include <getopt.h>
+#include <sys/types.h>
+
 #include <string>
-#include <tuple>
-
-typedef std::tuple<int, std::string> filedata;
 
 namespace air
 {
-class FileDetector
+class TuiOption
 {
 public:
-    ~FileDetector(void)
+    void GetOptions(int argc, char** argv);
+    bool
+    HasFile(void)
     {
-        pid_map.clear();
+        return has_file;
     }
-    filedata Detect(void);
-    void HandleTimeout(void);
+    std::string
+    GetFile(void)
+    {
+        return file;
+    }
 
 private:
-    void _Monitoring(void);
-    void _InitData(void);
-    void _UpdatePidMap(void);
-    void _UpdatePidStatus(void);
-    void _SelectPid(void);
+    void _ShowHelp(void);
 
-    int pid {-1};
-    bool waiting {false};
-    bool exit {false};
-    int candidates {0};
+    std::string file {""};
+    bool has_file {false};
 
-    std::map<int, bool> pid_map;
+    const char* const short_opts = "f:h";
+    const struct option long_opts[10] {{"file", required_argument, nullptr, 'f'},
+        {"help", no_argument, nullptr, 'h'}, {nullptr, no_argument, nullptr, 0}};
 };
+
 } // namespace air
 
-#endif // AIR_TUI_FILE_DETECTOR_H
+#endif // AIR_TUI_OPTION_H

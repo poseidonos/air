@@ -25,9 +25,9 @@
 #include "tool/tui/MoveHandler.h"
 
 void
-air::MoveHandler::HandleMove(EventData data, AConfig& tree)
+air::MoveHandler::HandleMove(EventType type, AConfig& tree)
 {
-    switch (data.type)
+    switch (type)
     {
         case air::EventType::MOVE_UP:
         {
@@ -59,7 +59,7 @@ air::MoveHandler::HandleMove(EventData data, AConfig& tree)
 void
 air::MoveHandler::_MoveUp(AConfig& tree)
 {
-    if (tree.group.begin()->second->here)
+    if (!tree.group.empty() && tree.group.begin()->second->here)
     {
         tree.pos_top = true;
         tree.pos_group = false;

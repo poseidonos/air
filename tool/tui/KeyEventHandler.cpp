@@ -26,48 +26,68 @@
 
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/select.h>
 #include <unistd.h>
 
 #include <iostream>
 
 void
-air::TerminalSetting::SaveDefaultTermios(void)
+air::KeyListener::_InitKeyMode(void)
 {
-    tcgetattr(STDIN_FILENO, &default_termios);
+    tcgetattr(0, &default_termios);
+    async_termios = default_termios;
+    async_termios.c_lflag &= ~ICANON;
+    async_termios.c_lflag &= ~ECHO;
+    async_termios.c_cc[VMIN] = 1;
+    async_termios.c_cc[VTIME] = 0;
+    tcsetattr(0, TCSANOW, &async_termios);
 }
 
 void
-air::TerminalSetting::RestoreDefaultTermios(void)
+air::KeyListener::_ResetKeyMode(void)
 {
-    tcsetattr(STDIN_FILENO, TCSANOW, &default_termios);
-
-    int fd;
-    fd = fcntl(STDIN_FILENO, F_SETFL, O_APPEND);
-    if (-1 == fd)
-    {
-        std::cout << "TerminalSetting::RestoreDefaultTermios failed\n";
-    }
+    tcsetattr(0, TCSANOW, &default_termios);
 }
 
-void
-air::KeyListener::_SetListenMode(void)
+int
+air::KeyListener::_HitKey(void)
 {
-    int fd;
-    struct termios instant_termios;
+    unsigned char ch;
+    int nread;
 
-    instant_termios = setting.default_termios;
-    instant_termios.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &instant_termios);
-
-    fd = fcntl(STDIN_FILENO, F_GETFL, 0);
-    if (-1 != fd)
+    if (-1 != input)
     {
-        fd = fcntl(STDIN_FILENO, F_SETFL, fd | O_NONBLOCK);
-        if (-1 == fd)
-        {
-            std::cout << "KeyListener::_SetListenMode failed\n";
-        }
+        return 1;
     }
+    async_termios.c_cc[VMIN] = 0;
+    tcsetattr(0, TCSANOW, &async_termios);
+    nread = read(0, &ch, 1);
+    async_termios.c_cc[VMIN] = 1;
+    tcsetattr(0, TCSANOW, &async_termios);
+    if (1 == nread)
+    {
+        input = ch;
+    }
+    return 0;
+}
+
+int
+air::KeyListener::_GetCh(void)
+{
+    char ch;
+    if (-1 != input)
+    {
+        ch = input;
+        input = -1;
+        return ch;
+    }
+    if (-1 == read(0, &ch, 1))
+    {
+        return -1;
+    }
+    return ch;
 }
 
 air::EventData
@@ -75,88 +95,107 @@ air::KeyListener::Listening(void)
 {
     EventData event;
 
-    int getchar_result;
-    getchar_result = getchar();
-
-    if (EOF != getchar_result)
+    if (!_HitKey())
     {
-        switch (getchar_result)
-        {
-            case KeyNormal::SPECIAL:
-            {
-                getchar_result = getchar();
-                if (KeySpecial::KEY_ESC == getchar_result)
-                {
-                    event.type = air::EventType::TUI_EXIT;
-                }
-                else if (KeySpecial::KEY_ARROW == getchar_result)
-                {
-                    getchar_result = getchar();
-                    switch (getchar_result)
-                    {
-                        case KeyArrow::KEY_ARROW_UP:
-                        {
-                            event.type = air::EventType::MOVE_UP;
-                            break;
-                        }
-                        case KeyArrow::KEY_ARROW_DOWN:
-                        {
-                            event.type = air::EventType::MOVE_DOWN;
-                            break;
-                        }
-                        case KeyArrow::KEY_ARROW_RIGHT:
-                        {
-                            event.type = air::EventType::MOVE_RIGHT;
-                            break;
-                        }
-                        case KeyArrow::KEY_ARROW_LEFT:
-                        {
-                            event.type = air::EventType::MOVE_LEFT;
-                            break;
-                        }
-                        default:
-                        {
-                            break;
-                        }
-                    }
-                }
+        return event;
+    }
 
-                break;
-            }
-            case KeyNormal::KEY_Q:
-            case KeyNormal::KEY_q:
+    int getchar_result;
+    getchar_result = _GetCh();
+
+    switch (getchar_result)
+    {
+        case KeyNormal::SPECIAL:
+        {
+            getchar_result = _GetCh();
+            if (KeySpecial::KEY_ESC == getchar_result)
             {
                 event.type = air::EventType::TUI_EXIT;
-                break;
             }
-            case KeyNormal::KEY_O:
-            case KeyNormal::KEY_o:
+            else if (KeySpecial::KEY_ARROW == getchar_result)
             {
-                event.type = air::EventType::CLI_RUN;
-                break;
+                getchar_result = _GetCh();
+                switch (getchar_result)
+                {
+                    case KeyArrow::KEY_ARROW_UP:
+                    {
+                        event.type = air::EventType::MOVE_UP;
+                        break;
+                    }
+                    case KeyArrow::KEY_ARROW_DOWN:
+                    {
+                        event.type = air::EventType::MOVE_DOWN;
+                        break;
+                    }
+                    case KeyArrow::KEY_ARROW_RIGHT:
+                    {
+                        event.type = air::EventType::MOVE_RIGHT;
+                        break;
+                    }
+                    case KeyArrow::KEY_ARROW_LEFT:
+                    {
+                        event.type = air::EventType::MOVE_LEFT;
+                        break;
+                    }
+                    default:
+                    {
+                        break;
+                    }
+                }
             }
-            case KeyNormal::KEY_X:
-            case KeyNormal::KEY_x:
-            {
-                event.type = air::EventType::CLI_STOP;
-                break;
-            }
-            case KeyNormal::KEY_I:
-            case KeyNormal::KEY_i:
-            {
-                event.type = air::EventType::CLI_INIT;
-                break;
-            }
-            case KeyNormal::NUM_1... KeyNormal::NUM_9:
-            {
-                event.type = air::EventType::CLI_INTERVAL;
-                event.value = getchar_result - 48;
-                break;
-            }
-            default:
-            {
-                break;
-            }
+
+            break;
+        }
+        case KeyNormal::KEY_Q:
+        case KeyNormal::KEY_q:
+        {
+            event.type = air::EventType::TUI_EXIT;
+            break;
+        }
+        case KeyNormal::KEY_O:
+        case KeyNormal::KEY_o:
+        {
+            event.type = air::EventType::CLI_RUN;
+            break;
+        }
+        case KeyNormal::KEY_X:
+        case KeyNormal::KEY_x:
+        {
+            event.type = air::EventType::CLI_STOP;
+            break;
+        }
+        case KeyNormal::KEY_I:
+        case KeyNormal::KEY_i:
+        {
+            event.type = air::EventType::CLI_INIT;
+            break;
+        }
+        case KeyNormal::NUM_1... KeyNormal::NUM_9:
+        {
+            event.type = air::EventType::CLI_INTERVAL;
+            event.value = getchar_result - 48;
+            break;
+        }
+        case KeyNormal::KEY_B:
+        case KeyNormal::KEY_b:
+        {
+            event.type = air::EventType::VIEW_PREV;
+            break;
+        }
+        case KeyNormal::KEY_N:
+        case KeyNormal::KEY_n:
+        {
+            event.type = air::EventType::VIEW_NEXT;
+            break;
+        }
+        case KeyNormal::KEY_SPACE:
+        {
+            event.type = air::EventType::PLAY_TOGGLE;
+            break;
+        }
+        default:
+        {
+            break;
         }
     }
 

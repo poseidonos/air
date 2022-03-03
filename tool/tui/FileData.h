@@ -22,41 +22,39 @@
  *   SOFTWARE.
  */
 
-#ifndef AIR_TUI_FILE_DETECTOR_H
-#define AIR_TUI_FILE_DETECTOR_H
+#ifndef AIR_TUI_FILE_DATA_H
+#define AIR_TUI_FILE_DATA_H
 
-#include <map>
 #include <string>
-#include <tuple>
-
-typedef std::tuple<int, std::string> filedata;
+#include <vector>
 
 namespace air
 {
-class FileDetector
+class FileData
 {
 public:
-    ~FileDetector(void)
+    explicit FileData(std::string file);
+    bool Update(void);
+    int64_t
+    GetLineCount(void)
     {
-        pid_map.clear();
+        return line_count;
     }
-    filedata Detect(void);
-    void HandleTimeout(void);
+    std::string&
+    GetLine(int64_t index)
+    {
+        return lines[index];
+    }
 
 private:
-    void _Monitoring(void);
-    void _InitData(void);
-    void _UpdatePidMap(void);
-    void _UpdatePidStatus(void);
-    void _SelectPid(void);
-
-    int pid {-1};
-    bool waiting {false};
-    bool exit {false};
-    int candidates {0};
-
-    std::map<int, bool> pid_map;
+    std::string title {""};
+    int64_t line_count {0};
+    int64_t read_data_size {0};
+    int64_t prev_data_size {0};
+    bool update_flag {false};
+    std::vector<std::string> lines;
 };
+
 } // namespace air
 
-#endif // AIR_TUI_FILE_DETECTOR_H
+#endif // AIR_TUI_FILE_DATA_H

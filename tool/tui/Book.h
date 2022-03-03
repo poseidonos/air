@@ -22,41 +22,40 @@
  *   SOFTWARE.
  */
 
-#ifndef AIR_TUI_FILE_DETECTOR_H
-#define AIR_TUI_FILE_DETECTOR_H
+#ifndef AIR_TUI_BOOK_H
+#define AIR_TUI_BOOK_H
 
-#include <map>
 #include <string>
-#include <tuple>
 
-typedef std::tuple<int, std::string> filedata;
+#include "tool/tui/EventType.h"
+#include "tool/tui/FileData.h"
 
 namespace air
 {
-class FileDetector
+class Book
 {
 public:
-    ~FileDetector(void)
+    explicit Book(FileData* file_data);
+    std::string& GetPage(EventType type);
+    std::string& GetLastPage(void);
+    int64_t
+    GetCurrentPageIndex(void)
     {
-        pid_map.clear();
+        return current_page_index;
     }
-    filedata Detect(void);
-    void HandleTimeout(void);
+    int64_t
+    GetMaximumPageIndex(void)
+    {
+        return maximum_page_index;
+    }
+    void UpdatePageIndex(void);
 
 private:
-    void _Monitoring(void);
-    void _InitData(void);
-    void _UpdatePidMap(void);
-    void _UpdatePidStatus(void);
-    void _SelectPid(void);
-
-    int pid {-1};
-    bool waiting {false};
-    bool exit {false};
-    int candidates {0};
-
-    std::map<int, bool> pid_map;
+    FileData* file_data {nullptr};
+    int64_t current_page_index {0};
+    int64_t maximum_page_index {0};
 };
+
 } // namespace air
 
-#endif // AIR_TUI_FILE_DETECTOR_H
+#endif // AIR_TUI_BOOK_H

@@ -29,16 +29,21 @@ namespace air
 {
 enum class EventType : int
 {
+    // DEFAULT ~ VIEW_NEXT : Batch & Real-time
     DEFAULT,
     TUI_EXIT,
     MOVE_UP,
     MOVE_DOWN,
     MOVE_RIGHT,
     MOVE_LEFT,
+    VIEW_PREV,
+    VIEW_NEXT,
+    // CLI_INIT ~ PLAY_TOGGLE : Real-time only
     CLI_INIT,
     CLI_RUN,
     CLI_STOP,
     CLI_INTERVAL,
+    PLAY_TOGGLE,
 };
 
 struct EventData

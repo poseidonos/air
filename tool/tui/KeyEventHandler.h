@@ -34,13 +34,18 @@ namespace air
 enum KeyNormal
 {
     SPECIAL = 27,
+    KEY_SPACE = 32,
     NUM_1 = 49,
     NUM_9 = 57,
+    KEY_B = 66,
     KEY_I = 73,
+    KEY_N = 78,
     KEY_O = 79,
     KEY_Q = 81,
     KEY_X = 88,
+    KEY_b = 98,
     KEY_i = 105,
+    KEY_n = 110,
     KEY_o = 111,
     KEY_q = 113,
     KEY_x = 120,
@@ -60,32 +65,28 @@ enum KeyArrow
     KEY_ARROW_LEFT = 68,
 };
 
-class TerminalSetting
-{
-public:
-    void SaveDefaultTermios(void);
-    void RestoreDefaultTermios(void);
-    struct termios default_termios;
-};
-
 class KeyListener
 {
 public:
     KeyListener()
     {
-        setting.SaveDefaultTermios();
-        _SetListenMode();
+        _InitKeyMode();
     }
     ~KeyListener()
     {
-        setting.RestoreDefaultTermios();
+        _ResetKeyMode();
     }
     EventData Listening(void);
 
 private:
-    void _SetListenMode(void);
+    void _InitKeyMode(void);
+    void _ResetKeyMode(void);
+    int _HitKey(void);
+    int _GetCh(void);
 
-    TerminalSetting setting;
+    struct termios default_termios;
+    struct termios async_termios;
+    int input {-1};
 };
 
 } // namespace air

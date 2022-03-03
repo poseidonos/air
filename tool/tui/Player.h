@@ -22,41 +22,40 @@
  *   SOFTWARE.
  */
 
-#ifndef AIR_TUI_FILE_DETECTOR_H
-#define AIR_TUI_FILE_DETECTOR_H
+#ifndef AIR_TUI_PLAYER_H
+#define AIR_TUI_PLAYER_H
 
-#include <map>
 #include <string>
-#include <tuple>
 
-typedef std::tuple<int, std::string> filedata;
+#include "tool/tui/CliHandler.h"
+#include "tool/tui/ConfigTree.h"
+#include "tool/tui/EventType.h"
+#include "tool/tui/KeyEventHandler.h"
+#include "tool/tui/MoveHandler.h"
+#include "tool/tui/Option.h"
+#include "tool/tui/Viewer.h"
 
 namespace air
 {
-class FileDetector
+class Player
 {
 public:
-    ~FileDetector(void)
-    {
-        pid_map.clear();
-    }
-    filedata Detect(void);
-    void HandleTimeout(void);
+    explicit Player(TuiOption* option);
+    void Run(void);
 
 private:
-    void _Monitoring(void);
-    void _InitData(void);
-    void _UpdatePidMap(void);
-    void _UpdatePidStatus(void);
-    void _SelectPid(void);
+    void _RunBatch(void);
+    void _RunRealTime(void);
 
-    int pid {-1};
-    bool waiting {false};
-    bool exit {false};
-    int candidates {0};
-
-    std::map<int, bool> pid_map;
+    TuiOption* option {nullptr};
+    EventData event;
+    KeyListener key_listener;
+    AConfig tree;
+    MoveHandler move_handler;
+    CLIHandler cli_handler;
+    Viewer viewer;
 };
+
 } // namespace air
 
-#endif // AIR_TUI_FILE_DETECTOR_H
+#endif // AIR_TUI_PLAYER_H

@@ -34,7 +34,7 @@
 #include <string>
 #include <thread>
 
-int
+filedata
 air::FileDetector::Detect(void)
 {
     int fd = fcntl(STDIN_FILENO, F_SETFL, O_APPEND);
@@ -61,7 +61,29 @@ air::FileDetector::Detect(void)
     }
 
     waiting = false;
-    return pid;
+    if (-1 == pid)
+    {
+        filedata err {pid, ""};
+        return err;
+    }
+
+    std::string file {"/tmp/air_"};
+    time_t curr_time = time(NULL);
+    tm* curr_tm = localtime(&curr_time);
+    file += std::to_string(curr_tm->tm_year + 1900);
+    if (curr_tm->tm_mon + 1 < 10)
+    {
+        file += "0";
+    }
+    file += std::to_string(curr_tm->tm_mon + 1);
+    if (curr_tm->tm_mday < 10)
+    {
+        file += "0";
+    }
+    file += std::to_string(curr_tm->tm_mday);
+    file += "_" + std::to_string(pid) + ".json";
+    filedata result {pid, file};
+    return result;
 }
 
 void

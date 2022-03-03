@@ -22,41 +22,40 @@
  *   SOFTWARE.
  */
 
-#ifndef AIR_TUI_FILE_DETECTOR_H
-#define AIR_TUI_FILE_DETECTOR_H
+#include "tool/tui/Option.h"
 
-#include <map>
-#include <string>
-#include <tuple>
+#include <iostream>
 
-typedef std::tuple<int, std::string> filedata;
-
-namespace air
+void
+air::TuiOption::GetOptions(int argc, char** argv)
 {
-class FileDetector
-{
-public:
-    ~FileDetector(void)
+    while (true)
     {
-        pid_map.clear();
+        const auto opt = getopt_long(argc, argv, short_opts, long_opts, nullptr);
+
+        if (-1 == opt)
+            break;
+
+        switch (opt)
+        {
+            case 'f':
+                file = std::string(optarg);
+                has_file = true;
+                break;
+
+            case 'h':
+            case '?':
+            default:
+                _ShowHelp();
+                break;
+        }
     }
-    filedata Detect(void);
-    void HandleTimeout(void);
+}
 
-private:
-    void _Monitoring(void);
-    void _InitData(void);
-    void _UpdatePidMap(void);
-    void _UpdatePidStatus(void);
-    void _SelectPid(void);
-
-    int pid {-1};
-    bool waiting {false};
-    bool exit {false};
-    int candidates {0};
-
-    std::map<int, bool> pid_map;
-};
-} // namespace air
-
-#endif // AIR_TUI_FILE_DETECTOR_H
+void
+air::TuiOption::_ShowHelp(void)
+{
+    std::cout << "--file(f) <filename>:     File to read AIR data\n"
+                 "--help(h):                Show help\n";
+    exit(1);
+}

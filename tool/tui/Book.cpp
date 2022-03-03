@@ -22,41 +22,52 @@
  *   SOFTWARE.
  */
 
-#ifndef AIR_TUI_FILE_DETECTOR_H
-#define AIR_TUI_FILE_DETECTOR_H
+#include "tool/tui/Book.h"
 
-#include <map>
-#include <string>
-#include <tuple>
+#include <unistd.h>
 
-typedef std::tuple<int, std::string> filedata;
-
-namespace air
+air::Book::Book(FileData* file_data): file_data(file_data)
 {
-class FileDetector
-{
-public:
-    ~FileDetector(void)
+    while (file_data->Update())
     {
-        pid_map.clear();
+        usleep(1000);
     }
-    filedata Detect(void);
-    void HandleTimeout(void);
+    maximum_page_index = file_data->GetLineCount();
+}
 
-private:
-    void _Monitoring(void);
-    void _InitData(void);
-    void _UpdatePidMap(void);
-    void _UpdatePidStatus(void);
-    void _SelectPid(void);
+std::string&
+air::Book::GetPage(EventType type)
+{
+    maximum_page_index = file_data->GetLineCount();
 
-    int pid {-1};
-    bool waiting {false};
-    bool exit {false};
-    int candidates {0};
+    if (EventType::VIEW_PREV == type)
+    {
+        if (0 < current_page_index)
+        {
+            current_page_index--;
+        }
+    }
+    else if (EventType::VIEW_NEXT == type)
+    {
+        if (maximum_page_index - 1 > current_page_index)
+        {
+            current_page_index++;
+        }
+    }
 
-    std::map<int, bool> pid_map;
-};
-} // namespace air
+    return file_data->GetLine(current_page_index);
+}
 
-#endif // AIR_TUI_FILE_DETECTOR_H
+std::string&
+air::Book::GetLastPage(void)
+{
+    maximum_page_index = file_data->GetLineCount();
+    current_page_index = maximum_page_index - 1;
+    return file_data->GetLine(current_page_index);
+}
+
+void
+air::Book::UpdatePageIndex(void)
+{
+    maximum_page_index = file_data->GetLineCount();
+}
