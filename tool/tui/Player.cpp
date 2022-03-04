@@ -81,8 +81,8 @@ air::Player::_RunBatch(void)
 
         if (update_render)
         {
-            viewer.Render(ViewMode::OFFLINE, tree, json_string, current_page_index,
-                maximum_page_index);
+            viewer.Render(TuiMode::OFFLINE, TuiStatus::PAUSE, tree, json_string,
+                current_page_index, maximum_page_index);
         }
 
         usleep(1000); // 1ms sleep for cpu efficiencyj
@@ -108,6 +108,8 @@ air::Player::_RunRealTime(void)
     int64_t maximum_page_index {book.GetMaximumPageIndex()};
     bool update_render {true};
     bool pause {false};
+    bool stop {false};
+    TuiStatus tui_status {TuiStatus::PLAY};
 
     while (EventType::TUI_EXIT != event.type)
     {
@@ -131,6 +133,16 @@ air::Player::_RunRealTime(void)
                 break;
             case EventType::CLI_INIT... EventType::CLI_INTERVAL:
                 cli_handler.HandleCLI(event, tree, pid);
+                if (EventType::CLI_STOP == event.type && tree.pos_top)
+                {
+                    stop = true;
+                    update_render = true;
+                }
+                else if (EventType::CLI_RUN == event.type && tree.pos_top)
+                {
+                    stop = false;
+                    update_render = true;
+                }
                 break;
             default:
                 break;
@@ -153,8 +165,23 @@ air::Player::_RunRealTime(void)
 
         if (update_render)
         {
-            viewer.Render(ViewMode::ONLINE, tree, json_string, current_page_index,
-                maximum_page_index, pid, pause);
+            if (stop)
+            {
+                tui_status = TuiStatus::STOP;
+            }
+            else
+            {
+                if (pause)
+                {
+                    tui_status = TuiStatus::PAUSE;
+                }
+                else
+                {
+                    tui_status = TuiStatus::PLAY;
+                }
+            }
+            viewer.Render(TuiMode::ONLINE, tui_status, tree, json_string,
+                current_page_index, maximum_page_index, pid);
         }
 
         usleep(1000); // 1ms sleep for cpu efficiency

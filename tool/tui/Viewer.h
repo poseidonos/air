@@ -33,10 +33,17 @@
 
 namespace air
 {
-enum class ViewMode : int
+enum class TuiMode : int
 {
     OFFLINE,
     ONLINE,
+};
+
+enum class TuiStatus : int
+{
+    PLAY,
+    PAUSE,
+    STOP,
 };
 
 enum class NodeType : int
@@ -53,17 +60,17 @@ enum class NodeType : int
 class Viewer
 {
 public:
-    void Render(ViewMode view_mode, AConfig& tree, std::string& json_string,
-        int64_t current_page_index, int64_t maximum_page_index, int pid = -1,
-        bool pause = false);
+    void Render(TuiMode tui_mode, TuiStatus tui_status, AConfig& tree,
+        std::string& json_string, int64_t current_page_index,
+        int64_t maximum_page_index, int pid = -1);
 
 private:
     void _ClearWindow(void);
-    void _Draw(ViewMode view_mode, AConfig& tree, std::string& json_string,
-        int64_t current_page_index, int64_t maximum_page_index, int pid,
-        bool pause);
-    void _DrawHeadline(ViewMode view_mode, int64_t current_page_index,
-        int64_t maximum_page_index, int pid, bool pause);
+    void _Draw(TuiMode tui_mode, TuiStatus tui_status, AConfig& tree,
+        std::string& json_string, int64_t current_page_index,
+        int64_t maximum_page_index, int pid);
+    void _DrawHeadline(TuiMode tui_mode, TuiStatus tui_status,
+        int64_t current_page_index, int64_t maximum_page_index, int pid);
     void _DrawGroup(AConfig& tree);
     void _DrawNode(ANode& tree, std::string name, JSONdoc& doc);
     void _SumData(JSONdoc& doc, NodeType type);

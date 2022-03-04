@@ -226,35 +226,35 @@ There is a way to visualize AIR data.
 TUI is a primitive and direct way. User can see the result on the machine where the application run. TUI displays the latest time result. To run TUI, just execute `air_tui` on the terminal.
 
 ```
-AIR TUI status: [play],  interval: [3],  timestamp: 2021-5-20:17:34:52, pid: 22232
-arrow up/down: movement, arrow right/left: unfold/fold, q(esc): quit, 1~9: interval, i: init, o: run, x: stop
+TUI mode: [online], status: [play], page: [6/6],  interval: [3],  timestamp: 2022-3-4:11:12:2, pid: 27019
+key {↑/↓}: move, {→/←}: (un)fold, {b}: perv page, {n}: next page, {space}: play/pause
+    {1~9}: streaming interval, {i}: init, {o}: run, {x}: stop, {q(esc)}: quit
 (*)   Top
-( )   +Group:SUBMIT
-( )[O]++Node:Q_SUBMISSION("queue")
-      "ProcessIO"(22237), index:0, filter:"AIR_BASE" Period(avg:209.7 , max:256.0 ), Total(avg:192.1 , max:256.0 )
-      "ProcessIO"(22238), index:1, filter:"AIR_BASE" Period(avg:230.2 , max:256.0 ), Total(avg:213.4 , max:256.0 )
-( )[O]++Node:UTIL_SUBMIT_THR("utilization")
-      "SubmitIO"(22236), index:0, filter:"AIR_SUBMIT" Period(usage:33.9m , 20.47%), Total(usage:96.5m , 20.59%)
-      "SubmitIO"(22236), index:1, filter:"AIR_SUBMIT" Period(usage:33.9m , 20.47%), Total(usage:96.5m , 20.59%)
-      "ProcessIO"(22237), index:0, filter:"AIR_PROCESS" Period(usage:30.9m , 18.69%), Total(usage:86.2m , 18.39%)
-      "ProcessIO"(22238), index:1, filter:"AIR_PROCESS" Period(usage:28.8m , 17.40%), Total(usage:82.7m , 17.67%)
-      "CompleteIO"(22239), index:0, filter:"AIR_COMPLETE" Period(usage:9.2m  , 5.59%), Total(usage:25.5m , 5.44%)
-      "CompleteIO"(22239), index:1, filter:"AIR_COMPLETE" Period(usage:28.8m , 17.38%), Total(usage:81.1m , 17.32%)
-( )   +Group:PROCESS
+( )   +Group:COMMON
 ( )[O]++Node:LAT_IO_PATH("latency")
-      ""(0), index:0, filter:"AIR_0~AIR_1" Period(avg:308ns, median:158ns, max:1us  , sample:100.0 ), Total(avg:373ns, median:172ns, max:10us , sample:300.0 )
-      ""(0), index:0, filter:"AIR_1~AIR_2" Period(avg:6us  , median:6us  , max:14us , sample:100.0 ), Total(avg:110us, median:110us, max:259us, sample:180.0 )
-      ""(0), index:0, filter:"AIR_2~AIR_3" Period(avg:6us  , median:5us  , max:14us , sample:100.0 ), Total(avg:4us  , median:3us  , max:22us , sample:294.0 )
-      ""(0), index:1, filter:"AIR_0~AIR_1" Period(avg:283ns, median:212ns, max:1us  , sample:100.0 ), Total(avg:318ns, median:176ns, max:12us , sample:289.0 )
-      ""(0), index:1, filter:"AIR_1~AIR_2" Period(avg:0ns  , median:0ns  , max:0ns  , sample:0.0   ), Total(avg:336us, median:344us, max:367us, sample:75.0  )
-      ""(0), index:1, filter:"AIR_2~AIR_3" Period(avg:22us , median:22us , max:27us , sample:90.0  ), Total(avg:10us , median:9us  , max:27us , sample:277.0 )
+      ""(0), index:0x0, filter:"AIR_0~AIR_1" Period(avg:262ns, median:126ns, max:5.7us, sample:99     ), Cumulation(avg:507ns, median:188ns, max:95us , sample:499    )
+      ""(0), index:0x0, filter:"AIR_1~AIR_2" Period(avg:224us, median:222us, max:233us, sample:54     ), Cumulation(avg:224us, median:222us, max:233us, sample:54     )
+      ""(0), index:0x1, filter:"AIR_0~AIR_1" Period(avg:224ns, median:140ns, max:1.1us, sample:94     ), Cumulation(avg:259ns, median:151ns, max:6.5us, sample:479    )
 ( )[O]++Node:LAT_PROCESS("latency")
-      ""(0), index:0, filter:"AIR_0~AIR_1" Period(avg:648ns, median:630ns, max:6us  , sample:99.0  ), Total(avg:675ns, median:469ns, max:12us , sample:298.0 )
-      ""(0), index:1, filter:"AIR_0~AIR_1" Period(avg:723ns, median:540ns, max:4us  , sample:100.0 ), Total(avg:811ns, median:617ns, max:11us , sample:300.0 )
+      ""(0), index:0x200, filter:"AIR_0~AIR_1" Period(avg:497ns, median:361ns, max:1.6us, sample:99     ), Cumulation(avg:685ns, median:426ns, max:9.7us, sample:497    )
+      ""(0), index:0x201, filter:"AIR_0~AIR_1" Period(avg:587ns, median:436ns, max:4.1us, sample:100    ), Cumulation(avg:780ns, median:533ns, max:9.8us, sample:498    )
 ( )[O]++Node:PERF_BENCHMARK("performance")
-        SUM_Period(iops:2.0m  , bw:8.1GB  )
-      "CompleteIO"(22239), index:0, filter:"AIR_READ" Period(iops:1.0m  , bw:4.2GB  , "4096(sz)-3081587(cnt)"), Total(iops_avg:943.0k, bw_avg:3.9GB  )
-      "CompleteIO"(22239), index:1, filter:"AIR_READ" Period(iops:958.7k, bw:3.9GB  , "4096(sz)-2876159(cnt)"), Total(iops_avg:901.3k, bw_avg:3.7GB  )
+        SUM Period(iops:2.1M   , bw:8.8GB   ), Cumulation(iops:2.1M   , bw:8.7GB   )
+      "CompleteIO"(27027), index:0x200, filter:"AIR_READ" Period(iops:1.1M   , bw:4.4GB   , count:[{"4096": 3609331}]), Cumulation(iops:1.1M   , bw:4.4GB   )
+      "CompleteIO"(27027), index:0x201, filter:"AIR_READ" Period(iops:1.1M   , bw:4.4GB   , count:[{"4096": 3624199}]), Cumulation(iops:1.1M   , bw:4.4GB   )
+( )   +Group:COMPLETE
+( )[O]++Node:LAT_COMPLETE("latency")
+      ""(0), index:0x0, filter:"AIR_0~AIR_1" Period(avg:92ns , median:67ns , max:512ns, sample:100    ), Cumulation(avg:152ns, median:99ns , max:5.8us, sample:500    )
+( )[.]..Node:Q_COMPLETION
+( )   +Group:SUBMIT
+( )[O]++Node:CNT_TEST_EVENT("count")
+      "CompleteIO"(27027), index:0x0, filter:"AIR_COMPLETE" Period(count:3.6M   ), Cumulation(count:14.4M  )
+      "CompleteIO"(27027), index:0x1, filter:"AIR_COMPLETE" Period(count:-3.6M  ), Cumulation(count:-14.3M )
+( )[O]++Node:LAT_SUBMIT("latency")
+      ""(0), index:0x0, filter:"AIR_0~AIR_1" Period(avg:236ns, median:136ns, max:940ns, sample:100    ), Cumulation(avg:331ns, median:195ns, max:7.1us, sample:482    )
+( )[O]++Node:Q_SUBMISSION("queue")
+      "ProcessIO"(27025), index:0x0, filter:"AIR_BASE" Period(avg:251.4  , max:256.0  ), Cumulation(avg:250.8  , max:256.0  )
+      "ProcessIO"(27026), index:0x1, filter:"AIR_BASE" Period(avg:251.9  , max:256.0  ), Cumulation(avg:251.5  , max:256.0  )
 ```
 
 In TUI, user can control AIR CLI in real-time.

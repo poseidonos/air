@@ -420,9 +420,9 @@ airlog("PERF_Volume", "AIR_READ" ubio->volume_id, ubio->size);
 
 ```
 ( )[O]++Node:PERF_Volume("performance")
-        SUM_Period(iops:2.0m  , bw:8.1GB  )
-      "Thread_01"(22239), index:3, filter:"AIR_READ" Period(iops:1.0m  , bw:4.2GB  , "4096(sz)-3081587(cnt)"), Total(iops_avg:943.0k, bw_avg:3.9GB  )
-      "Thread_05"(22243), index:1, filter:"AIR_READ" Period(iops:958.7k, bw:3.9GB  , "4096(sz)-2876159(cnt)"), Total(iops_avg:901.3k, bw_avg:3.7GB  )
+        SUM Period(iops:2.1M   , bw:8.8GB   ), Cumulation(iops:2.1M   , bw:8.7GB   )
+      "CompleteIO"(27027), index:0x3, filter:"AIR_WRITE" Period(iops:1.1M   , bw:4.4GB   , count:[{"4096": 3609331}]), Cumulation(iops:1.1M   , bw:4.4GB   )
+      "CompleteIO"(27027), index:0x3, filter:"AIR_READ"  Period(iops:1.1M   , bw:4.4GB   , count:[{"4096": 3624199}]), Cumulation(iops:1.1M   , bw:4.4GB   )
 ```
 
 #### 3.2.2.2. Latency Log
@@ -455,7 +455,7 @@ airlog("AsyncIO_Read", "BDEV_COPY", 0, ubio->address);
 /* Do Read */
 }
 …
-airlog("AsyncIO_Read", 0, "BDEV_COMPLETE", ubio->address);
+airlog("AsyncIO_Read", "BDEV_COMPLETE", 0, ubio->address);
 
 /*
     latency break down
@@ -467,8 +467,8 @@ airlog("AsyncIO_Read", 0, "BDEV_COMPLETE", ubio->address);
 
 ```
 ( )[O]++Node:AsyncIO_Read("latency")
-      ""(0), index:0, filter:"BDEV_SUBMIT~BDEV_COPY" Period(avg:308ns, median:158ns, max:1us  , sample:100.0 ), Total(avg:373ns, median:172ns, max:10us , sample:300.0 )
-      ""(0), index:0, filter:"BDEV_COPY~BDEV_COMPLETE" Period(avg:6us  , median:6us  , max:14us , sample:100.0 ), Total(avg:110us, median:110us, max:259us, sample:180.0 )
+      ""(0), index:0x0, filter:"BDEV_SUBMIT~BDEV_COPY" Period(avg:262ns, median:126ns, max:5.7us, sample:99     ), Cumulation(avg:507ns, median:188ns, max:95us , sample:499    )
+      ""(0), index:0x0, filter:"BDEV_COPY~BDEV_COMPLETE" Period(avg:224us, median:222us, max:233us, sample:54     ), Cumulation(avg:224us, median:222us, max:233us, sample:54     )
 ```
 
 #### 3.2.2.3. Queue Log
@@ -501,7 +501,8 @@ airlog("Q_Scheduler", "IOScheduler", 3, queue.size());
 
 ```
 ( )[O]++Node:Q_Scheduler("queue")
-      "IOScheduler"(3528), index:3, filter:"IOScheduler" Period(avg:209.7 , max:256.0 ), Total(avg:192.1 , max:256.0 )
+      "IOScheduler01"(27025), index:0x3, filter:"IOScheduler" Period(avg:251.4  , max:256.0  ), Cumulation(avg:250.8  , max:256.0  )
+      "IOScheduler02"(27026), index:0x3, filter:"IOScheduler" Period(avg:251.9  , max:256.0  ), Cumulation(avg:251.5  , max:256.0  )
 ```
 
 #### 3.2.2.4. Utilization Log
@@ -535,12 +536,12 @@ airlog("UTIL_reactor", "IDLE", function_id, tick);
 
 ```
 ( )[O]++Node:UTIL_reactor("utilization")
-      "Reactor_01"(22236), index:0, filter:"BUSY" Period(usage:33.9m , 20.47%), Total(usage:96.5m , 20.59%)
-      "Reactor_01"(22236), index:1, filter:"BUSY" Period(usage:33.9m , 20.47%), Total(usage:96.5m , 20.59%)
-      "Reactor_02"(22237), index:0, filter:"IDLE" Period(usage:30.9m , 18.69%), Total(usage:86.2m , 18.39%)
-      "Reactor_02"(22238), index:1, filter:"BUSY" Period(usage:28.8m , 17.40%), Total(usage:82.7m , 17.67%)
-      "Reactor_03"(22239), index:0, filter:"BUSY" Period(usage:9.2m  , 5.59%), Total(usage:25.5m , 5.44%)
-      "Reactor_03"(22239), index:1, filter:"IDLE" Period(usage:28.8m , 17.38%), Total(usage:81.1m , 17.32%)
+      "Reactor01"(28207), index:0x0, filter:"BUSY" Period(usage:62.8M  , 25.27%), Cumulation(usage:177.8M , 24.88%)
+      "Reactor01"(28207), index:0x0, filter:"IDLE" Period(usage:62.8M  , 25.27%), Cumulation(usage:177.8M , 24.88%)
+      "Reactor02"(28208), index:0x1, filter:"BUSY" Period(usage:36.2M  , 14.56%), Cumulation(usage:106.1M , 14.85%)
+      "Reactor02"(28208), index:0x1, filter:"IDLE" Period(usage:38.0M  , 15.27%), Cumulation(usage:110.6M , 15.47%)
+      "Reactor03"(28209), index:0x2, filter:"BUSY" Period(usage:10.9M  , 4.37%), Cumulation(usage:31.8M  , 4.45%)
+      "Reactor03"(28209), index:0x2, filter:"IDLE" Period(usage:38.0M  , 15.27%), Cumulation(usage:110.6M , 15.47%)
 ```
 
 #### 3.2.2.5. Count Log
@@ -574,8 +575,8 @@ airlog("COUNT_FlowControl", "FreeBlock", 0, -1);
 
 ```
 ( )[O]++Node:COUNT_FlowControl("count")
-      "IOWorker"(7343), index:0, filter:"FreeBlock" Period(count:12 ), Total(count:30.3 )
-      "IOWorker"(7347), index:0, filter:"FreeBlock" Period(count:3  ), Total(count:6.2  )
+      "EventScheduler"(28210), index:0x0, filter:"FreeBlock" Period(count:3.6M   ), Cumulation(count:10.6M  )
+      "EventScheduler"(28210), index:0x0, filter:"FreeBlock" Period(count:-3.8M  ), Cumulation(count:-11.1M )
 ```
 
 #### 3.2.2.6. Histogram Log
@@ -600,9 +601,9 @@ airlog(string_literal node_name, string_literal filter_item, uint64_t index, int
 **[API Use Case]**
 
 ```
-airlog("HIST_SAMPLE_3", "AIR_0", 0, -100);
+airlog("HIST_SAMPLE_3", "AIR_0", index, -100);
 ...
-airlog("HIST_SAMPLE_6", "AIR_BASE", 1, 99999);
+airlog("HIST_SAMPLE_6", "AIR_BASE", 0, 99999);
 ```
 
 **[TUI result]**
@@ -618,7 +619,7 @@ airlog("HIST_SAMPLE_6", "AIR_BASE", 1, 99999);
         Period         0       40      80              0          |0      |0      |0      |0      |0      |18.9K  |18.9K  |18.9K  |18.9K  |      18.9K
         Cumulation     0       40      80              0          |0      |0      |0      |0      |0      |94.3K  |94.3K  |94.3K  |94.3K  |      94.3K
 ( )[O]++Node:HIST_SAMPLE_6("histogram")
-      "HistogramLog"(19471), index:0x0, filter:"AIR_0", bucket_type:"exponential"
+      "HistogramLog"(19471), index:0x0, filter:"AIR_BASE", bucket_type:"exponential"
         Unit    value:(minimum/average/maximum) count:(underflow -1.0K   -100    -10     -1  0   1       10      100     1.0K    10.0K   100.0K  overflow)
         Period         -1.0K   6.7K    100.0K          18.9K      |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |18.9K  |      18.9K
         Cumulation     -1.0K   6.7K    100.0K          94.3K      |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |94.3K  |      94.3K
@@ -643,7 +644,7 @@ From AIR 0.2.0-alpha, AIR can profile SPDK source code. Since SPDK is based on C
 The AIR TUI(Text User Interface) is the visualization tool shows profiling results in text. The profiling results are shown according to the type of node in real-time. In every dump interval, profiling result is updated. The profiling result of each node is thread-aware, also each thread breaks down. Resource profiling results are shown bottom of the normal data and detailed data page. This keys are basic commands of TUI. The detailed description is below.
 
 ```
-$ air_tui
+$ air_tui [options] ...
 ```
 
 | key    | Description                                                  |
@@ -655,8 +656,17 @@ $ air_tui
 | q, esc | quit TUI                                                     |
 | ↑,↓    | move cursor position                                         |
 | ←,→    | Fold or spread group/node data                               |
+| b      | view previous page                                           |
+| n      | view next page                                               |
+| space  | toggle play/pause                                            |
 
+### 4.1. Options
 
+- ***--file(f)=str***
+
+  With this option, air_tui reads a file and parses the data. Without this option, air_tui detects a writing(data appending) file from /tmp/air_xxx.json format.
+
+  ex) air_tui --file=<path/file_name>
 
 ## 5. CLI
 
@@ -672,7 +682,7 @@ $ air_cli --pid=<target_pid> [options] ...
 
   Enable/Disable the air. Default is true.
 
-  ex) ./air_cli --pid=<target_pid> --run=<true/false>
+  ex) air_cli --pid=<target_pid> --run=<true/false>
 
 
 

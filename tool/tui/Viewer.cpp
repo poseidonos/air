@@ -42,12 +42,13 @@
 #define PURPLE "\033[1m\033[35m"
 
 void
-air::Viewer::Render(ViewMode view_mode, AConfig& tree, std::string& json_string,
-    int64_t current_page_index, int64_t maximum_page_index, int pid, bool pause)
+air::Viewer::Render(TuiMode tui_mode, TuiStatus tui_status, AConfig& tree,
+    std::string& json_string, int64_t current_page_index,
+    int64_t maximum_page_index, int pid)
 {
     _ClearWindow();
-    _Draw(view_mode, tree, json_string, current_page_index, maximum_page_index, pid,
-        pause);
+    _Draw(tui_mode, tui_status, tree, json_string, current_page_index,
+        maximum_page_index, pid);
 }
 
 void
@@ -63,8 +64,9 @@ air::Viewer::_ClearWindow(void)
 }
 
 void
-air::Viewer::_Draw(ViewMode view_mode, AConfig& tree, std::string& json_string,
-    int64_t current_page_index, int64_t maximum_page_index, int pid, bool pause)
+air::Viewer::_Draw(TuiMode tui_mode, TuiStatus tui_status, AConfig& tree,
+    std::string& json_string, int64_t current_page_index,
+    int64_t maximum_page_index, int pid)
 {
     struct winsize ws;
     ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
@@ -76,7 +78,7 @@ air::Viewer::_Draw(ViewMode view_mode, AConfig& tree, std::string& json_string,
     try
     {
         _DrawHeadline(
-            view_mode, current_page_index, maximum_page_index, pid, pause);
+            tui_mode, tui_status, current_page_index, maximum_page_index, pid);
         _DrawGroup(tree);
     }
     catch (const std::exception& e)
@@ -87,42 +89,45 @@ air::Viewer::_Draw(ViewMode view_mode, AConfig& tree, std::string& json_string,
 }
 
 void
-air::Viewer::_DrawHeadline(ViewMode view_mode, int64_t current_page_index,
-    int64_t maximum_page_index, int pid, bool pause)
+air::Viewer::_DrawHeadline(TuiMode tui_mode, TuiStatus tui_status,
+    int64_t current_page_index, int64_t maximum_page_index, int pid)
 {
     auto& head = air::json("data");
     std::stringstream stream;
 
-    std::cout << "AIR TUI status: [";
-    if (ViewMode::OFFLINE == view_mode)
+    std::cout << "TUI mode: [";
+    switch (tui_mode)
     {
-        std::cout << BLUE << "offline" << RESET;
+        case TuiMode::OFFLINE:
+            std::cout << BLUE << "offline" << RESET;
+            break;
+        case TuiMode::ONLINE:
+            std::cout << BLUE << "online" << RESET;
+            break;
+        default:
+            break;
     }
-    else
+
+    std::cout << "], status: [";
+    switch (tui_status)
     {
-        stream << head["play"];
-        std::string status {stream.str()};
-        if (std::string::npos != status.find("true"))
-        {
-            if (pause)
-            {
-                std::cout << PURPLE << "pause" << RESET;
-            }
-            else
-            {
-                std::cout << GREEN << "online" << RESET;
-            }
-        }
-        else
-        {
+        case TuiStatus::PLAY:
+            std::cout << GREEN << "play" << RESET;
+            break;
+        case TuiStatus::PAUSE:
+            std::cout << PURPLE << "pause" << RESET;
+            break;
+        case TuiStatus::STOP:
             std::cout << RED << "stop" << RESET;
-        }
+            break;
+        default:
+            break;
     }
 
     std::cout << "], page: [";
     std::cout << GREEN << current_page_index + 1 << RESET;
     std::cout << "/";
-    if (ViewMode::OFFLINE == view_mode)
+    if (TuiMode::OFFLINE == tui_mode)
     {
         std::cout << BLUE << maximum_page_index << RESET;
     }
@@ -132,7 +137,7 @@ air::Viewer::_DrawHeadline(ViewMode view_mode, int64_t current_page_index,
     }
 
     std::cout << "],  interval: [";
-    if (ViewMode::OFFLINE == view_mode)
+    if (TuiMode::OFFLINE == tui_mode)
     {
         std::cout << head["interval"];
     }
@@ -154,7 +159,7 @@ air::Viewer::_DrawHeadline(ViewMode view_mode, int64_t current_page_index,
     std::cout << tm->tm_year + 1900 << "-" << tm->tm_mon + 1 << "-" << tm->tm_mday
               << ":" << tm->tm_hour << ":" << tm->tm_min << ":" << tm->tm_sec;
 
-    if (ViewMode::ONLINE == view_mode)
+    if (TuiMode::ONLINE == tui_mode)
     {
         std::cout << ", pid: " << pid;
     }
@@ -162,7 +167,7 @@ air::Viewer::_DrawHeadline(ViewMode view_mode, int64_t current_page_index,
     std::cout << std::endl;
     curr_row++;
 
-    if (ViewMode::OFFLINE == view_mode)
+    if (TuiMode::OFFLINE == tui_mode)
     {
         std::cout << "key {\u2191/\u2193}: move, {\u2192/\u2190}: (un)fold, "
                      "{b}: perv page, {n}: next page, {q(esc)}: quit\n";
