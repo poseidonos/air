@@ -9,3 +9,6 @@ else()
     target_compile_options(air PRIVATE -std=c++14 -Wall -Werror -O3 -mavx2 -fPIC -fconstexpr-loop-limit=123456789)
 endif()
 target_link_libraries(air pthread)
+install(TARGETS air
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

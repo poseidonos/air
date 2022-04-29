@@ -27,5 +27,4 @@ add_subdirectory(tool)
 add_subdirectory(src)
 add_dependencies(air run_c_interface_gen)
 
-install(FILES build/src/libair.a DESTINATION /usr/local/lib)
-install(FILES src/api/Air.h src/api/Air_c.h DESTINATION /usr/local/include/air)
+install(FILES src/api/Air.h src/api/Air_c.h DESTINATION ${CMAKE_INSTALL_PREFIX}/include/air)
