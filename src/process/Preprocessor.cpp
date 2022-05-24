@@ -113,8 +113,16 @@ process::Preprocessor::_ConvertData(void)
             lib::LatencyData* lat_data = data.done_to.back();
             for (auto& timelog : lat_data->end_v)
             {
-                data.timelog_to.push_back(timelog);
-                need_update = true;
+                if (data.timelog_to_size < MAX_TIMELOG_TO_SIZE - 1)
+                {
+                    data.timelog_to[data.timelog_to_size] = timelog;
+                    data.timelog_to_size++;
+                    need_update = true;
+                }
+                else
+                {
+                    break;
+                }
             }
             data.done_to.pop_back();
         }
@@ -138,8 +146,9 @@ process::Preprocessor::_MatchData(void)
         }
         data.update = false;
 
-        for (auto& timelog : data.timelog_to)
+        for (uint32_t index {0}; index < data.timelog_to_size; index++)
         {
+            auto& timelog {data.timelog_to[index]};
             auto it_match = data.timestamp_from.find(timelog.key);
             if (it_match != data.timestamp_from.end())
             {
@@ -178,7 +187,7 @@ process::Preprocessor::_CleanData(int option)
             data.done_from.clear();
             data.done_to.clear();
             data.timestamp_from.clear();
-            data.timelog_to.clear();
+            data.timelog_to_size = 0;
         }
         match_map.clear();
     }
