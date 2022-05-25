@@ -172,7 +172,7 @@ public:
     static constexpr int32_t
     CheckValueRule(ParagraphType type, air::string_view sentence)
     {
-        if (0 > ConfigCheckerValue::CheckValueValidity(type, sentence))
+        if (0 > ConfigCheckerValue::CheckValueValidity(type, node_keys, sentence))
         {
             throw std::logic_error("Value violation");
         }

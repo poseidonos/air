@@ -679,7 +679,18 @@ TEST_F(ConfigCheckerTest, CheckValueRulePass)
             "Filter: Basic"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_DefaultType)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_NodeType_ForbiddenWords)
+{
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::FILTER,
+        "Filter: FILTER_IoGroup, Item: (F1_AAA, F1_BBB)"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::GROUP,
+        "Group: NodeA, NodeBuild: True, NodeRun: On"));
+    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
+        "Node: PERF_TypeA, Type: PERFORMANCE, Build: True, Run: On, "
+        "Group: POS_JOURNAL"));
+}
+
+TEST_F(ConfigCheckerTest, ValueValidityViolation_DefaultType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:199, AirBuild:True, NodeBuild:True, NodeRun:On, "
@@ -737,7 +748,7 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_DefaultType)
         "NodeSamplingRatio: 1000, NodeIndexSize: 4294967296"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_GroupType)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_GroupType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::GROUP,
         "Group: CANNOT_EXCEED_30_CHARACTERS_IN_STRING_TYPE_DATA, NodeBuild: False, "
@@ -750,7 +761,7 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_GroupType)
         "Group: POS_RSC, NodeBuild: False, NodeRun: On, NodeSamplingRatio: 0"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_FilterType)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_FilterType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::FILTER,
         "Filter: CANNOT_EXCEED_30_CHARACTERS_IN_STRING_TYPE_DATA, Item: (F1_AAA, "
@@ -799,7 +810,7 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_FilterType)
         config::ParagraphType::FILTER, "Filter: F6, Item: (F6_0, F6_1 F6_2, )"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_ScaleMissing)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_BucketType_ScaleMissing)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET,
         "Bucket: BUCKET_1, Bounds: [0, 100), Scale: "));
@@ -807,7 +818,7 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_ScaleMissing)
         "Bucket: BUCKET_1, Bounds: (-100, 100), Scale: "));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_InvalidScale)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_BucketType_InvalidScale)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET,
         "Bucket: BUCKET_1, Bounds: [0, 100), Scale: -10"));
@@ -823,7 +834,7 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_InvalidScale)
         "Bucket: BUCKET_5, Bounds: (-4^6, -4^2], Scale: 16^"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_BucketSizeOverflow)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_BucketType_BucketSizeOverflow)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET,
         "Bucket: BUCKET_1, Bounds: [0, 100), Scale: 2"));
@@ -831,7 +842,7 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_BucketSizeOverflow)
         "Bucket: BUCKET_1, Bounds: (-2^9, 2^9), Scale: 2^"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_BucketSizeUnderflow)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_BucketType_BucketSizeUnderflow)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET,
         "Bucket: BUCKET_4, Bounds: [8, 4), Scale: 2^"));
@@ -843,13 +854,13 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_BucketSizeUnderflow)
         "Bucket: BUCKET_4, Bounds: [-10, -22), Scale: 2"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_MissingBounds)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_BucketType_MissingBounds)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(
         config::ParagraphType::BUCKET, "Bucket: BUCKET_1, Bounds: , Scale: 10"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_MissingBrace)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_BucketType_MissingBrace)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET,
         "Bucket: BUCKET_1, Bounds: [0, 100, Scale: 10"));
@@ -859,13 +870,13 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_MissingBrace)
         "Bucket: BUCKET_1, Bounds: 0, 100, Scale: 10"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_MissingComma)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_BucketType_MissingComma)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET,
         "Bucket: BUCKET_4, Bounds: [2^0 2^10), Scale: 2^"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_InvalidBrace)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_BucketType_InvalidBrace)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET,
         "Bucket: BUCKET_4, Bounds: (2^0, 2^10), Scale: 2^"));
@@ -887,7 +898,7 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_InvalidBrace)
         "Bucket: BUCKET_6, Bounds: [-10^3, 10^5], Scale: 10^"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_InvalidBounds)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_BucketType_InvalidBounds)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET,
         "Bucket: BUCKET_4, Bounds: [3, 2^10), Scale: 2^"));
@@ -897,7 +908,7 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_InvalidBounds)
         "Bucket: BUCKET_4, Bounds: [4, 1025), Scale: 2^"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_BoundsOverflow)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_BucketType_BoundsOverflow)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::BUCKET,
         "Bucket: BUCKET_4, Bounds: [10^12, 10^19), Scale: 10^"));
@@ -909,7 +920,7 @@ TEST_F(ConfigCheckerTest, ValueVaildityViolation_BucketType_BoundsOverflow)
         "Bucket: BUCKET_4, Bounds: [-10^19, 0), Scale: 100000000000000000"));
 }
 
-TEST_F(ConfigCheckerTest, ValueVaildityViolation_NodeType)
+TEST_F(ConfigCheckerTest, ValueValidityViolation_NodeType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
         "Node: CANNOT_EXCEED_30_CHARACTERS_IN_STRING_TYPE_DATA, Type: PERFORMANCE, "

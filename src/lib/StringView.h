@@ -166,6 +166,15 @@ public:
 
         return air::string_view::npos;
     }
+    constexpr bool
+    contains(air::string_view arg) const
+    {
+        if (air::string_view::npos == find(arg))
+        {
+            return false;
+        }
+        return true;
+    }
     constexpr air::string_view
     substr(std::size_t start, std::size_t length) const
     {

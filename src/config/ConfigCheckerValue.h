@@ -41,13 +41,12 @@ public:
     ConfigCheckerValue(void)
     {
     }
-
     virtual ~ConfigCheckerValue(void)
     {
     }
-
     static constexpr int32_t
-    CheckValueValidity(ParagraphType type, air::string_view sentence)
+    CheckValueValidity(ParagraphType type, const air::string_view* node_keys,
+        air::string_view sentence)
     {
         size_t colon_pos {sentence.find(":")};
         size_t prev_comma {0};
@@ -81,6 +80,8 @@ public:
                     range_start_pos + 1, range_end_pos - range_start_pos - 1);
             }
             value = Strip(value);
+
+            _CheckForbiddenWords(value, node_keys);
 
             int32_t result {0};
             if (ParagraphType::DEFAULT == type)
@@ -138,6 +139,18 @@ public:
     }
 
 private:
+    static constexpr void
+    _CheckForbiddenWords(air::string_view value, const air::string_view* node_keys)
+    {
+        for (uint32_t i {0}; i < NUM_NODE_KEY; i++)
+        {
+            if (value.contains(node_keys[i]))
+            {
+                throw std::logic_error("Value cannot contain NODE's key");
+            }
+        }
+    }
+
     static constexpr int32_t
     _CheckNameValue(air::string_view value)
     {
