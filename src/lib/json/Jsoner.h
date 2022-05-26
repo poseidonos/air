@@ -47,12 +47,12 @@ public:
     {
         _GetInstance()._ClearDoc();
     }
-    static JSONdoc&&
+    static JSONdoc*
     Copy(std::string key)
     {
         JSONdoc* doc = new JSONdoc {JSONtype::OBJECT, true, false};
         _GetInstance()._GetDocument(key).Copy(doc);
-        return std::move(*doc);
+        return doc;
     }
 
 private:

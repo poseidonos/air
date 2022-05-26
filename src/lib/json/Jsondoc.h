@@ -512,7 +512,7 @@ public:
         return map.end();
     }
 
-    JSONdoc&&
+    JSONdoc*
     Compound(std::deque<std::string> node_queue)
     {
         JSONdoc* doc = new JSONdoc {JSONtype::OBJECT, false, false};
@@ -543,7 +543,7 @@ public:
                 }
             }
         }
-        return std::move(*doc);
+        return doc;
     }
 
     friend class RangeImpl;
