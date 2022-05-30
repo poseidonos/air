@@ -58,6 +58,10 @@ public:
     }
 };
 
+const int MinTime {10};
+const int ThreadRangeMax {8};
+const int Repeat {3};
+
 BENCHMARK_DEFINE_F(AirAPI, Type_Performance)(benchmark::State& state)
 {
     for (auto _ : state)
@@ -66,9 +70,9 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Performance)(benchmark::State& state)
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Performance)
-    ->MinTime(10)
-    ->ThreadRange(1, 8)
-    ->Repetitions(3);
+    ->MinTime(MinTime)
+    ->ThreadRange(1, ThreadRangeMax)
+    ->Repetitions(Repeat);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Latency)(benchmark::State& state)
 {
@@ -81,9 +85,9 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Latency)(benchmark::State& state)
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Latency)
-    ->MinTime(10)
-    ->ThreadRange(1, 8)
-    ->Repetitions(3);
+    ->MinTime(MinTime)
+    ->ThreadRange(1, ThreadRangeMax)
+    ->Repetitions(Repeat);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Queue)(benchmark::State& state)
 {
@@ -93,9 +97,9 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Queue)(benchmark::State& state)
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Queue)
-    ->MinTime(10)
-    ->ThreadRange(1, 8)
-    ->Repetitions(3);
+    ->MinTime(MinTime)
+    ->ThreadRange(1, ThreadRangeMax)
+    ->Repetitions(Repeat);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Utilization)(benchmark::State& state)
 {
@@ -105,9 +109,9 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Utilization)(benchmark::State& state)
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Utilization)
-    ->MinTime(10)
-    ->ThreadRange(1, 8)
-    ->Repetitions(3);
+    ->MinTime(MinTime)
+    ->ThreadRange(1, ThreadRangeMax)
+    ->Repetitions(Repeat);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Count)(benchmark::State& state)
 {
@@ -117,9 +121,9 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Count)(benchmark::State& state)
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Count)
-    ->MinTime(10)
-    ->ThreadRange(1, 8)
-    ->Repetitions(3);
+    ->MinTime(MinTime)
+    ->ThreadRange(1, ThreadRangeMax)
+    ->Repetitions(Repeat);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Best)(benchmark::State& state)
 {
@@ -129,9 +133,9 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Best)(benchmark::State& state)
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Histogram_Best)
-    ->MinTime(10)
-    ->ThreadRange(1, 8)
-    ->Repetitions(3);
+    ->MinTime(MinTime)
+    ->ThreadRange(1, ThreadRangeMax)
+    ->Repetitions(Repeat);
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Worst)(benchmark::State& state)
 {
@@ -141,8 +145,8 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Worst)(benchmark::State& state)
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Histogram_Worst)
-    ->MinTime(10)
-    ->ThreadRange(1, 8)
-    ->Repetitions(3);
+    ->MinTime(MinTime)
+    ->ThreadRange(1, ThreadRangeMax)
+    ->Repetitions(Repeat);
 
 BENCHMARK_MAIN();

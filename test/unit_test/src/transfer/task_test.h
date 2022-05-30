@@ -8,7 +8,7 @@ class TaskTest : public ::testing::Test
 public:
     static int function_call_count;
     static int
-    TestFunction(const air::JSONdoc& doc)
+    TestFunction(const air::JSONdoc&& doc)
     {
         function_call_count++;
         return 0;
@@ -32,7 +32,7 @@ protected:
 };
 
 int
-test_register(const air::JSONdoc& doc)
+test_register(const air::JSONdoc&& doc)
 {
     return 0;
 }

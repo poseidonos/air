@@ -60,8 +60,6 @@ main(int argc, char* argv[])
 
     sleep(runtime);
 
-    sleep(10);
-
     histogram_log.Stop();
     thr_histogram.join();
 

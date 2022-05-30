@@ -36,7 +36,7 @@
 
 namespace transfer
 {
-using task_unit = std::function<int(const air::JSONdoc&)>;
+using task_unit = std::function<int(const air::JSONdoc&&)>;
 using node_list = std::initializer_list<std::string>;
 
 class Task
@@ -55,7 +55,7 @@ public:
     ~Task(void);
 
     void Register(node_list nodes, task_unit function);
-    int NotifyAll(air::JSONdoc&& json_data);
+    int NotifyAll(air::JSONdoc* json_data);
 
 private:
     void _Outbox2List(void);

@@ -42,9 +42,9 @@ transfer::Transfer::SendData(void)
     {
         if (0 == async_tasks.get())
         {
-            air::JSONdoc json_data = air::json_copy("air");
-            async_tasks = std::async(std::launch::async, &Task::NotifyAll,
-                &Task::Get(), std::move(json_data));
+            auto json_data = air::json_copy("air");
+            async_tasks = std::async(
+                std::launch::async, &Task::NotifyAll, &Task::Get(), json_data);
         }
     }
 }
