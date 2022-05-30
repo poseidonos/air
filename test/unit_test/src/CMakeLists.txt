@@ -19,7 +19,7 @@ if(BUILD_UT)
         target_include_directories(${UT_BIN_NAME} PUBLIC ${CMAKE_SOURCE_DIR})
         target_compile_options(
             ${UT_BIN_NAME} PRIVATE -std=c++14 -Wall -Werror
-            -g -fprofile-arcs -ftest-coverage
+            -g -O1 -fno-omit-frame-pointer -fprofile-arcs -ftest-coverage
         )
         target_link_libraries(${UT_BIN_NAME} air gtest gmock gcov pthread)
     endforeach()

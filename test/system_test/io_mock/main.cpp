@@ -1,14 +1,32 @@
 
 #include <air/Air.h>
+#include <unistd.h>
 
+#include <iostream>
 #include <thread>
 
 #include "dummy_io.h"
 
 int
-main(void)
+main(int argc, char* argv[])
 {
-    printf("\n");
+    char option;
+    int runtime = 60;
+    optind = 1;
+    while (-1 != (option = getopt(argc, argv, "r:")))
+    {
+        switch (option)
+        {
+            case 'r':
+                runtime = atoi(optarg);
+                break;
+
+            default:
+                break;
+        }
+    }
+    std::cout << argv[0] << " start\n";
+    std::cout << "runtime:" << runtime << "\n";
 
     air_initialize(0);
     air_activate();
@@ -24,7 +42,7 @@ main(void)
     auto thr_process2 = std::thread(&DummyIO::ProcessIO, dummy_io, q1);
     auto thr_complete = std::thread(&DummyIO::CompleteIO, dummy_io);
 
-    sleep(100);
+    sleep(runtime);
 
     dummy_io.Stop();
 
@@ -37,7 +55,6 @@ main(void)
     air_deactivate();
     air_finalize();
 
-    printf("\n");
-
+    std::cout << argv[0] << " end\n";
     return 0;
 }

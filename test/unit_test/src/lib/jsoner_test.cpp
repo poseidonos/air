@@ -88,7 +88,7 @@ TEST(JsonerTest, json_copy)
 
     auto copy_obj = air::json_copy("obj");
     std::stringstream stream_copy_obj;
-    stream_copy_obj << copy_obj;
+    stream_copy_obj << *copy_obj;
     std::string copy_str = stream_copy_obj.str();
     EXPECT_EQ(0,
         copy_str.compare(
@@ -98,7 +98,7 @@ TEST(JsonerTest, json_copy)
 
     air::json_clear();
     std::stringstream stream_copy_obj2;
-    stream_copy_obj2 << copy_obj;
+    stream_copy_obj2 << *copy_obj;
     std::string copy_str2 = stream_copy_obj2.str();
     EXPECT_EQ(0,
         copy_str2.compare(
@@ -106,9 +106,11 @@ TEST(JsonerTest, json_copy)
             "[1, 2, 3], \"multi_arr\": [\"str\", 5, {\"dd\": 394.231}], \"obj\": "
             "{\"str2\": \"strstr\"}, \"str\": \"string\"}"));
 
-    copy_obj.Clear();
+    copy_obj->Clear();
     std::stringstream stream_copy_obj3;
-    stream_copy_obj3 << copy_obj;
+    stream_copy_obj3 << *copy_obj;
     std::string copy_str3 = stream_copy_obj3.str();
     EXPECT_EQ(0, copy_str3.compare("{}"));
+
+    delete copy_obj;
 }

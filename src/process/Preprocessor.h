@@ -56,12 +56,14 @@ private:
     void _MatchData(void);
     void _CleanData(int option);
 
+    static const uint32_t MAX_TIMELOG_TO_SIZE {100000};
     struct match_st
     {
         std::vector<lib::LatencyData*> done_from;
         std::vector<lib::LatencyData*> done_to;
         std::map<uint64_t, timespec> timestamp_from;
-        std::vector<lib::TimeLog> timelog_to;
+        lib::TimeLog timelog_to[MAX_TIMELOG_TO_SIZE];
+        uint32_t timelog_to_size {0};
         bool done {false};
         bool update {false};
     };

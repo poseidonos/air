@@ -109,28 +109,43 @@ transfer::Task::_EraseFinishedJob(void)
 }
 
 int
-transfer::Task::NotifyAll(air::JSONdoc&& json_data)
+transfer::Task::NotifyAll(air::JSONdoc* json_data)
 {
+    int rc {0};
     _Outbox2List();
 
+    std::deque<air::JSONdoc*> task_data_q;
     for (auto& task_info : task_list)
     {
-        air::JSONdoc&& task_data = json_data.Compound(task_info.nodes);
-        task_info.async_task = std::async(
-            std::launch::async, [&] { return task_info.function(task_data); });
+        auto task_data = json_data->Compound(task_info.nodes);
+        task_data_q.push_back(task_data);
+        task_info.async_task = std::async(std::launch::async,
+            [&] { return task_info.function(std::move(*task_data)); });
     }
 
     _WaitJobDone();
     _EraseFinishedJob();
 
+    while (!task_data_q.empty())
+    {
+        auto task_data = task_data_q.back();
+        task_data_q.pop_back();
+        delete task_data;
+        task_data = nullptr;
+    }
+
     try
     {
-        json_data.Clear();
+        json_data->Clear();
     }
     catch (std::exception& e)
     {
         std::cout << e.what() << std::endl;
-        return -1;
+        rc = -1;
     }
-    return 0;
+
+    delete json_data;
+    json_data = nullptr;
+
+    return rc;
 }

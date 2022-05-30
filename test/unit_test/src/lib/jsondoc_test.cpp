@@ -243,7 +243,7 @@ TEST(JsondocTest, Compound)
     auto compound = obj.Compound(q);
 
     std::stringstream stream;
-    stream << compound;
+    stream << *compound;
     std::string str = stream.str();
     EXPECT_EQ(0,
         str.compare("{\"Apple\": {\"color\": \"red\", \"weight(kg)\": 0.93}, "
@@ -251,6 +251,7 @@ TEST(JsondocTest, Compound)
                     "\"interval\": 3, \"timestamp\": 1639469944}"));
 
     air::json_clear();
+    delete compound;
 }
 
 TEST(JsondocTest, GetType_Array)

@@ -23,12 +23,12 @@ TEST_F(TaskTest, Singleton)
 TEST_F(TaskTest, Register_Lambda_Type1)
 {
     transfer::Task::Get().Register(
-        {"NodeA", "NodeB"}, [](const air::JSONdoc& doc) -> int { return 0; });
+        {"NodeA", "NodeB"}, [](const air::JSONdoc&& doc) -> int { return 0; });
 }
 
 TEST_F(TaskTest, Register_Lambda_Type2)
 {
-    auto t2 = [](const air::JSONdoc& doc) -> int { return 0; };
+    auto t2 = [](const air::JSONdoc&& doc) -> int { return 0; };
     transfer::Task::Get().Register({"NodeA"}, t2);
 }
 
@@ -40,7 +40,7 @@ TEST_F(TaskTest, Register_Function)
 TEST_F(TaskTest, NotifyAll)
 {
     int count {0};
-    transfer::Task::Get().Register({"Node"}, [&](const air::JSONdoc& doc) -> int {
+    transfer::Task::Get().Register({"Node"}, [&](const air::JSONdoc&& doc) -> int {
         usleep(count * 100000);
         count++;
         if (count >= 3)
@@ -50,16 +50,28 @@ TEST_F(TaskTest, NotifyAll)
         return 0;
     });
     air::JSONdoc& doc = air::json("doc");
-    transfer::Task::Get().NotifyAll(std::move(doc));
+    doc["test"] = {"NotifyAll test"};
+    auto copier = air::json_copy("doc");
+    transfer::Task::Get().NotifyAll(copier);
     EXPECT_EQ(1, count);
-    transfer::Task::Get().NotifyAll(std::move(doc));
+
+    copier = air::json_copy("doc");
+    transfer::Task::Get().NotifyAll(copier);
     EXPECT_EQ(2, count);
-    transfer::Task::Get().NotifyAll(std::move(doc));
+
+    copier = air::json_copy("doc");
+    transfer::Task::Get().NotifyAll(copier);
     EXPECT_EQ(3, count);
-    transfer::Task::Get().NotifyAll(std::move(doc));
+
+    copier = air::json_copy("doc");
+    transfer::Task::Get().NotifyAll(copier);
     EXPECT_EQ(3, count);
-    transfer::Task::Get().NotifyAll(std::move(doc));
+
+    copier = air::json_copy("doc");
+    transfer::Task::Get().NotifyAll(copier);
     EXPECT_EQ(3, count);
+
+    doc.Clear();
 }
 
 TEST_F(TaskTest, Lambda_Capture_Reference)
@@ -72,16 +84,19 @@ TEST_F(TaskTest, Lambda_Capture_Reference)
     EXPECT_EQ(100, obj.data);
 
     transfer::Task::Get().Register(
-        {"Node"}, [&obj](const air::JSONdoc& doc) -> int {
+        {"Node"}, [&obj](const air::JSONdoc&& doc) -> int {
             obj.data++;
             return 0;
         });
 
     obj.data++;
     air::JSONdoc& doc = air::json("doc");
-    transfer::Task::Get().NotifyAll(std::move(doc));
-
+    doc["test"] = {"Lambda_Capture_Ref test"};
+    auto copier = air::json_copy("doc");
+    transfer::Task::Get().NotifyAll(copier);
     EXPECT_EQ(102, obj.data);
+
+    doc.Clear();
 }
 
 TEST_F(TaskTest, Lambda_Capture_Copy)
@@ -106,17 +121,20 @@ TEST_F(TaskTest, Lambda_Capture_Copy)
     EXPECT_EQ(100, *obj->data);
 
     transfer::Task::Get().Register(
-        {"Node"}, [copy = *obj](const air::JSONdoc& doc) mutable -> int {
+        {"Node"}, [copy = *obj](const air::JSONdoc&& doc) mutable -> int {
             (*copy.data)++;
             return 0;
         });
 
     (*obj->data)++;
     air::JSONdoc& doc = air::json("doc");
-    transfer::Task::Get().NotifyAll(std::move(doc));
-
+    doc["test"] = {"Lambda_Capture_Copy test"};
+    auto copier = air::json_copy("doc");
+    transfer::Task::Get().NotifyAll(copier);
     EXPECT_EQ(101, *obj->data);
+
     delete obj;
+    doc.Clear();
 }
 
 TEST_F(TransferTest, Transfer)
@@ -154,7 +172,7 @@ TEST_F(TransferTest, SendData)
     obj["group"] = {groupTop};
 
     transfer::Task::Get().Register(
-        {"Apple", "Banana"}, [](const air::JSONdoc& doc) -> int {
+        {"Apple", "Banana"}, [](const air::JSONdoc&& doc) -> int {
             std::stringstream stream_apple;
             stream_apple << doc["Apple"];
             std::string str_apple = stream_apple.str();
@@ -172,6 +190,7 @@ TEST_F(TransferTest, SendData)
 
     transfer::Transfer transfer;
     transfer.SendData();
+    obj.Clear();
 }
 
 int

@@ -34,7 +34,7 @@ int
 main(int argc, char* argv[])
 {
     char option;
-    int runtime = 10;
+    int runtime = 60;
     optind = 1;
     while (-1 != (option = getopt(argc, argv, "r:")))
     {
@@ -59,8 +59,6 @@ main(int argc, char* argv[])
     auto thr_latency = std::thread(&LatencyLog::TestLog, latency_log);
 
     sleep(runtime);
-
-    sleep(10);
 
     latency_log.Stop();
     thr_latency.join();

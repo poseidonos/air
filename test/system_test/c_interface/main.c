@@ -22,11 +22,31 @@ test_func(void* data)
         AIRLOG(Q_SUBMISSION, AIR_BASE, 2, 22);
         AIRLOG_DUMMY(Q_COMPLETION, AIR_BASE, 3, 33);
     }
+
+    return NULL;
 }
 
 int
-main(void)
+main(int argc, char* argv[])
 {
+    char option;
+    int runtime = 60;
+    optind = 1;
+    while (-1 != (option = getopt(argc, argv, "r:")))
+    {
+        switch (option)
+        {
+            case 'r':
+                runtime = atoi(optarg);
+                break;
+
+            default:
+                break;
+        }
+    }
+    printf("%s\n", argv[0]);
+    printf("runtime:%d\n", runtime);
+
     pthread_t thread;
     int thr_id;
 
@@ -35,7 +55,7 @@ main(void)
 
     thr_id = pthread_create(&thread, NULL, test_func, NULL);
 
-    sleep(100);
+    sleep(runtime);
     run = 0;
 
     if (0 <= thr_id)
