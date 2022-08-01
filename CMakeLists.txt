@@ -9,8 +9,8 @@ project(
     LANGUAGES CXX C
 )
 
-find_package(Threads)
 find_package(benchmark)
+find_package(Threads)
 
 if(DEFINED CONFIG)
     message(STATUS "CONFIG is defined: ${CONFIG}")
@@ -21,6 +21,13 @@ else()
 endif()
 message(STATUS "AIR_CFG: ${AIR_CFG}")
 add_definitions(-DAIR_CFG=${AIR_CFG})
+
+if(DEFINED ASAN)
+    set(ASAN ${ASAN})
+else()
+    set(ASAN FALSE)
+endif()
+message(STATUS "ASAN: ${ASAN}")
 
 add_subdirectory(test)
 add_subdirectory(tool)
