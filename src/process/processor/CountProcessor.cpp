@@ -156,5 +156,6 @@ process::CountProcessor::_InitData(lib::Data* air_data, lib::AccData* acc_data)
         acc_count_data->cumulation_num_req_negative = 0;
         acc_count_data->cumulation_negative = 0;
         acc_count_data->need_erase = 0;
+        acc_count_data->updated_count = 0;
     }
 }

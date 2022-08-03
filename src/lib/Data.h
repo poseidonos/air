@@ -52,6 +52,7 @@ struct AccData
     {
     }
     uint32_t need_erase {0};
+    uint32_t updated_count {0};
 };
 
 struct PerformanceData : public Data

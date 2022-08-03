@@ -7,6 +7,7 @@ if(BUILD_ST)
     add_subdirectory(io_mock)
     add_subdirectory(latency_resolution)
     add_subdirectory(many_log)
+    add_subdirectory(sparsely_log)
 endif()
 
 add_custom_target(

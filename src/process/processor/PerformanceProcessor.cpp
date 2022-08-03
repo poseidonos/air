@@ -120,5 +120,6 @@ process::PerformanceProcessor::_InitData(
         acc_perf_data->cumulation_iops = 0;
         acc_perf_data->duration_second = 0.0;
         acc_perf_data->need_erase = 0;
+        acc_perf_data->updated_count = 0;
     }
 }
