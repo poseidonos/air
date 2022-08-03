@@ -71,7 +71,7 @@ private:
     meta::NodeMetaGetter* node_meta_getter {nullptr};
     node::NodeManager* node_manager {nullptr};
     collection::LatencyWriter latency_writer {};
-    static const uint64_t MAX_TIME {900000000}; // 900 ms
+    static const uint64_t MAX_TIME {50000000000}; // 50 s
     const uint32_t MAX_NID_SIZE {
         cfg::GetSentenceCount(config::ParagraphType::NODE)};
 };
