@@ -54,12 +54,14 @@ LatencyLog::TestLog(void)
     auto job3 {std::async(std::launch::async, _LogMilli_1)};
     auto job4 {std::async(std::launch::async, _LogMilli_2)};
     auto job5 {std::async(std::launch::async, _LogMilli_3)};
+    auto job6 {std::async(std::launch::async, _LogSecond)};
 
     job1.get();
     job2.get();
     job3.get();
     job4.get();
     job5.get();
+    job6.get();
 }
 
 void
@@ -175,6 +177,26 @@ LatencyLog::_LogMilli_3(void)
         airlog("LAT_DUMMY_04", "AIR_0", 0, key);
         usleep(500000); // 500ms
         airlog("LAT_DUMMY_04", "AIR_1", 0, key);
+
+        key++;
+    }
+}
+
+void
+LatencyLog::_LogSecond(void)
+{
+    cpu_set_t cpu {0};
+    CPU_SET(6, &cpu);
+    pthread_setaffinity_np(pthread_self(), sizeof(cpu), &cpu);
+    pthread_setname_np(pthread_self(), "LogSecond");
+    std::cout << "LogSecond thread run\n";
+
+    uint64_t key {0};
+    while (run)
+    {
+        airlog("LAT_DUMMY_05", "AIR_0", 0, key);
+        usleep(1100000); // 1.1s
+        airlog("LAT_DUMMY_05", "AIR_1", 0, key);
 
         key++;
     }

@@ -27,25 +27,29 @@
 void
 collection::SwitchGear::Run(void)
 {
-    for (auto& kv : node_manager->nda_map)
+    // streaming_interval x 20(50ms resolution) / 2(half streaming_interval)
+    uint32_t deadline {global_meta_getter->StreamingInterval() * 10};
+
+    for (uint32_t nid = 0; nid < MAX_NID_SIZE; nid++)
     {
-        for (uint32_t nid = 0; nid < MAX_NID_SIZE; nid++)
+        if (air::ProcessorType::LATENCY == node_meta_getter->ProcessorType(nid))
         {
-            if (air::ProcessorType::LATENCY == node_meta_getter->ProcessorType(nid))
+            uint32_t filter_size = node_meta_getter->FilterSize(nid);
+            uint32_t index_size = node_meta_getter->IndexSize(nid);
+            if (false == node_meta_getter->Run(nid))
             {
-                uint32_t filter_size = node_meta_getter->FilterSize(nid);
-                uint32_t index_size = node_meta_getter->IndexSize(nid);
-                if (false == node_meta_getter->Run(nid))
+                continue;
+            }
+            for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
+            {
+                for (uint32_t filter_index = 0; filter_index < filter_size;
+                     filter_index++)
                 {
-                    continue;
-                }
-                for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
-                {
-                    for (uint32_t filter_index = 0; filter_index < filter_size;
-                         filter_index++)
+                    for (auto& kv : node_manager->nda_map)
                     {
                         _CheckDeadline(kv.second->node[nid]->GetUserDataByHashIndex(
-                            hash_index, filter_index));
+                                           hash_index, filter_index),
+                            deadline);
                     }
                 }
             }
@@ -54,9 +58,10 @@ collection::SwitchGear::Run(void)
 }
 
 void
-collection::SwitchGear::_CheckDeadline(lib::Data* data)
+collection::SwitchGear::_CheckDeadline(lib::Data* data, uint32_t deadline)
 {
     lib::LatencyData* lat_data = static_cast<lib::LatencyData*>(data);
+    int32_t threshold {-1 * static_cast<int32_t>(deadline)};
 
     if (false == lat_data->access)
     {
@@ -75,7 +80,7 @@ collection::SwitchGear::_CheckDeadline(lib::Data* data)
     else if (lib::TimeLogState::RUN == lat_data->start_state)
     {
         lat_data->start_deadline--;
-        if (-9 > lat_data->start_deadline)
+        if (threshold > lat_data->start_deadline)
         {
             lat_data->start_state = lib::TimeLogState::STOP;
         }
@@ -93,7 +98,7 @@ collection::SwitchGear::_CheckDeadline(lib::Data* data)
     else if (lib::TimeLogState::RUN == lat_data->end_state)
     {
         lat_data->end_deadline--;
-        if (-9 > lat_data->end_deadline)
+        if (threshold > lat_data->end_deadline)
         {
             lat_data->end_state = lib::TimeLogState::STOP;
         }

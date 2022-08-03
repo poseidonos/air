@@ -122,7 +122,7 @@ process::TimingDistributor::_ResetTiming(lib::LatencyData* curr_data,
     curr_data->start_v.clear();
     if (curr_data->access)
     {
-        curr_data->start_v.reserve(token + 4);
+        curr_data->start_v.reserve(token * 2 + 1);
     }
     curr_data->start_token_size = token;
     curr_data->start_state = lib::TimeLogState::IDLE;
@@ -132,7 +132,7 @@ process::TimingDistributor::_ResetTiming(lib::LatencyData* curr_data,
     next_data->end_v.clear();
     if (next_data->access)
     {
-        next_data->end_v.reserve(token + 4);
+        next_data->end_v.reserve(token * 2 + 1);
     }
     next_data->end_token_size = token;
     next_data->end_state = lib::TimeLogState::IDLE;

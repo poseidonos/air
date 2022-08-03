@@ -139,6 +139,10 @@ process::Preprocessor::_MatchData(void)
 {
     for (auto& it : match_map)
     {
+        uint64_t key = it.first;
+        uint32_t nid = ((key >> 48) & 0xFFFF);
+        uint32_t hash_index = ((key >> 32) & 0xFFFF);
+        uint32_t filter_index = (key & 0xFFFFFFFF);
         auto& data = it.second;
         if (data.done || !data.update)
         {
@@ -149,13 +153,10 @@ process::Preprocessor::_MatchData(void)
         for (uint32_t index {0}; index < data.timelog_to_size; index++)
         {
             auto& timelog {data.timelog_to[index]};
+
             auto it_match = data.timestamp_from.find(timelog.key);
             if (it_match != data.timestamp_from.end())
             {
-                uint64_t key = it.first;
-                uint32_t nid = ((key >> 48) & 0xFFFF);
-                uint32_t hash_index = (key >> 32 & 0xFFFF);
-                uint32_t filter_index = (key & 0xFFFFFFFF);
                 lib::AccLatencyData* acc_data =
                     node_manager->GetAccLatData(nid, hash_index, filter_index);
 

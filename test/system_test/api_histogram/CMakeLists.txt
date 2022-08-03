@@ -6,3 +6,8 @@ target_compile_options(
     -g -O3 -fno-omit-frame-pointer -mavx2 -fPIC
 )
 target_link_libraries(st_api_histogram air pthread)
+
+if (ASAN)
+    add_compile_options(-fsanitize=address)
+    target_link_libraries(st_api_histogram -fsanitize=address)
+endif()

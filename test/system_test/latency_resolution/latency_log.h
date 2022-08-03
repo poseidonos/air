@@ -38,6 +38,7 @@ private:
     static void _LogMilli_1(void);
     static void _LogMilli_2(void);
     static void _LogMilli_3(void);
+    static void _LogSecond(void);
     static bool run;
 };
 

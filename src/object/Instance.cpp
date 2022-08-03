@@ -65,7 +65,8 @@ air::InstanceManager::InstanceManager(void)
     collection_observer = new collection::Observer {collection_manager};
     collection_cor_handler =
         new collection::CollectionCoRHandler {collection_observer};
-    switch_gear = new collection::SwitchGear {node_meta_getter, node_manager};
+    switch_gear = new collection::SwitchGear {
+        node_meta_getter, global_meta_getter, node_manager};
     switch_gear_cor_handler = new collection::SwitchGearCoRHandler {switch_gear};
 
     chain_manager = new chain::ChainManager {global_meta};
