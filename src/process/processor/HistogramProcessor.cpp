@@ -320,5 +320,6 @@ process::HistogramProcessor::_InitData(lib::Data* air_data, lib::AccData* acc_da
         time(&(acc_hist_data->since));
         acc_hist_data->is_first = true;
         acc_hist_data->need_erase = false;
+        acc_hist_data->updated_count = 0;
     }
 }

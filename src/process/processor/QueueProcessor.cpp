@@ -115,5 +115,6 @@ process::QueueProcessor::_InitData(lib::Data* air_data, lib::AccData* acc_data)
         acc_queue_data->cumulation_num_req = 0;
         acc_queue_data->cumulation_qd_avg = 0.0;
         acc_queue_data->need_erase = 0;
+        acc_queue_data->updated_count = 0;
     }
 }

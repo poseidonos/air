@@ -48,13 +48,23 @@ process::Processor::StreamData(air::string_view& node_name_view, uint32_t tid,
         {
             air_data = node_data->GetAirData(hash_index, filter_index);
             acc_data = node_data->GetAccData(hash_index, filter_index);
-            if (nullptr != air_data && 0 != air_data->access && nullptr != acc_data)
+            if (nullptr != air_data && nullptr != acc_data)
             {
-                hash_value = node_data->GetUserHashValue(hash_index);
-                _ProcessData(air_data, acc_data);
-                _JsonifyData({air_data, acc_data, node_name_view, tid, tname,
-                    hash_value, filter_index});
-                _InitData(air_data, acc_data);
+                if (0 != air_data->access)
+                {
+                    acc_data->updated_count++;
+                    _ProcessData(air_data, acc_data);
+                }
+                if (0 != acc_data->updated_count)
+                {
+                    hash_value = node_data->GetUserHashValue(hash_index);
+                    _JsonifyData({air_data, acc_data, node_name_view, tid, tname,
+                        hash_value, filter_index});
+                }
+                if (0 != air_data->access || 0 != acc_data->updated_count)
+                {
+                    _InitData(air_data, acc_data);
+                }
             }
         }
 

@@ -92,5 +92,6 @@ process::UtilizationProcessor::_InitData(
     {
         acc_util_data->cumulation_usage = 0;
         acc_util_data->need_erase = 0;
+        acc_util_data->updated_count = 0;
     }
 }

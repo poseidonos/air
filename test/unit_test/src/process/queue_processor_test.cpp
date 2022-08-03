@@ -60,18 +60,21 @@ TEST_F(QueueProcessorTest, StreamData_DataCase2)
 
     q_data->period_num_req = 12;
     q_data->period_qd_sum = 120;
+    q_data->period_qd_max = 30;
     q_data->access = true;
     acc_q_data->need_erase = false;
+    acc_q_data->updated_count = 0;
     air::string_view node_name_q1 {"Q_SUBMIT"};
     queue_processor.StreamData(
         node_name_q1, 0, "thread0", queue_data, air::ProcessorType::QUEUE, 1, 1, 1);
     EXPECT_EQ(true,
         ((10.1f > acc_q_data->cumulation_qd_avg) &&
             (9.9f < acc_q_data->cumulation_qd_avg)));
+    air::json_clear();
 
-    queue_processor.StreamData(node_name_q1, 0, "thread0", queue_data,
-        air::ProcessorType::QUEUE, 1, 1, 1); // for swap
-
+    // for swap buffer
+    queue_processor.StreamData(
+        node_name_q1, 0, "thread0", queue_data, air::ProcessorType::QUEUE, 1, 1, 1);
     air::json_clear();
 
     q_data->period_num_req = 12;
