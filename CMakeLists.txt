@@ -12,6 +12,9 @@ project(
 find_package(benchmark)
 find_package(Threads)
 
+execute_process(COMMAND bash -c "rm -rf ${CMAKE_SOURCE_DIR}/build/tool/c_interface_gen")
+execute_process(COMMAND bash -c "rm -rf ${CMAKE_SOURCE_DIR}/build/src")
+
 if(DEFINED CONFIG)
     message(STATUS "CONFIG is defined: ${CONFIG}")
     set(AIR_CFG ${CONFIG})
