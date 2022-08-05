@@ -51,16 +51,18 @@ public:
         CPU_ZERO(&cpu_set);
         CPU_SET(state.thread_index + 1, &cpu_set);
         pthread_setaffinity_np(pthread_self(), sizeof(cpu_set), &cpu_set);
+        sleep(3);
     }
     void
     TearDown(const ::benchmark::State& state)
     {
+        sleep(1);
     }
 };
 
 const int MinTime {10};
 const int ThreadRangeMax {8};
-const int Repeat {3};
+const int Repeat {5};
 
 BENCHMARK_DEFINE_F(AirAPI, Type_Performance)(benchmark::State& state)
 {
