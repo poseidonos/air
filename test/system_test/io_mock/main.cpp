@@ -1,11 +1,11 @@
 
-#include <air/Air.h>
 #include <unistd.h>
 
 #include <iostream>
 #include <thread>
 
 #include "dummy_io.h"
+#include "src/api/Air.h"
 
 int
 main(int argc, char* argv[])

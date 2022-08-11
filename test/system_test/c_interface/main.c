@@ -1,9 +1,10 @@
 
-#include <air/Air_c.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+#include "src/api/Air_c.h"
 
 static int run = 1;
 
@@ -14,13 +15,13 @@ test_func(void* data)
 
     while (run)
     {
-        AIRLOG(PERF_BENCHMARK, AIR_READ, 0, 4096);
-        AIRLOG(LAT_PROCESS, AIR_0, 0, key);
+        AIRLOG(PERF_BENCHMARK, eAIR_read, 0, 4096);
+        AIRLOG(LAT_PROCESS, eAIR_range_0, 0, key);
         usleep(100);
-        AIRLOG(LAT_PROCESS, AIR_1, 0, key);
+        AIRLOG(LAT_PROCESS, eAIR_range_1, 0, key);
         key++;
-        AIRLOG(Q_SUBMISSION, AIR_BASE, 2, 22);
-        AIRLOG_DUMMY(Q_COMPLETION, AIR_BASE, 3, 33);
+        AIRLOG(Q_SUBMISSION, eAIR_base, 2, 22);
+        AIRLOG_DUMMY(Q_COMPLETION, eAIR_base, 3, 33);
     }
 
     return NULL;

@@ -1,8 +1,9 @@
 #include "test/system_test/data_transfer/dummy_log.h"
 
-#include <air/Air.h>
 #include <pthread.h>
 #include <unistd.h>
+
+#include "src/api/Air.h"
 
 bool DummyLog::run = true;
 
@@ -29,13 +30,13 @@ DummyLog::TestLog(void)
 
     while (run)
     {
-        airlog("PERF_BENCHMARK", "AIR_READ", 0, 4096);
-        airlog("PERF_BENCHMARK", "AIR_READ", 0, 4096);
-        airlog("PERF_BENCHMARK", "AIR_READ", 3, 4096);
-        airlog("PERF_BENCHMARK", "AIR_WRITE", 0, 16384);
-        airlog("LAT_IO_PATH", "AIR_0", 1, lat_id);
+        airlog("PERF_BENCHMARK", "read", 0, 4096);
+        airlog("PERF_BENCHMARK", "read", 0, 4096);
+        airlog("PERF_BENCHMARK", "read", 3, 4096);
+        airlog("PERF_BENCHMARK", "write", 0, 16384);
+        airlog("LAT_IO_PATH", "range_0", 1, lat_id);
         usleep(100);
-        airlog("LAT_IO_PATH", "AIR_1", 1, lat_id);
+        airlog("LAT_IO_PATH", "range_1", 1, lat_id);
         lat_id++;
     }
 }

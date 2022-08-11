@@ -22,9 +22,10 @@
  *   SOFTWARE.
  */
 
-#include <air/Air.h>
 #include <benchmark/benchmark.h>
 #include <pthread.h>
+
+#include "src/api/Air.h"
 
 struct AirFixture
 {
@@ -68,7 +69,7 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Performance)(benchmark::State& state)
 {
     for (auto _ : state)
     {
-        airlog("PERF_BENCHMARK", "AIR_READ", 0, 4096);
+        airlog("PERF_BENCHMARK", "read", 0, 4096);
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Performance)
@@ -81,8 +82,8 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Latency)(benchmark::State& state)
     uint64_t key {0};
     for (auto _ : state)
     {
-        airlog("LAT_SUBMIT", "AIR_0", 0, key);
-        airlog("LAT_SUBMIT", "AIR_1", 0, key);
+        airlog("LAT_SUBMIT", "range_0", 0, key);
+        airlog("LAT_SUBMIT", "range_1", 0, key);
         key++;
     }
 }
@@ -95,7 +96,7 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Queue)(benchmark::State& state)
 {
     for (auto _ : state)
     {
-        airlog("Q_SUBMISSION", "AIR_BASE", 0, 24);
+        airlog("Q_SUBMISSION", "base", 0, 24);
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Queue)
@@ -107,7 +108,7 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Utilization)(benchmark::State& state)
 {
     for (auto _ : state)
     {
-        airlog("UTIL_SUBMIT_THR", "AIR_SUBMIT", 0, 3);
+        airlog("UTIL_SUBMIT_THR", "submit", 0, 3);
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Utilization)
@@ -119,7 +120,7 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Count)(benchmark::State& state)
 {
     for (auto _ : state)
     {
-        airlog("CNT_TEST_EVENT", "AIR_SUBMIT", 0, 2);
+        airlog("CNT_TEST_EVENT", "submit", 0, 2);
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Count)
@@ -131,7 +132,7 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Best)(benchmark::State& state)
 {
     for (auto _ : state)
     {
-        airlog("HIST_SAMPLE_3", "AIR_0", 0, 10);
+        airlog("HIST_SAMPLE_3", "range_0", 0, 10);
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Histogram_Best)
@@ -143,7 +144,7 @@ BENCHMARK_DEFINE_F(AirAPI, Type_Histogram_Worst)(benchmark::State& state)
 {
     for (auto _ : state)
     {
-        airlog("HIST_SAMPLE_6", "AIR_0", 0, 99999);
+        airlog("HIST_SAMPLE_6", "range_0", 0, 99999);
     }
 }
 BENCHMARK_REGISTER_F(AirAPI, Type_Histogram_Worst)

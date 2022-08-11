@@ -12,6 +12,6 @@ endif()
 
 add_custom_target(
     build_st
-    COMMAND cmake ../.. -DBUILD_ST=ON -DCONFIG=${CMAKE_SOURCE_DIR}/config/system_test.cfg
+    COMMAND cmake ../.. -DBUILD_ST=ON -DBUILD_UT=OFF -DRUN_UT=OFF -DCONFIG=${CMAKE_SOURCE_DIR}/config/system_test.cfg
     COMMAND make -j 8
 )
