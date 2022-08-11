@@ -24,13 +24,14 @@
 
 #include "test/system_test/sparsely_log/sparsely_log.h"
 
-#include <air/Air.h>
 #include <pthread.h>
 #include <unistd.h>
 
 #include <future>
 #include <iostream>
 #include <thread>
+
+#include "src/api/Air.h"
 
 bool SparselyLog::run = true;
 
@@ -66,24 +67,24 @@ SparselyLog::_Log(void)
     uint64_t key {0};
     while (run)
     {
-        airlog("PERF_BENCHMARK", "AIR_READ", 0, 4096);
-        airlog("PERF_BENCHMARK", "AIR_READ", 0, 4096);
-        airlog("PERF_BENCHMARK", "AIR_READ", 0, 4096);
-        airlog("LAT_SUBMIT", "AIR_0", 0, key);
-        airlog("LAT_SUBMIT", "AIR_1", 0, key);
+        airlog("PERF_BENCHMARK", "read", 0, 4096);
+        airlog("PERF_BENCHMARK", "read", 0, 4096);
+        airlog("PERF_BENCHMARK", "read", 0, 4096);
+        airlog("LAT_SUBMIT", "range_0", 0, key);
+        airlog("LAT_SUBMIT", "range_1", 0, key);
         key++;
-        airlog("Q_SUBMISSION", "AIR_BASE", 0, 10);
-        airlog("Q_SUBMISSION", "AIR_BASE", 0, 20);
-        airlog("Q_SUBMISSION", "AIR_BASE", 0, 30);
-        airlog("UTIL_SUBMIT_THR", "AIR_SUBMIT", 0, 3);
-        airlog("UTIL_SUBMIT_THR", "AIR_SUBMIT", 0, 3);
-        airlog("UTIL_SUBMIT_THR", "AIR_SUBMIT", 0, 3);
-        airlog("CNT_TEST_EVENT", "AIR_SUBMIT", 0, 2);
-        airlog("CNT_TEST_EVENT", "AIR_SUBMIT", 0, 2);
-        airlog("CNT_TEST_EVENT", "AIR_SUBMIT", 0, 2);
-        airlog("HIST_SAMPLE_3", "AIR_0", 0, 10);
-        airlog("HIST_SAMPLE_3", "AIR_0", 0, -40);
-        airlog("HIST_SAMPLE_3", "AIR_0", 0, 50);
+        airlog("Q_SUBMISSION", "base", 0, 10);
+        airlog("Q_SUBMISSION", "base", 0, 20);
+        airlog("Q_SUBMISSION", "base", 0, 30);
+        airlog("UTIL_SUBMIT_THR", "submit", 0, 3);
+        airlog("UTIL_SUBMIT_THR", "submit", 0, 3);
+        airlog("UTIL_SUBMIT_THR", "submit", 0, 3);
+        airlog("CNT_TEST_EVENT", "submit", 0, 2);
+        airlog("CNT_TEST_EVENT", "submit", 0, 2);
+        airlog("CNT_TEST_EVENT", "submit", 0, 2);
+        airlog("HIST_SAMPLE_3", "range_0", 0, 10);
+        airlog("HIST_SAMPLE_3", "range_0", 0, -40);
+        airlog("HIST_SAMPLE_3", "range_3", 0, 50);
 
         sleep(10);
     }

@@ -94,21 +94,6 @@ TEST_F(ConfigInterfaceTest, GetIntValue)
         cfg::GetIntValue(
             config::ParagraphType::GROUP, "NodeIndexSize", "POS_JOURNAL"));
 
-    EXPECT_EQ(0,
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_0"));
-    EXPECT_EQ(1,
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_1"));
-    EXPECT_EQ(2,
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_2"));
-    EXPECT_EQ(0,
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_0"));
-    EXPECT_EQ(3,
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_3"));
-    EXPECT_EQ(7,
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_7"));
-    EXPECT_EQ(10,
-        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_10"));
-
     EXPECT_EQ(
         10, cfg::GetIntValue(config::ParagraphType::BUCKET, "Scale", "BUCKET_1"));
     EXPECT_EQ(
@@ -149,6 +134,48 @@ TEST_F(ConfigInterfaceTest, GetIntValue)
     EXPECT_EQ(1000,
         cfg::GetIntValue(
             config::ParagraphType::NODE, "SamplingRatio", "LAT_SUBMIT"));
+}
+
+TEST_F(ConfigInterfaceTest, GetIntValue_Filter)
+{
+    EXPECT_EQ(
+        0, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "One", "ONE"));
+    EXPECT_EQ(
+        -1, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "One", "TWO"));
+    EXPECT_EQ(
+        -1, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "One", "ONEE"));
+
+    EXPECT_EQ(0,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_0"));
+    EXPECT_EQ(1,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_1"));
+    EXPECT_EQ(2,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_2"));
+    EXPECT_EQ(-1,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "BI_3"));
+    EXPECT_EQ(-1,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Basic", "XX_1"));
+
+    EXPECT_EQ(0,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_0"));
+    EXPECT_EQ(3,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_3"));
+    EXPECT_EQ(7,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_7"));
+    EXPECT_EQ(10,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_10"));
+    EXPECT_EQ(-1,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR_11"));
+    EXPECT_EQ(-1,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIRR_3"));
+    EXPECT_EQ(-1,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AOR_3"));
+    EXPECT_EQ(-1,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AI_3"));
+    EXPECT_EQ(-1,
+        cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "AIR3"));
+    EXPECT_EQ(
+        -1, cfg::GetIntValue(config::ParagraphType::FILTER, "Item", "Range", "_3"));
 }
 
 TEST_F(ConfigInterfaceTest, GetStrValue)

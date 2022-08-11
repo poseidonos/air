@@ -22,12 +22,12 @@
  *   SOFTWARE.
  */
 
-#include <air/Air.h>
 #include <unistd.h>
 
 #include <iostream>
 #include <thread>
 
+#include "src/api/Air.h"
 #include "test/system_test/api_histogram/histogram_log.h"
 
 int

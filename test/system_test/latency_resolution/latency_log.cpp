@@ -24,13 +24,14 @@
 
 #include "test/system_test/latency_resolution/latency_log.h"
 
-#include <air/Air.h>
 #include <pthread.h>
 #include <unistd.h>
 
 #include <future>
 #include <iostream>
 #include <thread>
+
+#include "src/api/Air.h"
 
 bool LatencyLog::run = true;
 
@@ -76,8 +77,8 @@ LatencyLog::_LogNano(void)
     uint64_t key {0};
     while (run)
     {
-        airlog("LAT_DUMMY_00", "AIR_0", 0, key);
-        airlog("LAT_DUMMY_00", "AIR_1", 0, key);
+        airlog("LAT_DUMMY_00", "range_0", 0, key);
+        airlog("LAT_DUMMY_00", "range_1", 0, key);
         key++;
     }
 }
@@ -94,21 +95,21 @@ LatencyLog::_LogMicro(void)
     uint64_t key {0};
     while (run)
     {
-        airlog("LAT_DUMMY_01", "AIR_0", 0, key);
+        airlog("LAT_DUMMY_01", "range_0", 0, key);
         usleep(1);
-        airlog("LAT_DUMMY_01", "AIR_1", 0, key);
+        airlog("LAT_DUMMY_01", "range_1", 0, key);
 
-        airlog("LAT_DUMMY_01", "AIR_0", 1, key);
+        airlog("LAT_DUMMY_01", "range_0", 1, key);
         usleep(10);
-        airlog("LAT_DUMMY_01", "AIR_1", 1, key);
+        airlog("LAT_DUMMY_01", "range_1", 1, key);
 
-        airlog("LAT_DUMMY_01", "AIR_0", 2, key);
+        airlog("LAT_DUMMY_01", "range_0", 2, key);
         usleep(100);
-        airlog("LAT_DUMMY_01", "AIR_1", 2, key);
+        airlog("LAT_DUMMY_01", "range_1", 2, key);
 
-        airlog("LAT_DUMMY_01", "AIR_0", 3, key);
+        airlog("LAT_DUMMY_01", "range_0", 3, key);
         usleep(200);
-        airlog("LAT_DUMMY_01", "AIR_1", 3, key);
+        airlog("LAT_DUMMY_01", "range_1", 3, key);
 
         key++;
     }
@@ -126,17 +127,17 @@ LatencyLog::_LogMilli_1(void)
     uint64_t key {0};
     while (run)
     {
-        airlog("LAT_DUMMY_02", "AIR_0", 0, key);
+        airlog("LAT_DUMMY_02", "range_0", 0, key);
         usleep(1000); // 1ms
-        airlog("LAT_DUMMY_02", "AIR_1", 0, key);
+        airlog("LAT_DUMMY_02", "range_1", 0, key);
 
-        airlog("LAT_DUMMY_02", "AIR_0", 1, key);
+        airlog("LAT_DUMMY_02", "range_0", 1, key);
         usleep(10000); // 10ms
-        airlog("LAT_DUMMY_02", "AIR_1", 1, key);
+        airlog("LAT_DUMMY_02", "range_1", 1, key);
 
-        airlog("LAT_DUMMY_02", "AIR_0", 2, key);
+        airlog("LAT_DUMMY_02", "range_0", 2, key);
         usleep(100000); // 100ms
-        airlog("LAT_DUMMY_02", "AIR_1", 2, key);
+        airlog("LAT_DUMMY_02", "range_1", 2, key);
 
         key++;
     }
@@ -154,9 +155,9 @@ LatencyLog::_LogMilli_2(void)
     uint64_t key {0};
     while (run)
     {
-        airlog("LAT_DUMMY_03", "AIR_0", 0, key);
+        airlog("LAT_DUMMY_03", "range_0", 0, key);
         usleep(300000); // 300ms
-        airlog("LAT_DUMMY_03", "AIR_1", 0, key);
+        airlog("LAT_DUMMY_03", "range_1", 0, key);
 
         key++;
     }
@@ -174,9 +175,9 @@ LatencyLog::_LogMilli_3(void)
     uint64_t key {0};
     while (run)
     {
-        airlog("LAT_DUMMY_04", "AIR_0", 0, key);
+        airlog("LAT_DUMMY_04", "range_0", 0, key);
         usleep(500000); // 500ms
-        airlog("LAT_DUMMY_04", "AIR_1", 0, key);
+        airlog("LAT_DUMMY_04", "range_1", 0, key);
 
         key++;
     }
@@ -194,9 +195,9 @@ LatencyLog::_LogSecond(void)
     uint64_t key {0};
     while (run)
     {
-        airlog("LAT_DUMMY_05", "AIR_0", 0, key);
+        airlog("LAT_DUMMY_05", "range_0", 0, key);
         usleep(1100000); // 1.1s
-        airlog("LAT_DUMMY_05", "AIR_1", 0, key);
+        airlog("LAT_DUMMY_05", "range_1", 0, key);
 
         key++;
     }

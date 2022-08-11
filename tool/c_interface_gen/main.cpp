@@ -100,12 +100,12 @@ main(void)
         {
             air::string_view name =
                 cfg::GetSentenceName(config::ParagraphType::FILTER, i);
-            air_h_file << "enum " << name << "\n{\n";
+            air_h_file << "enum Filter" << name << "\n{\n";
 
             int32_t item_size = cfg::GetItemSizeWithFilterName(name);
             for (int32_t j = 0; j < item_size; j++)
             {
-                air_h_file << "    " << cfg::GetItemStrWithFilterName(name, j)
+                air_h_file << "    eAIR_" << cfg::GetItemStrWithFilterName(name, j)
                            << ",\n";
             }
 

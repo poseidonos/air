@@ -419,6 +419,13 @@ private:
                 index.substr(index_token_pos + 1, index.size() - index_token_pos)};
             int64_t index_num {Stoi(index_suffix)};
 
+            air::string_view start_prefix {start_item.substr(0, start_token_pos)};
+            air::string_view index_prefix {index.substr(0, index_token_pos)};
+            if (start_prefix != index_prefix)
+            {
+                return -1;
+            }
+
             if (end_num < index_num)
             {
                 return -1;
@@ -455,7 +462,8 @@ private:
         }
         else
         {
-            return 0;
+            if (index == value)
+                return 0;
         }
 
         return -1;
