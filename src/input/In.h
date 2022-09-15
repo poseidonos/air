@@ -62,7 +62,7 @@ public:
 class InCommand
 {
 public:
-    explicit InCommand(input::Subject* new_subject): subject(new_subject)
+    explicit InCommand(input::Subject* subject): subject(subject)
     {
         struct msqid_ds msq_stat
         {

@@ -32,7 +32,7 @@ namespace collection
 class Collector
 {
 public:
-    explicit Collector(Writer* new_writer): writer(new_writer)
+    explicit Collector(Writer* writer): writer(writer)
     {
     }
     virtual ~Collector(void);
@@ -62,7 +62,7 @@ protected:
 class PerformanceCollector : public Collector
 {
 public:
-    explicit PerformanceCollector(Writer* new_writer): Collector(new_writer)
+    explicit PerformanceCollector(Writer* writer): Collector(writer)
     {
     }
     virtual ~PerformanceCollector(void)
@@ -73,7 +73,7 @@ public:
 class LatencyCollector : public Collector
 {
 public:
-    explicit LatencyCollector(Writer* new_writer): Collector(new_writer)
+    explicit LatencyCollector(Writer* writer): Collector(writer)
     {
     }
     virtual ~LatencyCollector(void)
@@ -84,7 +84,7 @@ public:
 class QueueCollector : public Collector
 {
 public:
-    explicit QueueCollector(Writer* new_writer): Collector(new_writer)
+    explicit QueueCollector(Writer* writer): Collector(writer)
     {
     }
     virtual ~QueueCollector(void)
@@ -95,7 +95,7 @@ public:
 class UtilizationCollector : public Collector
 {
 public:
-    explicit UtilizationCollector(Writer* new_writer): Collector(new_writer)
+    explicit UtilizationCollector(Writer* writer): Collector(writer)
     {
     }
     virtual ~UtilizationCollector(void)
@@ -106,7 +106,7 @@ public:
 class HistogramCollector : public Collector
 {
 public:
-    explicit HistogramCollector(Writer* new_writer): Collector(new_writer)
+    explicit HistogramCollector(Writer* writer): Collector(writer)
     {
     }
     virtual ~HistogramCollector(void)
@@ -117,7 +117,7 @@ public:
 class CountCollector : public Collector
 {
 public:
-    explicit CountCollector(Writer* new_writer): Collector(new_writer)
+    explicit CountCollector(Writer* writer): Collector(writer)
     {
     }
     virtual ~CountCollector(void)

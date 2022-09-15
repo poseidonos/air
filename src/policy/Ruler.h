@@ -35,9 +35,9 @@ namespace policy
 class Ruler
 {
 public:
-    Ruler(meta::NodeMeta* new_node_meta, meta::GlobalMeta* new_global_meta)
-    : node_meta(new_node_meta),
-      global_meta(new_global_meta)
+    Ruler(meta::NodeMeta* node_meta, meta::GlobalMeta* global_meta)
+    : node_meta(node_meta),
+      global_meta(global_meta)
     {
     }
     int CheckRule(uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);

@@ -54,46 +54,46 @@ chain::TaskChain::IsRun(meta::GlobalMeta* g_meta, uint32_t delayed_time)
 }
 
 void
-chain::SwitchGearTask::RunChain(lib_design::AbstractCoRHandler** cor_handler,
+chain::SwitchGearTask::RunChain(lib_design::AbstractCoRHandler** cor_handlers,
     meta::GlobalMeta* g_meta, int32_t option)
 {
     if (true == g_meta->AirPlay())
     {
-        cor_handler[to_dtype(pi::ChainHandler::SWITCHGEAR)]->HandleRequest(option);
+        cor_handlers[to_dtype(pi::ChainHandler::SWITCHGEAR)]->HandleRequest(option);
     }
 }
 
 void
-chain::PreprocessTask::RunChain(lib_design::AbstractCoRHandler** cor_handler,
+chain::PreprocessTask::RunChain(lib_design::AbstractCoRHandler** cor_handlers,
     meta::GlobalMeta* g_meta, int32_t option)
 {
     if (true == g_meta->AirPlay())
     {
-        cor_handler[to_dtype(pi::ChainHandler::PREPROCESS)]->HandleRequest(option);
+        cor_handlers[to_dtype(pi::ChainHandler::PREPROCESS)]->HandleRequest(option);
     }
 }
 
 void
-chain::CLITask::RunChain(lib_design::AbstractCoRHandler** cor_handler,
+chain::CLITask::RunChain(lib_design::AbstractCoRHandler** cor_handlers,
     meta::GlobalMeta* g_meta, int32_t option)
 {
-    cor_handler[to_dtype(pi::ChainHandler::INPUT)]->HandleRequest(option);
-    cor_handler[to_dtype(pi::ChainHandler::POLICY)]->HandleRequest(option);
-    cor_handler[to_dtype(pi::ChainHandler::COLLECTION)]->HandleRequest(option);
-    cor_handler[to_dtype(pi::ChainHandler::OUTPUT)]->HandleRequest(option);
+    cor_handlers[to_dtype(pi::ChainHandler::INPUT)]->HandleRequest(option);
+    cor_handlers[to_dtype(pi::ChainHandler::POLICY)]->HandleRequest(option);
+    cor_handlers[to_dtype(pi::ChainHandler::COLLECTION)]->HandleRequest(option);
+    cor_handlers[to_dtype(pi::ChainHandler::OUTPUT)]->HandleRequest(option);
 }
 
 void
-chain::AnalysisTask::RunChain(lib_design::AbstractCoRHandler** cor_handler,
+chain::AnalysisTask::RunChain(lib_design::AbstractCoRHandler** cor_handlers,
     meta::GlobalMeta* g_meta, int32_t option)
 {
-    cor_handler[to_dtype(pi::ChainHandler::PROCESS)]->HandleRequest(option);
-    cor_handler[to_dtype(pi::ChainHandler::TRANSFER)]->HandleRequest(option);
-    cor_handler[to_dtype(pi::ChainHandler::STREAM)]->HandleRequest(option);
+    cor_handlers[to_dtype(pi::ChainHandler::PROCESS)]->HandleRequest(option);
+    cor_handlers[to_dtype(pi::ChainHandler::TRANSFER)]->HandleRequest(option);
+    cor_handlers[to_dtype(pi::ChainHandler::STREAM)]->HandleRequest(option);
 
     if (true == g_meta->AirPlay())
     {
-        cor_handler[to_dtype(pi::ChainHandler::DETECT)]->HandleRequest(option);
+        cor_handlers[to_dtype(pi::ChainHandler::DETECT)]->HandleRequest(option);
     }
 
     if (g_meta->StreamingUpdate())
@@ -121,28 +121,28 @@ chain::ChainManager::RunChain(uint32_t delayed_time)
 
     if (switch_gear_run)
     {
-        switch_gear_task.RunChain(cor_handler, global_meta);
+        switch_gear_task.RunChain(cor_handlers, global_meta);
     }
     if (preprocess_run)
     {
         if (analysis_run)
         {
             preprocess_task.RunChain(
-                cor_handler, global_meta, to_dtype(pi::PreprocessOption::FORCED));
+                cor_handlers, global_meta, to_dtype(pi::PreprocessOption::FORCED));
         }
         else
         {
             preprocess_task.RunChain(
-                cor_handler, global_meta, to_dtype(pi::PreprocessOption::NORMAL));
+                cor_handlers, global_meta, to_dtype(pi::PreprocessOption::NORMAL));
         }
     }
     if (cli_run)
     {
-        cli_task.RunChain(cor_handler, global_meta);
+        cli_task.RunChain(cor_handlers, global_meta);
     }
     if (analysis_run)
     {
-        analysis_task.RunChain(cor_handler, global_meta);
+        analysis_task.RunChain(cor_handlers, global_meta);
     }
 }
 

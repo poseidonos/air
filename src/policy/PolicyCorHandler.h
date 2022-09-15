@@ -33,8 +33,7 @@ namespace policy
 class PolicyCoRHandler : public lib_design::AbstractCoRHandler
 {
 public:
-    explicit PolicyCoRHandler(policy::Observer* new_observer)
-    : observer(new_observer)
+    explicit PolicyCoRHandler(policy::Observer* observer): observer(observer)
     {
     }
     virtual ~PolicyCoRHandler(void)

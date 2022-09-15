@@ -353,11 +353,11 @@ collection::CollectionManager::_UpdateInit(
 
 int
 collection::CollectionManager::_UpdateNodeSamplingRate(
-    uint32_t node_index, uint32_t new_ratio)
+    uint32_t node_index, uint32_t ratio)
 {
     if (collector[node_index] != nullptr)
     {
-        return collector[node_index]->SetSamplingRate(new_ratio);
+        return collector[node_index]->SetSamplingRate(ratio);
     }
     return 0;
 }

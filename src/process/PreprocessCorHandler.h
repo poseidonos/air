@@ -33,8 +33,8 @@ namespace process
 class PreprocessCoRHandler : public lib_design::AbstractCoRHandler
 {
 public:
-    explicit PreprocessCoRHandler(Preprocessor* new_preprocessor)
-    : preprocessor(new_preprocessor)
+    explicit PreprocessCoRHandler(Preprocessor* preprocessor)
+    : preprocessor(preprocessor)
     {
     }
     virtual ~PreprocessCoRHandler(void)

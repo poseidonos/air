@@ -53,10 +53,10 @@ public:
     NodeManager(void)
     {
     }
-    NodeManager(meta::GlobalMetaGetter* new_global_meta_getter,
-        meta::NodeMetaGetter* new_node_meta_getter)
-    : global_meta_getter(new_global_meta_getter),
-      node_meta_getter(new_node_meta_getter)
+    NodeManager(meta::GlobalMetaGetter* global_meta_getter,
+        meta::NodeMetaGetter* node_meta_getter)
+    : global_meta_getter(global_meta_getter),
+      node_meta_getter(node_meta_getter)
     {
         nda_map.clear();
     }

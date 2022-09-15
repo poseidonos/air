@@ -40,7 +40,6 @@ stream::Stream::Stream(void)
 void
 stream::Stream::SendPacket(void)
 {
-    // new json
     std::ofstream export_file;
     // out : output(default)
     // app : append

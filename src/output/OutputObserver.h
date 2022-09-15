@@ -36,8 +36,7 @@ public:
     Observer(void)
     {
     }
-    explicit Observer(OutputManager* new_output_manager)
-    : output_manager(new_output_manager)
+    explicit Observer(OutputManager* output_manager): output_manager(output_manager)
     {
     }
     virtual ~Observer(void)

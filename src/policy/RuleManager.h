@@ -49,9 +49,9 @@ public:
 class RuleManager
 {
 public:
-    RuleManager(Ruler* new_ruler, policy::Subject* new_subject)
-    : ruler(new_ruler),
-      subject(new_subject)
+    RuleManager(Ruler* ruler, policy::Subject* subject)
+    : ruler(ruler),
+      subject(subject)
     {
     }
     void SetNodeMetaConfig(void* node);

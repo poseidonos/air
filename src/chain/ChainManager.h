@@ -38,9 +38,9 @@ class TaskChain
 {
 public:
     void
-    SetPeriod(uint32_t new_period)
+    SetPeriod(uint32_t period)
     {
-        period = new_period;
+        this->period = period;
         deadline = period;
     }
     uint32_t
@@ -53,12 +53,12 @@ public:
     {
         return deadline;
     }
-    virtual void RunChain(lib_design::AbstractCoRHandler** cor_handler,
+    virtual void RunChain(lib_design::AbstractCoRHandler** cor_handlers,
         meta::GlobalMeta* g_meta, int32_t option = 0) = 0;
     bool IsRun(meta::GlobalMeta* g_meta, uint32_t delayed_time);
 
 protected:
-    explicit TaskChain(uint32_t new_period): period(new_period)
+    explicit TaskChain(uint32_t period): period(period)
     {
         deadline = period;
     }
@@ -77,7 +77,7 @@ public:
     SwitchGearTask(void): TaskChain(50)
     {
     }
-    virtual void RunChain(lib_design::AbstractCoRHandler** cor_handler,
+    virtual void RunChain(lib_design::AbstractCoRHandler** cor_handlers,
         meta::GlobalMeta* g_meta, int32_t option = 0);
 };
 
@@ -87,7 +87,7 @@ public:
     PreprocessTask(void): TaskChain(100)
     {
     }
-    virtual void RunChain(lib_design::AbstractCoRHandler** cor_handler,
+    virtual void RunChain(lib_design::AbstractCoRHandler** cor_handlers,
         meta::GlobalMeta* g_meta, int32_t option = 0);
 };
 
@@ -97,7 +97,7 @@ public:
     CLITask(void): TaskChain(100)
     {
     }
-    virtual void RunChain(lib_design::AbstractCoRHandler** cor_handler,
+    virtual void RunChain(lib_design::AbstractCoRHandler** cor_handlers,
         meta::GlobalMeta* g_meta, int32_t option = 0);
 };
 
@@ -107,7 +107,7 @@ public:
     AnalysisTask(void): TaskChain(1000)
     {
     }
-    virtual void RunChain(lib_design::AbstractCoRHandler** cor_handler,
+    virtual void RunChain(lib_design::AbstractCoRHandler** cor_handlers,
         meta::GlobalMeta* g_meta, int32_t option = 0);
 };
 
@@ -120,16 +120,15 @@ public:
     virtual ~ChainManager(void)
     {
     }
-    explicit ChainManager(meta::GlobalMeta* new_global_meta)
-    : global_meta(new_global_meta)
+    explicit ChainManager(meta::GlobalMeta* global_meta): global_meta(global_meta)
     {
     }
     void Init(void);
     void RunChain(uint32_t delayed_time);
     void
-    AttachChain(lib_design::AbstractCoRHandler* new_cor_handler, uint32_t index)
+    AttachChain(lib_design::AbstractCoRHandler* cor_handler, uint32_t index)
     {
-        cor_handler[index] = new_cor_handler;
+        cor_handlers[index] = cor_handler;
     }
     virtual void RunThread(uint32_t run_skip_count);
     SwitchGearTask*
@@ -154,9 +153,10 @@ public:
     }
 
 private:
-    lib_design::AbstractCoRHandler* cor_handler[to_dtype(pi::ChainHandler::COUNT)] {
-        nullptr,
-    };
+    lib_design::AbstractCoRHandler*
+        cor_handlers[to_dtype(pi::ChainHandler::COUNT)] {
+            nullptr,
+        };
     SwitchGearTask switch_gear_task {};
     PreprocessTask preprocess_task {};
     CLITask cli_task {};

@@ -25,9 +25,9 @@
 #include "src/lib/Hash.h"
 
 template<typename K>
-air::HashMap<K>::HashMap(uint32_t new_capacity)
+air::HashMap<K>::HashMap(uint32_t capacity)
 {
-    capacity = new_capacity;
+    this->capacity = capacity;
     hash_arr = new HashNode<K>*[capacity];
     for (uint32_t i = 0; i < capacity; i++)
     {

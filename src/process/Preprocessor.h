@@ -39,10 +39,10 @@ namespace process
 class Preprocessor
 {
 public:
-    Preprocessor(meta::NodeMetaGetter* new_node_meta_getter,
-        node::NodeManager* new_node_manager)
-    : node_meta_getter(new_node_meta_getter),
-      node_manager(new_node_manager)
+    Preprocessor(
+        meta::NodeMetaGetter* node_meta_getter, node::NodeManager* node_manager)
+    : node_meta_getter(node_meta_getter),
+      node_manager(node_manager)
     {
     }
     virtual ~Preprocessor(void)

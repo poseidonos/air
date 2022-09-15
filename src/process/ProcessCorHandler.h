@@ -33,8 +33,8 @@ namespace process
 class ProcessCoRHandler : public lib_design::AbstractCoRHandler
 {
 public:
-    explicit ProcessCoRHandler(ProcessManager* new_process_manager)
-    : process_manager(new_process_manager)
+    explicit ProcessCoRHandler(ProcessManager* process_manager)
+    : process_manager(process_manager)
     {
     }
     virtual ~ProcessCoRHandler(void)

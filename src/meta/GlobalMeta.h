@@ -63,19 +63,19 @@ public:
         return streaming_update;
     }
     virtual inline void
-    SetAirBuild(bool new_air_build)
+    SetAirBuild(bool air_build)
     {
-        air_build = new_air_build;
+        this->air_build = air_build;
     }
     virtual inline void
-    SetAirPlay(bool new_air_play)
+    SetAirPlay(bool air_play)
     {
-        air_play = new_air_play;
+        this->air_play = air_play;
     }
     virtual inline void
-    SetStreamingInterval(uint32_t new_streaming_interval)
+    SetStreamingInterval(uint32_t streaming_interval)
     {
-        streaming_value = new_streaming_interval;
+        this->streaming_value = streaming_interval;
         streaming_update = true;
     }
     virtual inline void
@@ -85,9 +85,9 @@ public:
         streaming_update = false;
     }
     inline void
-    SetCpuNum(uint32_t new_cpu_num)
+    SetCpuNum(uint32_t cpu_num)
     {
-        cpu_num = new_cpu_num;
+        this->cpu_num = cpu_num;
     }
     inline uint32_t
     CpuNum(void) const
@@ -113,8 +113,7 @@ public:
     virtual ~GlobalMetaGetter(void)
     {
     }
-    explicit GlobalMetaGetter(GlobalMeta* new_global_meta)
-    : global_meta(new_global_meta)
+    explicit GlobalMetaGetter(GlobalMeta* global_meta): global_meta(global_meta)
     {
     }
     virtual inline bool
