@@ -39,8 +39,7 @@ namespace output
 class OutputManager
 {
 public:
-    explicit OutputManager(OutCommand* new_out_command)
-    : out_command(new_out_command)
+    explicit OutputManager(OutCommand* out_command): out_command(out_command)
     {
     }
     ~OutputManager(void)

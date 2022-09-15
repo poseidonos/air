@@ -58,9 +58,9 @@ protected:
         {
             case JSONtype::OBJECT:
             {
-                std::string new_key {doc_name + "_" + key};
-                auto& obj = JSONer::JSON(new_key);
-                _ParseObject(obj, new_key, value);
+                std::string tmp_key {doc_name + "_" + key};
+                auto& obj = JSONer::JSON(tmp_key);
+                _ParseObject(obj, tmp_key, value);
                 doc[key] = {obj};
                 break;
             }
@@ -121,10 +121,10 @@ protected:
         {
             case JSONtype::OBJECT:
             {
-                std::string new_key {
+                std::string tmp_key {
                     doc_name + "_" + key + "_" + std::to_string(value_count)};
-                auto& obj = JSONer::JSON(new_key);
-                doc[key] += {_ParseObject(obj, new_key, value)};
+                auto& obj = JSONer::JSON(tmp_key);
+                doc[key] += {_ParseObject(obj, tmp_key, value)};
                 break;
             }
             case JSONtype::ARRAY:

@@ -64,7 +64,7 @@ node::NodeManager::CreateNodeDataArray(uint32_t tid)
         return;
     }
 
-    NodeDataArray* new_node_data_array = new NodeDataArray;
+    node_data_array = new NodeDataArray;
 
     for (uint32_t i = 0; i < MAX_NID_SIZE; i++)
     {
@@ -77,17 +77,17 @@ node::NodeManager::CreateNodeDataArray(uint32_t tid)
             case (air::ProcessorType::UTILIZATION):
             case (air::ProcessorType::COUNT):
             case (air::ProcessorType::HISTOGRAM):
-                new_node_data_array->node[i] =
+                node_data_array->node[i] =
                     new NodeData(type, node_meta_getter->IndexSize(i),
                         node_meta_getter->FilterSize(i));
                 break;
             default:
-                new_node_data_array->node[i] = nullptr;
+                node_data_array->node[i] = nullptr;
                 break;
         }
-        node_initializer.InitNodeData(i, type, new_node_data_array->node[i]);
+        node_initializer.InitNodeData(i, type, node_data_array->node[i]);
     }
-    nda_map.insert(std::make_pair(tid, new_node_data_array));
+    nda_map.insert(std::make_pair(tid, node_data_array));
 }
 
 void

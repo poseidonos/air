@@ -76,7 +76,7 @@ public:
     }
 
     static void*
-    NewData(JSONtype type, void* v)
+    Data(JSONtype type, void* v)
     {
         switch (type)
         {
@@ -181,7 +181,7 @@ private:
 };
 
 constexpr auto cpp_type = CPPtype::Type;
-constexpr auto new_data = CPPtype::NewData;
+constexpr auto cpp_data = CPPtype::Data;
 
 } // namespace air
 

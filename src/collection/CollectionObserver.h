@@ -36,8 +36,8 @@ public:
     Observer(void)
     {
     }
-    explicit Observer(CollectionManager* new_collection_manager)
-    : collection_manager(new_collection_manager)
+    explicit Observer(CollectionManager* collection_manager)
+    : collection_manager(collection_manager)
     {
     }
     virtual ~Observer(void)

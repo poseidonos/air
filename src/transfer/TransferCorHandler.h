@@ -33,7 +33,7 @@ namespace transfer
 class TransferCoRHandler : public lib_design::AbstractCoRHandler
 {
 public:
-    explicit TransferCoRHandler(Transfer* new_transfer): transfer(new_transfer)
+    explicit TransferCoRHandler(Transfer* transfer): transfer(transfer)
     {
     }
     virtual ~TransferCoRHandler(void)

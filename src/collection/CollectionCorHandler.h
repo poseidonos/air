@@ -33,8 +33,8 @@ namespace collection
 class CollectionCoRHandler : public lib_design::AbstractCoRHandler
 {
 public:
-    explicit CollectionCoRHandler(collection::Observer* new_observer)
-    : observer(new_observer)
+    explicit CollectionCoRHandler(collection::Observer* observer)
+    : observer(observer)
     {
     }
     virtual ~CollectionCoRHandler(void)

@@ -31,13 +31,13 @@
 void
 process::Processor::StreamData(air::string_view& node_name_view, uint32_t tid,
     const char* tname, node::NodeData* node_data, air::ProcessorType ptype,
-    double new_time, uint32_t index_size, uint32_t filter_size)
+    double time, uint32_t index_size, uint32_t filter_size)
 {
     if (nullptr == node_data)
     {
         return;
     }
-    lap_time = new_time;
+    lap_time = time;
 
     lib::Data* air_data {nullptr};
     lib::AccData* acc_data {nullptr};

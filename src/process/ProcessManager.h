@@ -42,12 +42,11 @@ namespace process
 class ProcessManager
 {
 public:
-    ProcessManager(meta::GlobalMetaGetter* new_global_meta_getter,
-        meta::NodeMetaGetter* new_node_meta_getter,
-        node::NodeManager* new_node_manager)
-    : global_meta_getter(new_global_meta_getter),
-      node_meta_getter(new_node_meta_getter),
-      node_manager(new_node_manager)
+    ProcessManager(meta::GlobalMetaGetter* global_meta_getter,
+        meta::NodeMetaGetter* node_meta_getter, node::NodeManager* node_manager)
+    : global_meta_getter(global_meta_getter),
+      node_meta_getter(node_meta_getter),
+      node_manager(node_manager)
     {
     }
     ~ProcessManager(void);

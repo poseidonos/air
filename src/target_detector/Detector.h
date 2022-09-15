@@ -33,8 +33,7 @@ namespace detect
 class Detector
 {
 public:
-    explicit Detector(node::NodeManager* new_node_manager)
-    : node_manager(new_node_manager)
+    explicit Detector(node::NodeManager* node_manager): node_manager(node_manager)
     {
     }
     ~Detector(void)

@@ -33,7 +33,7 @@ namespace input
 class InCoRHandler : public lib_design::AbstractCoRHandler
 {
 public:
-    explicit InCoRHandler(InCommand* new_in_command): in_command(new_in_command)
+    explicit InCoRHandler(InCommand* in_command): in_command(in_command)
     {
     }
     virtual ~InCoRHandler(void)

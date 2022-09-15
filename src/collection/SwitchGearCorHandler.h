@@ -33,8 +33,7 @@ namespace collection
 class SwitchGearCoRHandler : public lib_design::AbstractCoRHandler
 {
 public:
-    explicit SwitchGearCoRHandler(SwitchGear* new_switch_gear)
-    : switch_gear(new_switch_gear)
+    explicit SwitchGearCoRHandler(SwitchGear* switch_gear): switch_gear(switch_gear)
     {
     }
     virtual ~SwitchGearCoRHandler(void)

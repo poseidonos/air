@@ -33,8 +33,7 @@ namespace output
 class OutputCoRHandler : public lib_design::AbstractCoRHandler
 {
 public:
-    explicit OutputCoRHandler(output::Observer* new_observer)
-    : observer(new_observer)
+    explicit OutputCoRHandler(output::Observer* observer): observer(observer)
     {
     }
     virtual ~OutputCoRHandler(void)

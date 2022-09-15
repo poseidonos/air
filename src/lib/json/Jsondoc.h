@@ -43,11 +43,11 @@ namespace air
 class JSONdoc
 {
 public:
-    JSONdoc(JSONtype new_type = JSONtype::WHITESPACE, bool new_ownership = false,
-        bool new_key = false)
-    : type(new_type),
-      ownership(new_ownership),
-      key(new_key)
+    JSONdoc(JSONtype type = JSONtype::WHITESPACE, bool ownership = false,
+        bool key = false)
+    : type(type),
+      ownership(ownership),
+      key(key)
     {
     }
 
@@ -472,9 +472,9 @@ public:
     }
 
     void
-    SetType(JSONtype new_type)
+    SetType(JSONtype type)
     {
-        type = new_type;
+        this->type = type;
     }
 
     void
@@ -494,7 +494,7 @@ public:
             }
             else
             {
-                void* data = new_data(v.second.type, v.second.data);
+                void* data = cpp_data(v.second.type, v.second.data);
                 dst->map.insert({v.first, {data, v.second.type}});
             }
         }

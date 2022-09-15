@@ -53,13 +53,13 @@ public:
 class CollectionManager
 {
 public:
-    CollectionManager(meta::GlobalMetaGetter* new_global_meta_getter,
-        meta::NodeMetaGetter* new_node_meta_getter,
-        node::NodeManager* new_node_manager, collection::Subject* new_subject)
-    : global_meta_getter(new_global_meta_getter),
-      node_meta_getter(new_node_meta_getter),
-      node_manager(new_node_manager),
-      subject(new_subject)
+    CollectionManager(meta::GlobalMetaGetter* global_meta_getter,
+        meta::NodeMetaGetter* node_meta_getter, node::NodeManager* node_manager,
+        collection::Subject* subject)
+    : global_meta_getter(global_meta_getter),
+      node_meta_getter(node_meta_getter),
+      node_manager(node_manager),
+      subject(subject)
     {
     }
     virtual ~CollectionManager(void);
@@ -117,7 +117,7 @@ private:
     void _InitNode(uint32_t node_index);
     int _UpdateInit(
         uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
-    int _UpdateNodeSamplingRate(uint32_t node_index, uint32_t new_ratio);
+    int _UpdateNodeSamplingRate(uint32_t node_index, uint32_t ratio);
     int _UpdateSamplingRate(
         uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
 

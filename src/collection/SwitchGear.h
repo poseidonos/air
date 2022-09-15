@@ -36,12 +36,11 @@ namespace collection
 class SwitchGear
 {
 public:
-    SwitchGear(meta::NodeMetaGetter* new_node_meta_getter,
-        meta::GlobalMetaGetter* new_global_meta_getter,
-        node::NodeManager* new_node_manager)
-    : node_meta_getter(new_node_meta_getter),
-      global_meta_getter(new_global_meta_getter),
-      node_manager(new_node_manager)
+    SwitchGear(meta::NodeMetaGetter* node_meta_getter,
+        meta::GlobalMetaGetter* global_meta_getter, node::NodeManager* node_manager)
+    : node_meta_getter(node_meta_getter),
+      global_meta_getter(global_meta_getter),
+      node_manager(node_manager)
     {
     }
     virtual ~SwitchGear(void)

@@ -34,7 +34,7 @@ template<typename K>
 class HashNode
 {
 public:
-    HashNode(K new_key, bool new_valid): key(new_key), valid(new_valid)
+    HashNode(K key, bool valid): key(key), valid(valid)
     {
     }
     K key;
@@ -45,7 +45,7 @@ template<typename K>
 class HashMap
 {
 public:
-    explicit HashMap(uint32_t new_capacity);
+    explicit HashMap(uint32_t capacity);
     virtual ~HashMap(void);
     virtual inline uint32_t
     InsertHashNode(K key)
