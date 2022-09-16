@@ -33,19 +33,22 @@ process::TimingDistributor::SetTiming(
     std::map<uint64_t, int32_t> timing_map;
     timing_map.clear();
 
-    for (auto& kv : node_manager->nda_map)
+    for (uint32_t nid = 0; nid < MAX_NID_SIZE; nid++)
     {
-        for (uint32_t nid = 0; nid < MAX_NID_SIZE; nid++)
-        {
-            uint32_t index_size = node_meta_getter->IndexSize(nid);
-            uint32_t filter_size = node_meta_getter->FilterSize(nid);
+        uint32_t index_size = node_meta_getter->IndexSize(nid);
+        uint32_t filter_size = node_meta_getter->FilterSize(nid);
 
-            if (air::ProcessorType::LATENCY == node_meta_getter->ProcessorType(nid))
+        if (air::ProcessorType::LATENCY == node_meta_getter->ProcessorType(nid))
+        {
+            for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
             {
-                for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
+                for (uint32_t filter_index = 0; filter_index < filter_size - 1;
+                     filter_index++)
                 {
-                    for (uint32_t filter_index = 0; filter_index < filter_size - 1;
-                         filter_index++)
+                    lib::AccLatencyData* acc =
+                        node_manager->GetAccLatData(nid, hash_index, filter_index);
+
+                    for (auto& kv : node_manager->nda_map)
                     {
                         lib::LatencyData* to = static_cast<lib::LatencyData*>(
                             kv.second->node[nid]->GetUserDataByHashIndex(
@@ -53,8 +56,6 @@ process::TimingDistributor::SetTiming(
                         lib::LatencyData* from = static_cast<lib::LatencyData*>(
                             kv.second->node[nid]->GetUserDataByHashIndex(
                                 hash_index, filter_index));
-                        lib::AccLatencyData* acc = node_manager->GetAccLatData(
-                            nid, hash_index, filter_index);
 
                         uint64_t key {0};
                         int32_t value {0};
@@ -71,24 +72,7 @@ process::TimingDistributor::SetTiming(
                         _ResetTiming(
                             from, to, timing_map[key], acc->period_sample_count);
                     }
-                }
-            }
-        }
-    }
 
-    for (uint32_t nid = 0; nid < MAX_NID_SIZE; nid++)
-    {
-        if (node_meta_getter->ProcessorType(nid) == air::ProcessorType::LATENCY)
-        {
-            uint32_t index_size = node_meta_getter->IndexSize(nid);
-            for (uint32_t hash_index = 0; hash_index < index_size; hash_index++)
-            {
-                uint32_t filter_size = node_meta_getter->FilterSize(nid);
-                for (uint32_t filter_index = 0; filter_index < filter_size - 1;
-                     filter_index++)
-                {
-                    lib::AccLatencyData* acc =
-                        node_manager->GetAccLatData(nid, hash_index, filter_index);
                     acc->period_sample_count = 0;
                 }
             }
@@ -120,20 +104,12 @@ process::TimingDistributor::_ResetTiming(lib::LatencyData* curr_data,
 
     curr_data->start_deadline = time_value;
     curr_data->start_v.clear();
-    if (curr_data->access)
-    {
-        curr_data->start_v.reserve(token * 2 + 1);
-    }
     curr_data->start_token_size = token;
     curr_data->start_state = lib::TimeLogState::IDLE;
     curr_data->access = false;
 
     next_data->end_deadline = time_value;
     next_data->end_v.clear();
-    if (next_data->access)
-    {
-        next_data->end_v.reserve(token * 2 + 1);
-    }
     next_data->end_token_size = token;
     next_data->end_state = lib::TimeLogState::IDLE;
     next_data->access = false;
