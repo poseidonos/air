@@ -133,7 +133,7 @@ public:
         value = Strip(value);
 
         if (key == "AirBuild" || key == "NodeBuild" || key == "NodeRun" ||
-            key == "Build" || key == "Run")
+            key == "Build" || key == "Run" || key == "FileWrite")
         {
             if (value == "TRUE" || value == "True" || value == "true" ||
                 value == "ON" || value == "On" || value == "on")

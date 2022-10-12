@@ -177,10 +177,10 @@ public:
     NodeMetaGetter(void)
     {
     }
-    virtual ~NodeMetaGetter(void)
+    explicit NodeMetaGetter(NodeMeta* node_meta): node_meta(node_meta)
     {
     }
-    explicit NodeMetaGetter(NodeMeta* node_meta): node_meta(node_meta)
+    virtual ~NodeMetaGetter(void)
     {
     }
     virtual inline air::ProcessorType

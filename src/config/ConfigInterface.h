@@ -93,6 +93,7 @@ public:
         if (ParagraphType::DEFAULT == type)
         {
             if (key != "AirBuild" && key != "StreamingInterval" &&
+                key != "FileWrite" && key != "RemainingFileCount" &&
                 key != "NodeBuild" && key != "NodeRun" &&
                 key != "NodeSamplingRatio" && key != "NodeIndexSize")
             {

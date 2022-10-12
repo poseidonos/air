@@ -57,6 +57,16 @@ public:
     {
         global_meta->SetAirBuild(air_build);
     }
+    void
+    SetFileWrite(bool file_write)
+    {
+        global_meta->SetFileWrite(file_write);
+    }
+    void
+    SetRemainingFileCount(uint32_t file_count)
+    {
+        global_meta->SetRemainingFileCount(file_count);
+    }
 
 private:
     int _CheckEnableNodeRule(
@@ -66,6 +76,10 @@ private:
     int _CheckSetSamplingRatioRule(
         uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
     int _CheckStreamInterval(
+        uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
+    int _CheckFileWriteRule(
+        uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
+    int _CheckRemainFileCountRule(
         uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
     bool _SetEnableNodeRule(
         uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);

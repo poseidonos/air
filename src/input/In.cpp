@@ -53,14 +53,14 @@ input::InCommand::_NotifyToPolicy(uint32_t type2, uint32_t value1, uint32_t valu
 }
 
 void
-input::InCommand::_CheckEnableCMD(void)
+input::InCommand::_SendAirRunCMD(void)
 {
     _NotifyToPolicy(to_dtype(pi::Type2::ENABLE_AIR), recv_msg.cmd_int_value1, 0,
         static_cast<int>(recv_msg.pid), recv_msg.cmd_type, recv_msg.cmd_order);
 }
 
 void
-input::InCommand::_CheckSetStreamingIntervalCMD(void)
+input::InCommand::_SendAirStreamIntervalCMD(void)
 {
     uint32_t type2 = to_dtype(pi::Type2::SET_STREAMING_INTERVAL);
     uint32_t value1 = recv_msg.cmd_int_value1; // interval
@@ -70,7 +70,25 @@ input::InCommand::_CheckSetStreamingIntervalCMD(void)
 }
 
 void
-input::InCommand::_SetEnableNodeValue(uint32_t* type2, uint32_t* value2)
+input::InCommand::_SendAirFileWriteCMD(void)
+{
+    uint32_t type2 = to_dtype(pi::Type2::SET_FILE_WRITE);
+    uint32_t value1 = recv_msg.cmd_int_value1; // file_write
+    _NotifyToPolicy(
+        type2, value1, 0, recv_msg.pid, recv_msg.cmd_type, recv_msg.cmd_order);
+}
+
+void
+input::InCommand::_SendAirRemainFileCountCMD(void)
+{
+    uint32_t type2 = to_dtype(pi::Type2::SET_REMAIN_FILE_COUNT);
+    uint32_t value1 = recv_msg.cmd_int_value1; // remain_file_count
+    _NotifyToPolicy(
+        type2, value1, 0, recv_msg.pid, recv_msg.cmd_type, recv_msg.cmd_order);
+}
+
+void
+input::InCommand::_SetNodeRunValue(uint32_t* type2, uint32_t* value2)
 {
     if (strcmp(recv_msg.cmd_str_value, "node") == 0)
     {
@@ -94,18 +112,18 @@ input::InCommand::_SetEnableNodeValue(uint32_t* type2, uint32_t* value2)
 }
 
 void
-input::InCommand::_CheckEnableNodeCMD(void)
+input::InCommand::_SendNodeRunCMD(void)
 {
     uint32_t type2 {0};                        // command
     uint32_t value1 = recv_msg.cmd_int_value1; // bool
     uint32_t value2 = recv_msg.cmd_int_value2; // node_id range
-    _SetEnableNodeValue(&type2, &value2);
+    _SetNodeRunValue(&type2, &value2);
     _NotifyToPolicy(
         type2, value1, value2, recv_msg.pid, recv_msg.cmd_type, recv_msg.cmd_order);
 }
 
 void
-input::InCommand::_CheckInitNodeCMD(void)
+input::InCommand::_SendNodeInitCMD(void)
 {
     uint32_t value1 {0};
     uint32_t value2 {0};
@@ -136,7 +154,7 @@ input::InCommand::_CheckInitNodeCMD(void)
 }
 
 void
-input::InCommand::_CheckSetSamplingRatioCMD(void)
+input::InCommand::_SendNodeSampleRatioCMD(void)
 {
     uint32_t type2 {0};                        // command
     uint32_t value1 = recv_msg.cmd_int_value1; // ratio
@@ -180,23 +198,31 @@ input::InCommand::HandleKernelMsg(void)
             case CMD_PID:
                 break;
             case CMD_AIR_RUN:
-                _CheckEnableCMD();
+                _SendAirRunCMD();
                 num_enq++;
                 break;
             case CMD_AIR_STREAM_INTERVAL:
-                _CheckSetStreamingIntervalCMD();
+                _SendAirStreamIntervalCMD();
+                num_enq++;
+                break;
+            case CMD_AIR_FILE_WRITE:
+                _SendAirFileWriteCMD();
+                num_enq++;
+                break;
+            case CMD_AIR_REMAIN_FILE_COUNT:
+                _SendAirRemainFileCountCMD();
                 num_enq++;
                 break;
             case CMD_NODE_RUN:
-                _CheckEnableNodeCMD();
+                _SendNodeRunCMD();
                 num_enq++;
                 break;
             case CMD_NODE_INIT:
-                _CheckInitNodeCMD();
+                _SendNodeInitCMD();
                 num_enq++;
                 break;
             case CMD_NODE_SAMPLE_RATIO:
-                _CheckSetSamplingRatioCMD();
+                _SendNodeSampleRatioCMD();
                 num_enq++;
                 break;
         }

@@ -54,7 +54,8 @@ private:
     enum BoolOption
     {
         BOOL_OPT_AIR,
-        BOOL_OPT_NODE
+        BOOL_OPT_NODE,
+        BOOL_OPT_AIR_FILE_WRITE,
     };
     enum NodeOption
     {
@@ -84,6 +85,12 @@ private:
     int opt_air_stream_interval {0};
     int air_stream_interval_value {0};
 
+    int opt_air_file_write {0};
+    bool air_file_write_value {false};
+
+    int opt_air_remain_file_count {0};
+    int air_remain_file_count_value {0};
+
     int opt_node_run {0};
     std::string node_run_type {""};
     int node_run_value1 {0};
@@ -104,6 +111,8 @@ private:
     struct option options[10] {{"pid", 1, &opt_pid, 1},
         {"air-run", 1, &opt_air_run, 1},
         {"air-stream-interval", 1, &opt_air_stream_interval, 1},
+        {"air-file-write", 1, &opt_air_file_write, 1},
+        {"air-remain-file-count", 1, &opt_air_remain_file_count, 1},
         {"node-run", 1, &opt_node_run, 1}, {"node-init", 1, &opt_node_init, 1},
         {"node-sample-ratio", 1, &opt_node_sample_ratio, 1}, {0, 0, 0, 0}};
     int cmd_duplicate_check[CMD_MAX_COUNT];

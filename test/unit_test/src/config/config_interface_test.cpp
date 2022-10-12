@@ -82,6 +82,9 @@ TEST_F(ConfigInterfaceTest, GetIntValue)
     EXPECT_EQ(1, cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"));
     EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::DEFAULT, "NodeBuild"));
     EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::DEFAULT, "NodeRun"));
+    EXPECT_EQ(1, cfg::GetIntValue(config::ParagraphType::DEFAULT, "FileWrite"));
+    EXPECT_EQ(
+        3, cfg::GetIntValue(config::ParagraphType::DEFAULT, "RemainingFileCount"));
 
     EXPECT_EQ(
         0, cfg::GetIntValue(config::ParagraphType::GROUP, "NodeBuild", "POS_META"));

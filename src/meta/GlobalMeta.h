@@ -94,14 +94,36 @@ public:
     {
         return cpu_num;
     }
+    inline void
+    SetFileWrite(bool file_write)
+    {
+        this->file_write = file_write;
+    }
+    inline bool
+    FileWrite(void) const
+    {
+        return file_write;
+    }
+    inline void
+    SetRemainingFileCount(uint32_t file_count)
+    {
+        this->remaining_file_count = file_count;
+    }
+    inline uint32_t
+    RemainingFileCount(void) const
+    {
+        return remaining_file_count;
+    }
 
 private:
     bool air_build {true};
     bool air_play {true};
-    uint32_t streaming_interval {1};
     bool streaming_update {false};
+    bool file_write {true};
+    uint32_t streaming_interval {1};
     uint32_t streaming_value {0};
     uint32_t cpu_num {0};
+    uint32_t remaining_file_count {3};
 };
 
 class GlobalMetaGetter
@@ -110,10 +132,10 @@ public:
     GlobalMetaGetter(void)
     {
     }
-    virtual ~GlobalMetaGetter(void)
+    explicit GlobalMetaGetter(GlobalMeta* global_meta): global_meta(global_meta)
     {
     }
-    explicit GlobalMetaGetter(GlobalMeta* global_meta): global_meta(global_meta)
+    virtual ~GlobalMetaGetter(void)
     {
     }
     virtual inline bool
@@ -145,6 +167,16 @@ public:
     CpuNum(void) const
     {
         return global_meta->CpuNum();
+    }
+    inline bool
+    FileWrite(void) const
+    {
+        return global_meta->FileWrite();
+    }
+    inline uint32_t
+    RemainingFileCount(void) const
+    {
+        return global_meta->RemainingFileCount();
     }
 
 private:

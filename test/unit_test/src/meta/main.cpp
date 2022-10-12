@@ -78,6 +78,12 @@ TEST_F(GlobalMetaTest, GlobalMeta)
 
     global_meta->SetCpuNum(1);
     EXPECT_EQ(1, global_meta_getter->CpuNum());
+
+    global_meta->SetFileWrite(false);
+    EXPECT_EQ(false, global_meta->FileWrite());
+
+    global_meta->SetRemainingFileCount(34);
+    EXPECT_EQ(34, global_meta->RemainingFileCount());
 }
 
 int

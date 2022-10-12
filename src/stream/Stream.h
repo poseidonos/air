@@ -27,20 +27,24 @@
 
 #include <sys/types.h>
 
+#include "src/meta/GlobalMeta.h"
+
 namespace stream
 {
 class Stream
 {
 public:
-    Stream(void);
+    explicit Stream(meta::GlobalMetaGetter* global_meta_getter);
     virtual ~Stream(void)
     {
     }
 
     void SendPacket(void);
+    void RemainFiles(void);
 
 private:
     pid_t pid {0};
+    meta::GlobalMetaGetter* global_meta_getter {nullptr};
 };
 
 } // namespace stream

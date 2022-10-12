@@ -24,15 +24,21 @@
 
 #include "src/stream/Stream.h"
 
+#include <dirent.h>
+#include <stdio.h>
+#include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
 
 #include <fstream>
+#include <iostream>
+#include <map>
 #include <string>
 
 #include "src/lib/json/Json.h"
 
-stream::Stream::Stream(void)
+stream::Stream::Stream(meta::GlobalMetaGetter* global_meta_getter)
+: global_meta_getter(global_meta_getter)
 {
     pid = getpid();
 }
@@ -40,6 +46,12 @@ stream::Stream::Stream(void)
 void
 stream::Stream::SendPacket(void)
 {
+    if (false == global_meta_getter->FileWrite())
+    {
+        air::json_clear();
+        return;
+    }
+
     std::ofstream export_file;
     // out : output(default)
     // app : append
@@ -73,4 +85,62 @@ stream::Stream::SendPacket(void)
     export_file.close();
 
     air::json_clear();
+}
+
+void
+stream::Stream::RemainFiles(void)
+{
+    if (false == global_meta_getter->FileWrite())
+    {
+        return;
+    }
+
+    std::string str_dir {"/tmp/"};
+    std::string file_suffix {"_" + std::to_string(pid) + ".json"};
+    std::map<unsigned long, std::string> files;
+    files.clear();
+
+    DIR* dp {opendir(str_dir.c_str())};
+    if (nullptr != dp)
+    {
+        for (;;)
+        {
+            struct dirent* item {readdir(dp)};
+            if (nullptr == item)
+            {
+                break;
+            }
+
+            std::string str_dir_name {item->d_name};
+
+            if (std::string::npos != str_dir_name.find("air_") &&
+                std::string::npos != str_dir_name.find(file_suffix))
+            {
+                unsigned long date {std::stoul(str_dir_name.substr(4, 8))};
+                files.insert({date, "/tmp/" + str_dir_name});
+            }
+        }
+    }
+    closedir(dp);
+
+    int32_t delete_file_count {static_cast<int32_t>(files.size()) -
+        static_cast<int32_t>(global_meta_getter->RemainingFileCount())};
+
+    if (0 < delete_file_count)
+    {
+        for (const auto& item : files)
+        {
+            if (0 != remove(item.second.c_str()))
+            {
+                std::cout << "air delete file failed: " << item.second << "\n";
+            }
+            delete_file_count--;
+
+            if (0 >= delete_file_count)
+            {
+                break;
+            }
+        }
+    }
+    files.clear();
 }

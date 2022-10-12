@@ -181,9 +181,9 @@ public:
     }
 
 private:
-    static constexpr air::string_view default_keys[NUM_DEFAULT_KEY] {
-        "StreamingInterval", "AirBuild", "NodeBuild", "NodeRun",
-        "NodeSamplingRatio", "NodeIndexSize"};
+    static constexpr air::string_view default_keys[NUM_DEFAULT_KEY] {"AirBuild",
+        "NodeBuild", "NodeRun", "NodeSamplingRatio", "NodeIndexSize",
+        "StreamingInterval", "FileWrite", "RemainingFileCount"};
     static constexpr air::string_view group_keys[NUM_GROUP_KEY] {
         "Group", "NodeBuild", "NodeRun", "NodeSamplingRatio", "NodeIndexSize"};
     static constexpr air::string_view filter_keys[NUM_FILTER_KEY] {
@@ -193,7 +193,7 @@ private:
     static constexpr air::string_view node_keys[NUM_NODE_KEY] {"Node", "Type",
         "Group", "Filter", "Build", "Run", "SamplingRatio", "IndexSize", "Bucket"};
 
-    static constexpr uint32_t num_mandatory_list[5] {6, 1, 2, 3, 4};
+    static constexpr uint32_t num_mandatory_list[5] {8, 1, 2, 3, 4};
 };
 
 } // namespace config

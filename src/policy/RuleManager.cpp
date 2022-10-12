@@ -115,6 +115,10 @@ policy::RuleManager::SetGlobalConfig(void)
         cfg::GetIntValue(config::ParagraphType::DEFAULT, "StreamingInterval"));
     ruler->SetAirBuild(
         cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"));
+    ruler->SetFileWrite(
+        cfg::GetIntValue(config::ParagraphType::DEFAULT, "FileWrite"));
+    ruler->SetRemainingFileCount(
+        cfg::GetIntValue(config::ParagraphType::DEFAULT, "RemainingFileCount"));
 }
 
 int

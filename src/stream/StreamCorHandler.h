@@ -43,6 +43,7 @@ public:
     HandleRequest(int option = 0)
     {
         stream->SendPacket();
+        stream->RemainFiles();
     }
 
 private:

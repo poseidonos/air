@@ -200,6 +200,29 @@ policy::Ruler::_CheckStreamInterval(
 }
 
 int
+policy::Ruler::_CheckFileWriteRule(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
+{
+    if (0 == value1 || 1 == value1)
+    {
+        return 0;
+    }
+    return -12;
+}
+
+int
+policy::Ruler::_CheckRemainFileCountRule(
+    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
+{
+    int result {0};
+    if (0 >= value1 || 99 < value1)
+    {
+        result = -12;
+    }
+    return result;
+}
+
+int
 policy::Ruler::CheckRule(
     uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
@@ -212,6 +235,12 @@ policy::Ruler::CheckRule(
 
         case (to_dtype(pi::Type2::SET_STREAMING_INTERVAL)):
             result = _CheckStreamInterval(type1, type2, value1, value2);
+            break;
+        case (to_dtype(pi::Type2::SET_FILE_WRITE)):
+            result = _CheckFileWriteRule(type1, type2, value1, value2);
+            break;
+        case (to_dtype(pi::Type2::SET_REMAIN_FILE_COUNT)):
+            result = _CheckRemainFileCountRule(type1, type2, value1, value2);
             break;
 
         case (to_dtype(pi::Type2::ENABLE_NODE)):
@@ -379,13 +408,29 @@ policy::Ruler::SetRule(
                 global_meta->SetAirPlay(data);
             }
             result = true;
-
             break;
 
         case (to_dtype(pi::Type2::SET_STREAMING_INTERVAL)):
             if (global_meta->StreamingInterval() != value1)
             {
                 global_meta->SetStreamingInterval(value1);
+            }
+            result = true;
+            break;
+
+        case (to_dtype(pi::Type2::SET_FILE_WRITE)):
+            data = (bool)value1;
+            if (global_meta->FileWrite() != data)
+            {
+                global_meta->SetFileWrite(data);
+            }
+            result = true;
+            break;
+
+        case (to_dtype(pi::Type2::SET_REMAIN_FILE_COUNT)):
+            if (global_meta->RemainingFileCount() != value1)
+            {
+                global_meta->SetRemainingFileCount(value1);
             }
             result = true;
             break;

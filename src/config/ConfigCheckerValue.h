@@ -276,11 +276,12 @@ private:
         {
             return _CheckNumberValue(value, 3);
         }
-        else if (key == "StreamingInterval")
+        else if (key == "StreamingInterval" || key == "RemainingFileCount")
         {
             return _CheckNumberValue(value, 2);
         }
-        else if (key == "AirBuild" || key == "NodeBuild" || key == "NodeRun")
+        else if (key == "AirBuild" || key == "NodeBuild" || key == "NodeRun" ||
+            key == "FileWrite")
         {
             return _CheckBoolValue(value);
         }
