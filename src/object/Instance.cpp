@@ -56,7 +56,7 @@ air::InstanceManager::InstanceManager(void)
     out_observer = new output::Observer {out_manager};
     out_cor_handler = new output::OutputCoRHandler {out_observer};
 
-    stream = new stream::Stream {};
+    stream = new stream::Stream {global_meta_getter};
     stream_cor_handler = new stream::StreamCoRHandler {stream};
 
     collection_subject = new collection::Subject {};

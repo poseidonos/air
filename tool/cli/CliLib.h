@@ -34,6 +34,8 @@ enum CommandType
     CMD_PID = 0,
     CMD_AIR_RUN,
     CMD_AIR_STREAM_INTERVAL,
+    CMD_AIR_FILE_WRITE,
+    CMD_AIR_REMAIN_FILE_COUNT,
     CMD_NODE_RUN,
     CMD_NODE_INIT,
     CMD_NODE_SAMPLE_RATIO,
@@ -47,6 +49,8 @@ enum ReturnCode
     ERR_OPT_PID,
     ERR_OPT_AIR_RUN,
     ERR_OPT_AIR_STREAM_INTERVAL,
+    ERR_OPT_AIR_FILE_WRITE,
+    ERR_OPT_AIR_REMAIN_FILE_COUNT,
     ERR_OPT_NODE_RUN,
     ERR_OPT_NODE_INIT,
     ERR_OPT_NODE_SAMPLE_RATIO,
@@ -66,6 +70,9 @@ static const std::string ReturnMsg[RC_COUNT] {"[SUCCESS]",
     "[ERR_OPT_AIR_RUN] ex) --pid=<target_pid> --air-run=<bool>",
     "[ERR_OPT_AIR_STREAM_INTERVAL] ex) --pid=<target_pid> "
     "--air-stream-interval=<1~60>",
+    "[ERR_OPT_AIR_FILE_WRITE] ex) --pid=<target_pid> --air-file-write=<bool>",
+    "[ERR_OPT_AIR_REMAIN_FILE_COUNT] ex) --pid=<target_pid> "
+    "--air-remain-file-count=<1~99>",
     "[ERR_OPT_NODE_RUN] ex) --pid=<target_pid> --node-run=<node/range/all>",
     "[ERR_OPT_NODE_INIT] ex) --pid=<target_pid> --node-init=<node/range/all>",
     "[ERR_OPT_NODE_SAMPLE_RATIO] ex) --pid=<target_pid> "

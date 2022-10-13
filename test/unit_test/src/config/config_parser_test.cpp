@@ -31,9 +31,10 @@ TEST_F(ConfigParserTest, GetSentenceFromParagraph)
 {
     EXPECT_EQ(0,
         cfg->GetSentenceFromParagraph(config::ParagraphType::DEFAULT)
-            .compare("StreamingInterval:1, AirBuild:True, NodeBuild:False, "
-                     "NodeRun:Off,\n         NodeSamplingRatio: 1000, "
-                     "NodeIndexSize:32"));
+            .compare(
+                "StreamingInterval:1, FileWrite: On, AirBuild:True,\n"
+                "         NodeBuild:False, NodeRun:Off, NodeSamplingRatio: 1000,\n"
+                "         NodeIndexSize:32, RemainingFileCount: 3"));
 
     EXPECT_EQ(0,
         cfg->GetSentenceFromParagraph(config::ParagraphType::GROUP, 1)
@@ -162,38 +163,57 @@ TEST_F(ConfigParserTest, GetIntValueFromSentence)
     EXPECT_EQ(1,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:On, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32",
+            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "RemainingFileCount: 3",
             "AirBuild"));
     EXPECT_EQ(1,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:On, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32",
+            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "RemainingFileCount: 3",
             "NodeBuild"));
     EXPECT_EQ(0,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:Off, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32",
+            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "RemainingFileCount: 3",
             "NodeRun"));
     EXPECT_EQ(3,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:  3   , AirBuild  : True, NodeBuild:True, "
-            "NodeRun:Off, NodeSamplingRatio: 1000, NodeIndexSize:32",
+            "NodeRun:Off, NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: "
+            "On, RemainingFileCount: 3",
             "StreamingInterval"));
     EXPECT_EQ(1000,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:off, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32",
+            "NodeSamplingRatio: 1000, NodeIndexSize:32 ,FileWrite: On, "
+            "RemainingFileCount: 3",
             "NodeSamplingRatio"));
     EXPECT_EQ(-1,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:off, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32",
+            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "RemainingFileCount: 3",
             "Condition"));
     EXPECT_EQ(32,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:Off, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32",
+            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "RemainingFileCount: 3",
             "NodeIndexSize"));
+    EXPECT_EQ(1,
+        cfg->GetIntValueFromSentence(
+            "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:Off, "
+            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "RemainingFileCount: 3",
+            "FileWrite"));
+    EXPECT_EQ(7,
+        cfg->GetIntValueFromSentence(
+            "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:Off, "
+            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "RemainingFileCount: 7",
+            "RemainingFileCount"));
 
     // GROUP
     EXPECT_EQ(0,
@@ -277,43 +297,50 @@ TEST_F(ConfigParserTest, GetStrValueFromSentence)
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32",
+               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "RemainingFileCount: 3",
                "AirBuild")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32",
+               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "RemainingFileCount: 3",
                "NodeBuild")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:Off, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32",
+               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "RemainingFileCount: 3",
                "StreamingInterval")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:Off, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32",
+               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "RemainingFileCount: 3",
                "SamplingRatio")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:Off, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32",
+               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "RemainingFileCount: 3",
                "Condition")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:off, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32",
+               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "RemainingFileCount: 3",
                "NodeRun")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:off, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32",
+               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "RemainingFileCount: 3",
                "NodeIndexSize")
             .compare(""));
 

@@ -41,6 +41,8 @@ enum CommandType
     CMD_PID = 0,
     CMD_AIR_RUN,
     CMD_AIR_STREAM_INTERVAL,
+    CMD_AIR_FILE_WRITE,
+    CMD_AIR_REMAIN_FILE_COUNT,
     CMD_NODE_RUN,
     CMD_NODE_INIT,
     CMD_NODE_SAMPLE_RATIO
@@ -84,13 +86,15 @@ public:
     int HandleKernelMsg(void);
 
 private:
-    void _CheckEnableCMD(void);
-    void _CheckSetStreamingIntervalCMD(void);
-    void _SetEnableNodeValue(uint32_t* type2, uint32_t* value1);
-    void _CheckEnableNodeCMD(void);
-    void _CheckDisableNodeCMD(void);
-    void _CheckInitNodeCMD(void);
-    void _CheckSetSamplingRatioCMD(void);
+    void _SendAirRunCMD(void);
+    void _SendAirStreamIntervalCMD(void);
+    void _SendAirFileWriteCMD(void);
+    void _SendAirRemainFileCountCMD(void);
+    void _SendNodeRunCMD(void);
+    void _SetNodeRunValue(uint32_t* type2, uint32_t* value1);
+    void _SendNodeInitCMD(void);
+    void _SendNodeSampleRatioCMD(void);
+
     void _NotifyToPolicy(uint32_t type2, uint32_t value1, uint32_t value2, int pid,
         int64_t cmd_type, int cmd_order);
 

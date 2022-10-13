@@ -39,7 +39,7 @@ dtype(E e) noexcept // to primitive data types
 
 namespace config
 {
-static constexpr uint32_t NUM_DEFAULT_KEY {6};
+static constexpr uint32_t NUM_DEFAULT_KEY {8};
 static constexpr uint32_t NUM_GROUP_KEY {5};
 static constexpr uint32_t NUM_FILTER_KEY {2};
 static constexpr uint32_t NUM_BUCKET_KEY {3};

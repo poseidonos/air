@@ -105,6 +105,46 @@ air::CliSend::Send(int argc, char* argv[], int& target_pid)
                 num_send++;
             }
         }
+        if (1 == opt_air_file_write)
+        {
+            memset(&send_msg, 0, sizeof(struct msg_q_send_st));
+            send_msg.pid = pid;
+            send_msg.cmd_type = CMD_AIR_FILE_WRITE;
+            send_msg.cmd_int_value1 = air_file_write_value;
+            send_msg.cmd_order = cmd_duplicate_check[CMD_AIR_FILE_WRITE];
+
+            if (-1 ==
+                msgsnd(msg_q_key_id, &send_msg,
+                    sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
+            {
+                cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL,
+                    "CliSend::Send air-file-write");
+            }
+            else
+            {
+                num_send++;
+            }
+        }
+        if (1 == opt_air_remain_file_count)
+        {
+            memset(&send_msg, 0, sizeof(struct msg_q_send_st));
+            send_msg.pid = pid;
+            send_msg.cmd_type = CMD_AIR_REMAIN_FILE_COUNT;
+            send_msg.cmd_int_value1 = air_remain_file_count_value;
+            send_msg.cmd_order = cmd_duplicate_check[CMD_AIR_REMAIN_FILE_COUNT];
+
+            if (-1 ==
+                msgsnd(msg_q_key_id, &send_msg,
+                    sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
+            {
+                cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL,
+                    "CliSend::Send air-remain-file-count");
+            }
+            else
+            {
+                num_send++;
+            }
+        }
         if (1 == opt_node_run)
         {
             memset(&send_msg, 0, sizeof(struct msg_q_send_st));
@@ -222,9 +262,20 @@ air::CliSend::_CheckRule(int argc, char* argv[])
         if (0 != opt)
         {
             cli_result->SetReturn(ReturnCode::ERR_INVALID_USAGE,
-                "option: "
-                "pid/air-run/air-stream-interval/node-run/node-init/"
-                "node-sample-ratio");
+                "usage: air_cli "
+                "<--pid={process_id}> [ <--air-run={bool}>               |\n"
+                "                                      "
+                "<--air-stream-interval={int}     |\n"
+                "                                      "
+                "<--air-file-write={bool}>        |\n"
+                "                                      "
+                "<--air-remain-file-count={int}>  |\n"
+                "                                      "
+                "<--node-run={custom}>            |\n"
+                "                                      "
+                "<--node-init={custom}>           |\n"
+                "                                      "
+                "<--node-sample-ratio={int}> ]");
             return false;
         }
 
@@ -272,6 +323,26 @@ air::CliSend::_CheckRule(int argc, char* argv[])
                     return false;
                 }
                 air_stream_interval_value = std::stoi(optarg);
+            }
+            else if (0 == strcmp(options[index].name, "air-file-write"))
+            {
+                if (false ==
+                    _CheckBoolOpt(BoolOption::BOOL_OPT_AIR_FILE_WRITE, optarg))
+                {
+                    cli_result->SetReturn(ReturnCode::ERR_OPT_AIR_FILE_WRITE,
+                        "air-file-write value must be a boolean");
+                    return false;
+                }
+            }
+            else if (0 == strcmp(options[index].name, "air-remain-file-count"))
+            {
+                if (false == _IsNumber(optarg))
+                {
+                    cli_result->SetReturn(ReturnCode::ERR_OPT_AIR_REMAIN_FILE_COUNT,
+                        "air-remain-file-count value must be an integer");
+                    return false;
+                }
+                air_remain_file_count_value = std::stoi(optarg);
             }
             else if (0 == strcmp(options[index].name, "node-run"))
             {
@@ -366,6 +437,10 @@ air::CliSend::_CheckBoolOpt(BoolOption option, char* str)
         {
             node_run_enable = false;
         }
+        else if (BoolOption::BOOL_OPT_AIR_FILE_WRITE == option)
+        {
+            air_file_write_value = false;
+        }
         return true;
     }
     else if (0 == strcmp(str, "true"))
@@ -377,6 +452,10 @@ air::CliSend::_CheckBoolOpt(BoolOption option, char* str)
         else if (BoolOption::BOOL_OPT_NODE == option)
         {
             node_run_enable = true;
+        }
+        else if (BoolOption::BOOL_OPT_AIR_FILE_WRITE == option)
+        {
+            air_file_write_value = true;
         }
         return true;
     }
