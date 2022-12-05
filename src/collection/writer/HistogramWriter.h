@@ -111,11 +111,6 @@ public:
 
         hist_data->access = true;
     }
-    int
-    SetSamplingRate(uint32_t rate) override
-    {
-        return 0;
-    }
 };
 
 } // namespace collection

@@ -27,11 +27,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-TEST_F(CollectorTest, PerformanceCollector_SetSamplingRate)
-{
-    EXPECT_EQ(0, performance_collector->SetSamplingRate(1));
-}
-
 TEST_F(CollectorTest, PerformanceCollector_LogData)
 {
     lib::Data* data {new lib::PerformanceData};
@@ -59,11 +54,6 @@ TEST_F(CollectorTest, PerformanceCollector_InformInit)
     delete data_dirty;
     data_dirty = nullptr;
     performance_collector->InformInit(data_dirty);
-}
-
-TEST_F(CollectorTest, LatencyCollector_SetSamplingRate)
-{
-    EXPECT_EQ(0, latency_collector->SetSamplingRate(1));
 }
 
 TEST_F(CollectorTest, LeatencyCollector_LogData)
@@ -94,11 +84,6 @@ TEST_F(CollectorTest, LatencyCollector_InformInit)
     delete data_dirty;
 }
 
-TEST_F(CollectorTest, QueueCollector_SetSamplingRate)
-{
-    EXPECT_EQ(0, queue_collector->SetSamplingRate(1));
-}
-
 TEST_F(CollectorTest, QueueCollector_LogData)
 {
     lib::Data* data {new lib::QueueData};
@@ -123,11 +108,6 @@ TEST_F(CollectorTest, QueueCollector_InformInit)
     EXPECT_EQ(value, q_data->need_erase);
 
     delete data_dirty;
-}
-
-TEST_F(CollectorTest, CountCollector_SetSamplingRate)
-{
-    EXPECT_EQ(0, count_collector->SetSamplingRate(1));
 }
 
 TEST_F(CollectorTest, CountCollector_LogData)
@@ -162,11 +142,6 @@ TEST_F(CollectorTest, CountCollector_InformInit)
     count_collector->InformInit(data_dirty);
 }
 
-TEST_F(CollectorTest, UtilizationCollector_SetSamplingRate)
-{
-    EXPECT_EQ(0, util_collector->SetSamplingRate(1));
-}
-
 TEST_F(CollectorTest, UtilizationCollector_LogData)
 {
     lib::Data* data {new lib::UtilizationData};
@@ -191,11 +166,6 @@ TEST_F(CollectorTest, UtilizationCollector_InformInit)
     delete data_dirty;
     data_dirty = nullptr;
     util_collector->InformInit(data_dirty);
-}
-
-TEST_F(CollectorTest, HistogramCollector_SetSamplingRate)
-{
-    EXPECT_EQ(0, histogram_collector->SetSamplingRate(1));
 }
 
 TEST_F(CollectorTest, HistogramCollector_LogData)

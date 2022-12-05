@@ -73,11 +73,6 @@ TEST_F(WriterTest, PerformanceWriter_InformInit)
     delete data_dirty;
 }
 
-TEST_F(WriterTest, PerformanceWriter_SetSamplingRate)
-{
-    EXPECT_EQ(0, performance_writer->SetSamplingRate(1));
-}
-
 TEST_F(WriterTest, LatencyWriter_LogData)
 {
     lib::Data* data_dirty {new lib::LatencyData};
@@ -160,58 +155,6 @@ TEST_F(WriterTest, QueueWriter_InformInit)
     EXPECT_EQ(nullptr, data_dirty);
 }
 
-TEST_F(WriterTest, QueueWriter_IsSampling)
-{
-    lib::Data* data {new lib::QueueData};
-    lib::QueueData* queue_data {static_cast<lib::QueueData*>(data)};
-
-    queue_writer->SetSamplingRate(9);
-    EXPECT_EQ(true, queue_writer->IsSampling(queue_data));
-    for (int i = 0; i < 8; i++)
-    {
-        EXPECT_EQ(false, queue_writer->IsSampling(queue_data));
-    }
-    EXPECT_EQ(true, queue_writer->IsSampling(queue_data));
-
-    queue_writer->SetSamplingRate(4);
-    EXPECT_EQ(true, queue_writer->IsSampling(queue_data));
-    for (int i = 0; i < 3; i++)
-    {
-        EXPECT_EQ(false, queue_writer->IsSampling(queue_data));
-    }
-    EXPECT_EQ(true, queue_writer->IsSampling(queue_data));
-
-    queue_writer->SetSamplingRate(1);
-    EXPECT_EQ(true, queue_writer->IsSampling(queue_data));
-    EXPECT_EQ(true, queue_writer->IsSampling(queue_data));
-    EXPECT_EQ(true, queue_writer->IsSampling(queue_data));
-
-    queue_writer->SetSamplingRate(1000);
-    queue_writer->IsSampling(queue_data);
-    for (int i = 0; i < 10; i++)
-    {
-        EXPECT_GT((uint32_t)901, queue_writer->GetLoggingPoint(queue_data));
-    }
-
-    queue_writer->SetSamplingRate(20);
-    queue_writer->IsSampling(queue_data);
-    for (int i = 0; i < 10; i++)
-    {
-        EXPECT_GT((uint32_t)19, queue_writer->GetLoggingPoint(queue_data));
-    }
-
-    delete data;
-}
-
-TEST_F(WriterTest, QueueWriter_SetSamplingRate)
-{
-    EXPECT_EQ(0, queue_writer->SetSamplingRate(1));
-    EXPECT_EQ(0, queue_writer->SetSamplingRate(1000));
-    EXPECT_EQ(0, queue_writer->SetSamplingRate(10000));
-    EXPECT_EQ(-2, queue_writer->SetSamplingRate(0));
-    EXPECT_EQ(-2, queue_writer->SetSamplingRate(10001));
-}
-
 TEST_F(WriterTest, CountWriter_LogData)
 {
     lib::Data* data {new lib::CountData};
@@ -251,11 +194,6 @@ TEST_F(WriterTest, CountWriter_InformInit)
     EXPECT_EQ(nullptr, data_dirty);
 }
 
-TEST_F(WriterTest, CountWriter_SetSamplingRate)
-{
-    EXPECT_EQ(0, count_writer->SetSamplingRate(1));
-}
-
 TEST_F(WriterTest, UtilizationWriter_LogData)
 {
     lib::Data* data {new lib::UtilizationData};
@@ -281,16 +219,6 @@ TEST_F(WriterTest, UtilizationWriter_InformInit)
     data_dirty = nullptr;
     util_writer->InformInit(data_dirty);
     EXPECT_EQ(nullptr, data_dirty);
-}
-
-TEST_F(WriterTest, UtilizationWriter_SetSamplingRate)
-{
-    EXPECT_EQ(0, util_writer->SetSamplingRate(1));
-}
-
-TEST_F(WriterTest, HistogramWriter_SetSamplingRate)
-{
-    EXPECT_EQ(0, histogram_writer->SetSamplingRate(1));
 }
 
 TEST_F(WriterTest, HistogramWriter_InformInit)

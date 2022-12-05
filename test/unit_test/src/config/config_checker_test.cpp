@@ -32,21 +32,21 @@
 TEST_F(ConfigCheckerTest, CheckParagraphRule_DefaultType)
 {
     constexpr air::string_view default_paragraph = R"DEFAULT(
-    "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32"
+    "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, NodeIndexSize:32"
     )DEFAULT";
     constexpr air::string_view default_paragraph_with_comment = R"DEFAULT(
             // default setting for Mandatory
-    "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32"
+    "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, NodeIndexSize:32"
     )DEFAULT";
     constexpr air::string_view default_paragraph_multi_line = R"DEFAULT(
             // default setting for Mandatory
     "StreamingInterval:1, AirBuild:True, 
-        NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32"
+        NodeBuild:True, NodeRun:On, NodeIndexSize:32"
     )DEFAULT";
     constexpr air::string_view default_paragraph_multi_line2 = R"DEFAULT(
             // default setting for Mandatory
     "StreamingInterval:1, AirBuild:True
-        ,NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32"
+        ,NodeBuild:True, NodeRun:On, NodeIndexSize:32"
     )DEFAULT";
 
     EXPECT_EQ(0,
@@ -69,13 +69,13 @@ TEST_F(ConfigCheckerTest, CheckParagraphRule_GroupType)
     "Group:POS_IO"
     "Group:POS_META"
     "Group: testetsetsetset, NodeRun: On, NodeBuild: False"
-    "Group: POS_REBUILD, NodeSamplingRatio: 1000, NodeBuild: True"
+    "Group: POS_REBUILD, NodeBuild: True"
     )GROUP";
     constexpr air::string_view group_paragraph_with_comment = R"GROUP(
     "Group:POS_IO"
     "Group:POS_META"// comment test
     "Group: testetsetsetset, NodeRun: On, NodeBuild: False"
-    "Group: POS_REBUILD, NodeSamplingRatio: 1000, NodeBuild: True"
+    "Group: POS_REBUILD, NodeBuild: True"
     )GROUP";
     constexpr air::string_view group_paragraph_multi_line = R"GROUP(
             // group setting, TBD
@@ -83,7 +83,7 @@ TEST_F(ConfigCheckerTest, CheckParagraphRule_GroupType)
     "Group:POS_META"// comment test
     "Group: testetsetsetset, NodeRun: On, NodeBuild: False"
     "Group: POS_REBUILD
-        , NodeSamplingRatio: 1000, NodeBuild: True"
+        , NodeBuild: True"
     )GROUP";
     EXPECT_EQ(0,
         cfg_checker->CheckParagraphRule(
@@ -228,31 +228,31 @@ TEST_F(ConfigCheckerTest, CheckParagraphRule_NodeType)
 TEST_F(ConfigCheckerTest, SentenceFormatViolation)
 {
     constexpr air::string_view default_no_quote = R"DEFAULT(
-    StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32
+    StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, NodeIndexSize:32
     )DEFAULT";
     constexpr air::string_view default_no_key_viol = R"DEFAULT(
-    "StreamingInterval:1, :True, NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32"
+    "StreamingInterval:1, :True, NodeBuild:True, NodeRun:On, NodeIndexSize:32"
     )DEFAULT";
     constexpr air::string_view default_no_value_viol = R"DEFAULT(
-    "StreamingInterval:1, AirBuild:, NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32"
+    "StreamingInterval:1, AirBuild:, NodeBuild:True, NodeRun:On, NodeIndexSize:32"
     )DEFAULT";
     constexpr air::string_view default_no_colon_viol = R"DEFAULT(
-    "StreamingInterval:1, AirBuild True, NodeBuild True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32"
+    "StreamingInterval:1, AirBuild True, NodeBuild True, NodeRun:On, NodeIndexSize:32"
     )DEFAULT";
     constexpr air::string_view default_no_colon_viol2 = R"DEFAULT(
-    "StreamingInterval 1, AirBuild True, NodeBuild True, NodeRun On, NodeSamplingRatio 1000, NodeIndexSize 32"
+    "StreamingInterval 1, AirBuild True, NodeBuild True, NodeRun On, NodeIndexSize 32"
     )DEFAULT";
     constexpr air::string_view default_comment_viol = R"DEFAULT(
     "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On,   // comment violation
-        NodeSamplingRatio: 1000, NodeIndexSize:32"
+        NodeIndexSize:32"
     )DEFAULT";
     constexpr air::string_view default_no_end_quote = R"DEFAULT(
     "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On,
-        NodeSamplingRatio: 1000, NodeIndexSize:32
+        NodeIndexSize:32
     )DEFAULT";
     constexpr air::string_view default_comma_count_viol = R"DEFAULT(
     "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On,
-        NodeSamplingRatio: 1000, NodeIndexSize:32, "
+        NodeIndexSize:32, "
     )DEFAULT";
 
     EXPECT_ANY_THROW(cfg_checker->CheckParagraphRule(
@@ -279,7 +279,7 @@ TEST_F(ConfigCheckerTest, NameDuplicatedViolation)
     "Group:POS_IO, Build:False"
     "Group:POS_REBUILD"
     "Group: testetsetsetset, NodeRun: on, NodeBuild: False"
-    "Group: POS_REBUILD, NodeSamplingRatio: 1000, NodeBuild: True"
+    "Group: POS_REBUILD, NodeBuild: True"
     )GROUP");
     EXPECT_ANY_THROW(cfg_checker->CheckParagraphRule(
         config::ParagraphType::GROUP, group_key_duplicated));
@@ -315,16 +315,15 @@ TEST_F(ConfigCheckerTest, CheckKeyRule_DefaultType)
     EXPECT_EQ(0,
         cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
             "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32, "
-            "FileWrite: On, RemainingFileCount: 3"));
+            "NodeIndexSize:32, FileWrite: On, RemainingFileCount: 3"));
     EXPECT_EQ(0,
         cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-            "NodeSamplingRatio: 1000, NodeRun:On, NodeBuild:True, AirBuild:True, "
+            "NodeRun:On, NodeBuild:True, AirBuild:True, "
             "StreamingInterval:1, NodeIndexSize:32, "
             "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_EQ(0,
         cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-            "NodeSamplingRatio: 1000, NodeRun:On, NodeBuild:True, AirBuild:True, "
+            "NodeRun:On, NodeBuild:True, AirBuild:True, "
             "StreamingInterval:1, NodeIndexSize : 32, "
             "FileWrite: On, RemainingFileCount: 3"));
 }
@@ -333,23 +332,13 @@ TEST_F(ConfigCheckerTest, CheckKeyRule_GroupType)
 {
     EXPECT_EQ(0,
         cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-            "Group: POS_RSC, NodeBuild: False, NodeRun: On, NodeSamplingRatio: "
-            "10"));
-    EXPECT_EQ(0,
-        cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-            "NodeBuild: False, Group: POS_RSC, NodeSamplingRatio: 10, NodeRun: "
-            "On"));
-    EXPECT_EQ(0,
-        cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-            "NodeBuild: False, NodeRun: On, NodeSamplingRatio: 10, Group: "
-            "POS_RSC"));
-    EXPECT_EQ(0,
-        cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-            "Group: POS_RSC, NodeBuild: False, NodeRun: On, NodeSamplingRatio: "
-            "100"));
-    EXPECT_EQ(0,
-        cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
             "Group: POS_RSC, NodeBuild: False, NodeRun: On"));
+    EXPECT_EQ(0,
+        cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
+            "NodeBuild: False, Group: POS_RSC, NodeRun: On"));
+    EXPECT_EQ(0,
+        cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
+            "NodeBuild: False, NodeRun: On, Group: POS_RSC"));
     EXPECT_EQ(0,
         cfg_checker->CheckKeyRule(
             config::ParagraphType::GROUP, "Group: POS_RSC, NodeBuild: False"));
@@ -419,45 +408,39 @@ TEST_F(ConfigCheckerTest, KeyTypoViolation_DefaultType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AAABuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
-        "RemainingFileCount: 3"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "StreamingInterval:1, AirBuild:True, N0deBuild:True, NodeRun:On, "
-        "NodeSamplingRati0: 1000, NodeIndexSize:32, FileWrite: On, "
-        "RemainingFileCount: 3"));
+        "NodeIndexSize:32, FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NR:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
-        "RemainingFileCount: 3"));
+        "NodeIndexSize:32, FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "SI:1, AirBuild:True, NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, "
+        "SI:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
         "NodeIndexSize:32, FileWrite: Off, RemainingFileCount: 34"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, NSR: "
         "1333, NodeIndexSize:32, FileWrite: Off, RemainingFileCount: 34"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, AS:33, FileWrite: Off, RemainingFileCount: 34"));
+        "AS:33, FileWrite: Off, RemainingFileCount: 34"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, FileWritee: On, AirBuild:True, "
-        "NodeBuild:False, NodeRun:Off, NodeSamplingRatio: 1000, "
+        "NodeBuild:False, NodeRun:Off, "
         "NodeIndexSize:32, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, FileWrite: On, AirBuild:True, "
-        "NodeBuild:False, NodeRun:Off, NodeSamplingRatio: 1000, "
+        "NodeBuild:False, NodeRun:Off, "
         "NodeIndexSize:32, RemainingFilCount: 3"));
 }
 
 TEST_F(ConfigCheckerTest, KeyTypoViolation_GroupType)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-        "Group: POS_RSC, NB: False, NodeRun: On, NodeSamplingRatio: 10"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-        "Group: POS_RSC, NodeBuild: False, RN: On, NodeSamplingRatio: 10"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(
+        config::ParagraphType::GROUP, "Group: POS_RSC, NB: False, NodeRun: On"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(
+        config::ParagraphType::GROUP, "Group: POS_RSC, NodeBuild: False, RN: On"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
         "Group: POS_RSC, NodeBuild: False, NodeRun: On, NSR: 10"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-        "Group: POS_RSC, NodeBuild: False, Node: On, NodeSamplingRatio: 10"));
+        "Group: POS_RSC, NodeBuild: False, Node: On"));
 }
 
 TEST_F(ConfigCheckerTest, KeyTypoViolation_FilterType)
@@ -481,30 +464,28 @@ TEST_F(ConfigCheckerTest, KeyTypoViolation_BucketType)
 TEST_F(ConfigCheckerTest, KeyTypoViolation_NodeType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
-        "NN: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, Group: POS_Journal, "
-        "SamplingRatio: 100"));
+        "NN: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, Group: "
+        "POS_Journal"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
-        "Node: PERF_CP, t: PERFORMANCE, Build: True, Run: On, Group: POS_Journal, "
-        "SamplingRatio: 100"));
+        "Node: PERF_CP, t: PERFORMANCE, Build: True, Run: On, Group: POS_Journal"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
-        "Node: PERF_CP, Type: PERFORMANCE, B: True, Run: On, Group: POS_Journal, "
-        "SamplingRatio: 100"));
+        "Node: PERF_CP, Type: PERFORMANCE, B: True, Run: On, Group: POS_Journal"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
         "Node: PERF_CP, Type: PERFORMANCE, Build: True, RN: On, Group: "
-        "POS_Journal, SamplingRatio: 100"));
+        "POS_Journal"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
         "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, Group: "
-        "POS_Journal, SamplingRatio: 100"));
+        "POS_Journal"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
-        "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, GN: POS_Journal, "
-        "SamplingRatio: 100"));
+        "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, GN: "
+        "POS_Journal, "));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
         "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, Group: "
         "POS_Journal, SR: 100"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
-        "Node: PERF_CP, Type: PERFORMANCE, SamplingRatio: 10"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
-        "Node: LAT_TEST, Type: LATENCY, SamplingRatio : 1000"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(
+        config::ParagraphType::NODE, "Node: PERF_CP, Type: PERFORMANCE"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(
+        config::ParagraphType::NODE, "Node: LAT_TEST, Type: LATENCY"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::NODE,
         "Node: HIST_PSD, Type : HISTOGRAM, Filter: Basic,  Group: POS, Bucke: "
         "BUCKET_6"));
@@ -513,35 +494,31 @@ TEST_F(ConfigCheckerTest, KeyTypoViolation_NodeType)
 TEST_F(ConfigCheckerTest, KeyMandatoryViolation_DefaultType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
+        "StreamingInterval:1, AirBuild:True, NodeBuild:True, "
         "NodeIndexSize:32, FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "StreamingInterval:1, AirBuild:True, NodeBuild:True, "
-        "NodeSamplingRatio:1000, NodeIndexSize:32, FileWrite: On, "
-        "RemainingFileCount: 3"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "StreamingInterval:1, AirBuild:True, NodeRun:On, NodeSamplingRatio:1000, "
+        "StreamingInterval:1, AirBuild:True, NodeRun:On, "
         "NodeIndexSize: 50, FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "StreamingInterval:1, NodeBuild:True, NodeRun:On, NodeSamplingRatio:1000, "
+        "StreamingInterval:1, NodeBuild:True, NodeRun:On, "
         "NodeIndexSize:32, FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "AirBuild:True, NodeBuild:True, NodeRun:On, NodeSamplingRatio:1000, "
+        "AirBuild:True, NodeBuild:True, NodeRun:On, "
         "NodeIndexSize:10, FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "AirBuild:True, NodeBuild:True, NodeRun:On, NodeSamplingRatio:1000, "
+        "AirBuild:True, NodeBuild:True, NodeRun:On, "
         "NodeIndexSize:10, FileWrite: On, StreamingInterval:1"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "AirBuild:True, NodeBuild:True, NodeRun:On, NodeSamplingRatio:1000, "
+        "AirBuild:True, NodeBuild:True, NodeRun:On, "
         "NodeIndexSize:10, RemainingFileCount: 5, StreamingInterval:1"));
 }
 
 TEST_F(ConfigCheckerTest, KeyMandatoryViolation_GroupType)
 {
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-        "NodeBuild: False, NodeRun: On, NodeSamplingRatio: 10"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(
-        config::ParagraphType::GROUP, "NodeBuild: False, NodeSamplingRatio: 10"));
+        config::ParagraphType::GROUP, "NodeBuild: False, NodeRun: On"));
+    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(
+        config::ParagraphType::GROUP, "NodeBuild: False"));
 }
 
 TEST_F(ConfigCheckerTest, KeyMandatoryViolation_FilterType)
@@ -580,34 +557,30 @@ TEST_F(ConfigCheckerTest, KeyDuplicationViolation_DefaultType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, StreamingInterval: 10, AirBuild:True, "
-        "NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32, "
+        "NodeBuild:True, NodeRun:On, NodeIndexSize:32, "
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, AirBuild: False, NodeBuild:True, "
-        "NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32, "
+        "NodeRun:On, NodeIndexSize:32, "
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeBuild:True, NodeIndexSize:32, "
+        "NodeBuild:True, NodeIndexSize:32, "
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeRun:On, NodeIndexSize:32, "
+        "NodeRun:On, NodeIndexSize:32, "
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "NodeSamplingRatio: 10, StreamingInterval:1, AirBuild:True, "
-        "NodeBuild:True, NodeRun:On, NodeSamplingRatio: 1000, NodeIndexSize:32, "
-        "FileWrite: On, RemainingFileCount: 3"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "NodeSamplingRatio: 10, NodeIndexSize: 100, StreamingInterval:1, "
+        "NodeIndexSize: 100, StreamingInterval:1, "
         "AirBuild:True, NodeBuild:True, NodeRun:On, NodeIndexSize: 10, "
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "NodeSamplingRatio: 10, NodeIndexSize: 100, StreamingInterval:1, "
+        "NodeIndexSize: 100, StreamingInterval:1, "
         "AirBuild:True, NodeBuild:True, NodeRun:On, "
         "FileWrite: On, FileWrite: Off, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::DEFAULT,
-        "NodeSamplingRatio: 10, NodeIndexSize: 100, StreamingInterval:1, "
+        "NodeIndexSize: 100, StreamingInterval:1, "
         "AirBuild:True, NodeBuild:True, NodeRun:On, "
         "FileWrite: On, RemainingFileCount: 1, RemainingFileCount: 3"));
 }
@@ -615,17 +588,14 @@ TEST_F(ConfigCheckerTest, KeyDuplicationViolation_DefaultType)
 TEST_F(ConfigCheckerTest, KeyDuplicationViolation_GroupType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-        "Group: POS_RSC, NodeBuild: False, NodeRun: On, NodeSamplingRatio: 10, "
+        "Group: POS_RSC, NodeBuild: False, NodeRun: On, "
         "Group: POS_RSC"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-        "Group: POS_RSC, NodeBuild: False, NodeRun: On, NodeSamplingRatio: 10, "
+        "Group: POS_RSC, NodeBuild: False, NodeRun: On, "
         "NodeBuild: False"));
     EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-        "Group: POS_RSC, NodeBuild: False, NodeRun: On, NodeSamplingRatio: 10, "
+        "Group: POS_RSC, NodeBuild: False, NodeRun: On, "
         "NodeRun: On"));
-    EXPECT_ANY_THROW(cfg_checker->CheckKeyRule(config::ParagraphType::GROUP,
-        "Group: POS_RSC, NodeBuild: False, NodeRun: On, NodeSamplingRatio: 10, "
-        "NodeSamplingRatio: 1"));
 }
 
 TEST_F(ConfigCheckerTest, KeyDuplicationViolation_FilterType)
@@ -676,12 +646,11 @@ TEST_F(ConfigCheckerTest, CheckValueRulePass)
     EXPECT_EQ(0,
         cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
             "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-            "NodeSamplingRatio: 1000, NodeIndexSize: 30, "
+            "NodeIndexSize: 30, "
             "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_EQ(0,
         cfg_checker->CheckValueRule(config::ParagraphType::GROUP,
-            "Group: POS_RSC, NodeBuild: False, NodeRun: On, NodeSamplingRatio: "
-            "100"));
+            "Group: POS_RSC, NodeBuild: False, NodeRun: On"));
     EXPECT_EQ(0,
         cfg_checker->CheckValueRule(
             config::ParagraphType::GROUP, "Group: POS_RSC"));
@@ -730,83 +699,63 @@ TEST_F(ConfigCheckerTest, ValueValidityViolation_DefaultType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:199, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize:32, "
+        "NodeIndexSize:32, "
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval: b , AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize:32, "
+        "NodeIndexSize:32, "
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval: 1a, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize:32, "
+        "NodeIndexSize:32, "
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval: aaaaaa, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize:32,"
+        "NodeIndexSize:32,"
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild: 100, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize:32,"
+        "NodeIndexSize:32,"
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:-99, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize:32,"
+        "NodeIndexSize:32,"
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:abcd, "
-        "NodeSamplingRatio: 1000, NodeIndexSize:32,"
+        "NodeIndexSize:32,"
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:abcd, "
-        "NodeSamplingRatio: 1000, NodeIndexSize:32,"
+        "NodeIndexSize:32,"
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:abcd, "
-        "NodeSamplingRatio: 10000, NodeIndexSize:32,"
+        "NodeIndexSize:32,"
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: -1, NodeIndexSize:32,"
+        "NodeIndexSize: -10,"
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 0.0000000000000001, NodeIndexSize:32,"
+        "NodeIndexSize: 10000000000,"
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 0.a001, NodeIndexSize:32,"
+        "NodeIndexSize: 5000000000,"
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1ra01, NodeIndexSize:32,"
+        "NodeIndexSize: 4294967296,"
         "FileWrite: On, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize: -10,"
-        "FileWrite: On, RemainingFileCount: 3"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
-        "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 100000, NodeIndexSize:32,"
-        "FileWrite: On, RemainingFileCount: 3"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
-        "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize: 10000000000,"
-        "FileWrite: On, RemainingFileCount: 3"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
-        "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize: 5000000000,"
-        "FileWrite: On, RemainingFileCount: 3"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
-        "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize: 4294967296,"
-        "FileWrite: On, RemainingFileCount: 3"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
-        "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize: 32,"
+        "NodeIndexSize: 32,"
         "FileWrite: 3, RemainingFileCount: 3"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::DEFAULT,
         "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-        "NodeSamplingRatio: 1000, NodeIndexSize: 32,"
+        "NodeIndexSize: 32,"
         "FileWrite: Off, RemainingFileCount: 100"));
 }
 
@@ -814,13 +763,13 @@ TEST_F(ConfigCheckerTest, ValueValidityViolation_GroupType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::GROUP,
         "Group: CANNOT_EXCEED_30_CHARACTERS_IN_STRING_TYPE_DATA, NodeBuild: False, "
-        "NodeRun: On, NodeSamplingRatio: 10"));
+        "NodeRun: On"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::GROUP,
-        "Group: POS_RSC, NodeBuild: 123, NodeRun: On, NodeSamplingRatio: 10"));
+        "Group: POS_RSC, NodeBuild: 123, NodeRun: On"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::GROUP,
-        "Group: POS_RSC, NodeBuild: False, NodeRun: 123, NodeSamplingRatio: 10"));
+        "Group: POS_RSC, NodeBuild: False, NodeRun: 123"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::GROUP,
-        "Group: POS_RSC, NodeBuild: False, NodeRun: On, NodeSamplingRatio: 0"));
+        "Group: POS_RSC, NodeBuild: False, NodeIndxSize: 1000"));
 }
 
 TEST_F(ConfigCheckerTest, ValueValidityViolation_FilterType)
@@ -986,26 +935,23 @@ TEST_F(ConfigCheckerTest, ValueValidityViolation_NodeType)
 {
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
         "Node: CANNOT_EXCEED_30_CHARACTERS_IN_STRING_TYPE_DATA, Type: PERFORMANCE, "
-        "Build: True, Run: On, SamplingRatio:1000, Group: POS_JOURNAL, Filter: "
+        "Build: True, Run: On, Group: POS_JOURNAL, Filter: "
         "Basic"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
-        "Node: PERF_CP, Type: NOTYPE, Build: True, Run: On, SamplingRatio:1000, "
+        "Node: PERF_CP, Type: NOTYPE, Build: True, Run: On, "
         "Group: POS_JOURNAL"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
         "Node: PERF_CP, Type: PERFORMANCE, Build: 123, Run: On, "
-        "SamplingRatio:1000, Group: POS_JOURNAL"));
+        " Group: POS_JOURNAL"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
         "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: 123, "
-        "SamplingRatio:1000, Group: POS_JOURNAL"));
+        "Group: POS_JOURNAL"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
         "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, "
-        "SamplingRatio:0.9, Group: POS_JOURNAL"));
+        "Group: POS_JOURNALLLL"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
         "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, "
-        "SamplingRatio:1000, Group: POS_JOURNALLLL"));
-    EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
-        "Node: PERF_CP, Type: PERFORMANCE, Build: True, Run: On, "
-        "SamplingRatio:1000, Group: POS_JOURNAL, Filter: Basiccc"));
+        "Group: POS_JOURNAL, Filter: Basiccc"));
     EXPECT_ANY_THROW(cfg_checker->CheckValueRule(config::ParagraphType::NODE,
         "Node: HIST_PSD, Type : HISTOGRAM, Filter: Basic,  Group: POS, Bucket: "
         "BUCKET_NOT_EXIST"));

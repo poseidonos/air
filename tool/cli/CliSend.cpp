@@ -190,29 +190,6 @@ air::CliSend::Send(int argc, char* argv[], int& target_pid)
                 num_send++;
             }
         }
-        if (1 == opt_node_sample_ratio)
-        {
-            memset(&send_msg, 0, sizeof(struct msg_q_send_st));
-            send_msg.pid = pid;
-            send_msg.cmd_type = CMD_NODE_SAMPLE_RATIO;
-            memcpy(send_msg.cmd_str_value, node_sample_ratio_type.c_str(), 10);
-            send_msg.cmd_int_value1 = node_sample_ratio_value1; // ratio
-            send_msg.cmd_int_value2 = node_sample_ratio_value2; // node start
-            send_msg.cmd_int_value3 = node_sample_ratio_value3; // node end
-            send_msg.cmd_order = cmd_duplicate_check[CMD_NODE_SAMPLE_RATIO];
-
-            if (-1 ==
-                msgsnd(msg_q_key_id, &send_msg,
-                    sizeof(struct msg_q_send_st) - sizeof(long), IPC_NOWAIT))
-            {
-                cli_result->SetReturn(ReturnCode::ERR_KERNEL_MSGQ_FAIL,
-                    "CliSend::Send node-sample-ratio");
-            }
-            else
-            {
-                num_send++;
-            }
-        }
     }
 
     target_pid = target_pid_value;
@@ -273,9 +250,7 @@ air::CliSend::_CheckRule(int argc, char* argv[])
                 "                                      "
                 "<--node-run={custom}>            |\n"
                 "                                      "
-                "<--node-init={custom}>           |\n"
-                "                                      "
-                "<--node-sample-ratio={int}> ]");
+                "<--node-init={custom}> ]\n");
             return false;
         }
 
@@ -375,33 +350,6 @@ air::CliSend::_CheckRule(int argc, char* argv[])
                 {
                     cli_result->SetReturn(
                         ReturnCode::ERR_OPT_NODE_INIT, "invalid format");
-                    return false;
-                }
-            }
-            else if (0 == strcmp(options[index].name, "node-sample-ratio"))
-            {
-                char* tok = strtok(optarg, "_");
-                if (nullptr == tok)
-                {
-                    cli_result->SetReturn(
-                        ReturnCode::ERR_OPT_NODE_SAMPLE_RATIO, "missing '_'");
-                    return false;
-                }
-
-                if (false == _IsNumber(tok))
-                {
-                    cli_result->SetReturn(
-                        ReturnCode::ERR_OPT_NODE_SAMPLE_RATIO, "missing integer");
-                    return false;
-                }
-                node_sample_ratio_value1 = std::stoi(tok);
-
-                tok = strtok(NULL, "_");
-                if (false ==
-                    _CheckMultiOption(NodeOption::NODE_OPT_SAMPLE_RATIO, tok))
-                {
-                    cli_result->SetReturn(
-                        ReturnCode::ERR_OPT_NODE_SAMPLE_RATIO, "invalid format");
                     return false;
                 }
             }
@@ -581,10 +529,6 @@ air::CliSend::_SetMultiOptionType(NodeOption option, const char* str, int str_le
     {
         node_init_type.assign(str, str_len);
     }
-    else if (NodeOption::NODE_OPT_SAMPLE_RATIO == option)
-    {
-        node_sample_ratio_type.assign(str, str_len);
-    }
 }
 
 void
@@ -598,10 +542,6 @@ air::CliSend::_SetMultiOptionValue1(NodeOption option, int value1)
     {
         node_init_value1 = value1;
     }
-    else if (NodeOption::NODE_OPT_SAMPLE_RATIO == option)
-    {
-        node_sample_ratio_value2 = value1;
-    }
 }
 
 void
@@ -614,10 +554,6 @@ air::CliSend::_SetMultiOptionValue2(NodeOption option, int value2)
     else if (NodeOption::NODE_OPT_INIT == option)
     {
         node_init_value2 = value2;
-    }
-    else if (NodeOption::NODE_OPT_SAMPLE_RATIO == option)
-    {
-        node_sample_ratio_value3 = value2;
     }
 }
 

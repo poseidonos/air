@@ -128,64 +128,6 @@ policy::Ruler::_CheckInitNodeRule(
 }
 
 int
-policy::Ruler::_CheckSetSamplingRatioRule(
-    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
-{
-    /*  type2: command, value1: ratio, value2: node_id range  */
-    int result {-1};
-    uint32_t upper_bit, lower_bit;
-
-    if (1 > value1 || 10000 < value1)
-    {
-        result = -13;
-        return result;
-    }
-
-    switch (type2)
-    {
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE)):
-            result = 0;
-            if (value2 >= MAX_NID_SIZE)
-            {
-                result = -11;
-            }
-            break;
-
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP)):
-            result = 0;
-            if (value2 >= cfg::GetSentenceCount(config::ParagraphType::GROUP))
-            {
-                result = -11;
-            }
-            break;
-
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE)):
-            result = 0;
-            upper_bit = (value2 >> 16) & 0x0000FFFF;
-            lower_bit = value2 & 0x0000FFFF;
-            if (upper_bit >= MAX_NID_SIZE)
-            {
-                result = -11;
-            }
-            if (lower_bit >= MAX_NID_SIZE)
-            {
-                result = -11;
-            }
-            if (lower_bit < upper_bit)
-            {
-                result = -11;
-            }
-            break;
-
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL)):
-            result = 0;
-            break;
-    }
-
-    return result;
-}
-
-int
 policy::Ruler::_CheckStreamInterval(
     uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
@@ -257,12 +199,6 @@ policy::Ruler::CheckRule(
             result = _CheckInitNodeRule(type1, type2, value1, value2);
             break;
 
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE)):
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE)):
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP)):
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL)):
-            result = _CheckSetSamplingRatioRule(type1, type2, value1, value2);
-            break;
         default:
             result = -1; // command not found
             break;
@@ -336,63 +272,6 @@ policy::Ruler::_SetEnableNodeRule(
 }
 
 bool
-policy::Ruler::_SetSamplingRatioRule(
-    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
-{
-    /*  type2: command, value1: ratio, value2: node_id range*/
-    bool result {false};
-    uint32_t i, upper_bit, lower_bit;
-
-    switch (type2)
-    {
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE)):
-            if (node_meta->SampleRatio(value2) != value1)
-            {
-                node_meta->SetSampleRatio(value2, value1);
-            }
-            result = true;
-            break;
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE)):
-            upper_bit = (value2 >> 16) & 0x0000FFFF;
-            lower_bit = value2 & 0x0000FFFF;
-            for (i = upper_bit; i <= lower_bit; i++)
-            {
-                if (node_meta->SampleRatio(i) != value1)
-                {
-                    node_meta->SetSampleRatio(i, value1);
-                }
-            }
-            result = true;
-            break;
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP)):
-            for (i = 0; i < cfg::GetSentenceCount(config::ParagraphType::NODE); i++)
-            {
-                if ((uint32_t)node_meta->GroupId(i) == value2)
-                {
-                    if (node_meta->SampleRatio(i) != value1)
-                    {
-                        node_meta->SetSampleRatio(i, value1);
-                    }
-                }
-            }
-            result = true;
-            break;
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL)):
-            for (i = 0; i < MAX_NID_SIZE; i++)
-            {
-                if (node_meta->SampleRatio(i) != value1)
-                {
-                    node_meta->SetSampleRatio(i, value1);
-                }
-            }
-            result = true;
-            break;
-    }
-
-    return result;
-}
-
-bool
 policy::Ruler::SetRule(
     uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
 {
@@ -447,13 +326,6 @@ policy::Ruler::SetRule(
         case (to_dtype(pi::Type2::INITIALIZE_NODE_WITH_RANGE)):
         case (to_dtype(pi::Type2::INITIALIZE_NODE_WITH_GROUP)):
             result = true;
-            break;
-
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE)):
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE)):
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL)):
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP)):
-            result = _SetSamplingRatioRule(type1, type2, value1, value2);
             break;
     }
 

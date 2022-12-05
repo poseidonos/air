@@ -153,37 +153,6 @@ input::InCommand::_SendNodeInitCMD(void)
         type2, value1, value2, recv_msg.pid, recv_msg.cmd_type, recv_msg.cmd_order);
 }
 
-void
-input::InCommand::_SendNodeSampleRatioCMD(void)
-{
-    uint32_t type2 {0};                        // command
-    uint32_t value1 = recv_msg.cmd_int_value1; // ratio
-    uint32_t value2 = {0};                     // node_id range
-
-    if (strcmp(recv_msg.cmd_str_value, "node") == 0)
-    {
-        type2 = to_dtype(pi::Type2::SET_SAMPLING_RATE);
-        value2 = recv_msg.cmd_int_value2;
-    }
-    else if (strcmp(recv_msg.cmd_str_value, "range") == 0)
-    {
-        type2 = to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE);
-        value2 = (recv_msg.cmd_int_value2 << 16) + recv_msg.cmd_int_value3;
-    }
-    else if (strcmp(recv_msg.cmd_str_value, "group") == 0)
-    {
-        type2 = to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP);
-        value2 = recv_msg.cmd_int_value2;
-    }
-    else if (strcmp(recv_msg.cmd_str_value, "all") == 0)
-    {
-        type2 = to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL);
-    }
-
-    _NotifyToPolicy(
-        type2, value1, value2, recv_msg.pid, recv_msg.cmd_type, recv_msg.cmd_order);
-}
-
 int
 input::InCommand::HandleKernelMsg(void)
 {
@@ -219,10 +188,6 @@ input::InCommand::HandleKernelMsg(void)
                 break;
             case CMD_NODE_INIT:
                 _SendNodeInitCMD();
-                num_enq++;
-                break;
-            case CMD_NODE_SAMPLE_RATIO:
-                _SendNodeSampleRatioCMD();
                 num_enq++;
                 break;
         }

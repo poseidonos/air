@@ -38,7 +38,6 @@ enum CommandType
     CMD_AIR_REMAIN_FILE_COUNT,
     CMD_NODE_RUN,
     CMD_NODE_INIT,
-    CMD_NODE_SAMPLE_RATIO,
     CMD_MAX_COUNT
 };
 
@@ -53,7 +52,6 @@ enum ReturnCode
     ERR_OPT_AIR_REMAIN_FILE_COUNT,
     ERR_OPT_NODE_RUN,
     ERR_OPT_NODE_INIT,
-    ERR_OPT_NODE_SAMPLE_RATIO,
     ERR_OUT_OF_RANGE,
     ERR_MISSING_PID_OPTION,
     ERR_AIR_NOT_FOUND,
@@ -75,8 +73,6 @@ static const std::string ReturnMsg[RC_COUNT] {"[SUCCESS]",
     "--air-remain-file-count=<1~99>",
     "[ERR_OPT_NODE_RUN] ex) --pid=<target_pid> --node-run=<node/range/all>",
     "[ERR_OPT_NODE_INIT] ex) --pid=<target_pid> --node-init=<node/range/all>",
-    "[ERR_OPT_NODE_SAMPLE_RATIO] ex) --pid=<target_pid> "
-    "--node-sample-ratio=<1~10000>",
     "[ERR_OUT_OF_RANGE]", "[ERR_MISSING_PID_OPTION]", "[ERR_AIR_NOT_FOUND]",
     "[ERR_KERNEL_MSGQ_FAIL]", "[ERR_DUPLICATION]", "[ERR_TIMEOUT]",
     "[ERR_MSG_Q_NOT_EXIST]", "[ERR_UNKNOWN]"};

@@ -60,8 +60,7 @@ private:
     enum NodeOption
     {
         NODE_OPT_RUN,
-        NODE_OPT_INIT,
-        NODE_OPT_SAMPLE_RATIO
+        NODE_OPT_INIT
     };
     void _Initialize(void);
     void _Finalize(void);
@@ -102,19 +101,13 @@ private:
     int node_init_value1 {0};
     int node_init_value2 {0};
 
-    int opt_node_sample_ratio {0};
-    std::string node_sample_ratio_type {""};
-    int node_sample_ratio_value1 {100};
-    int node_sample_ratio_value2 {0};
-    int node_sample_ratio_value3 {0};
-
-    struct option options[10] {{"pid", 1, &opt_pid, 1},
+    struct option options[8] {{"pid", 1, &opt_pid, 1},
         {"air-run", 1, &opt_air_run, 1},
         {"air-stream-interval", 1, &opt_air_stream_interval, 1},
         {"air-file-write", 1, &opt_air_file_write, 1},
         {"air-remain-file-count", 1, &opt_air_remain_file_count, 1},
         {"node-run", 1, &opt_node_run, 1}, {"node-init", 1, &opt_node_init, 1},
-        {"node-sample-ratio", 1, &opt_node_sample_ratio, 1}, {0, 0, 0, 0}};
+        {0, 0, 0, 0}};
     int cmd_duplicate_check[CMD_MAX_COUNT];
 
     key_t msg_q_key_id {0};

@@ -117,9 +117,6 @@ private:
     void _InitNode(uint32_t node_index);
     int _UpdateInit(
         uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
-    int _UpdateNodeSamplingRate(uint32_t node_index, uint32_t ratio);
-    int _UpdateSamplingRate(
-        uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2);
 
     Collector* collector[cfg::GetSentenceCount(config::ParagraphType::NODE)] {
         nullptr,

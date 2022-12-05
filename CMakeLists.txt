@@ -4,7 +4,7 @@ set(CMAKE_C_COMPILER "gcc")
 
 project(
     AIR
-    VERSION 0.8.5
+    VERSION 0.8.7
     DESCRIPTION "Analytics In Real-time"
     LANGUAGES CXX C
 )

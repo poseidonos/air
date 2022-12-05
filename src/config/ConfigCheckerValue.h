@@ -268,11 +268,7 @@ private:
     static constexpr int32_t
     _CheckDefaultValue(air::string_view key, air::string_view value)
     {
-        if (key == "NodeSamplingRatio")
-        {
-            return _CheckNumberValue(value, 5);
-        }
-        else if (key == "NodeIndexSize")
+        if (key == "NodeIndexSize")
         {
             return _CheckNumberValue(value, 3);
         }
@@ -297,10 +293,6 @@ private:
         if (key == "Group")
         {
             return _CheckNameValue(value);
-        }
-        else if (key == "NodeSamplingRatio")
-        {
-            return _CheckNumberValue(value, 5);
         }
         else if (key == "NodeIndexSize")
         {
@@ -472,10 +464,6 @@ private:
         else if (key == "Type")
         {
             return _CheckType(value);
-        }
-        else if (key == "SamplingRatio")
-        {
-            return _CheckNumberValue(value, 5);
         }
         else if (key == "IndexSize")
         {

@@ -36,11 +36,6 @@ public:
     {
     }
     virtual ~Collector(void);
-    int
-    SetSamplingRate(uint32_t rate)
-    {
-        return writer->SetSamplingRate(rate);
-    }
     inline void
     LogData(lib::Data* data, uint64_t value)
     {

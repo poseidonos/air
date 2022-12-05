@@ -45,13 +45,6 @@ public:
             send_msg_.cmd_int_value1 = 0; // start node
             send_msg_.cmd_int_value2 = 1; // end node
         }
-        else if (strcmp(argv, "node-sample-ratio") == 0)
-        {
-            send_msg_.cmd_type = input::CommandType::CMD_NODE_SAMPLE_RATIO;
-            send_msg_.cmd_int_value1 = 100; // sampling ratio
-            send_msg_.cmd_int_value2 = 0;   // start node
-            send_msg_.cmd_int_value3 = 1;   // end nodea
-        }
         else
         {
             send_msg_.cmd_type = 99;
