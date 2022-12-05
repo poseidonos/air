@@ -94,16 +94,14 @@ public:
         {
             if (key != "AirBuild" && key != "StreamingInterval" &&
                 key != "FileWrite" && key != "RemainingFileCount" &&
-                key != "NodeBuild" && key != "NodeRun" &&
-                key != "NodeSamplingRatio" && key != "NodeIndexSize")
+                key != "NodeBuild" && key != "NodeRun" && key != "NodeIndexSize")
             {
                 return -1;
             }
         }
         else if (ParagraphType::GROUP == type)
         {
-            if (key != "NodeBuild" && key != "NodeRun" &&
-                key != "NodeSamplingRatio" && key != "NodeIndexSize")
+            if (key != "NodeBuild" && key != "NodeRun" && key != "NodeIndexSize")
             {
                 return -1;
             }
@@ -124,8 +122,7 @@ public:
         }
         else if (ParagraphType::NODE == type)
         {
-            if (key != "Build" && key != "Run" && key != "SamplingRatio" &&
-                key != "IndexSize")
+            if (key != "Build" && key != "Run" && key != "IndexSize")
             {
                 return -1;
             }
@@ -296,18 +293,6 @@ private:
                         ParagraphType::DEFAULT, 0);
                     ret =
                         config_parser.GetIntValueFromSentence(sentence, "NodeRun");
-                }
-            }
-            else if (key == "SamplingRatio")
-            {
-                ret = config_parser.GetIntValueFromSentence(
-                    sentence, "NodeSamplingRatio");
-                if (0 > ret)
-                {
-                    sentence = config_parser.GetSentenceFromParagraph(
-                        ParagraphType::DEFAULT, 0);
-                    ret = config_parser.GetIntValueFromSentence(
-                        sentence, "NodeSamplingRatio");
                 }
             }
             else if (key == "IndexSize")

@@ -75,8 +75,6 @@ TEST_F(ConfigInterfaceTest, GetIntValue)
 {
     EXPECT_EQ(
         1, cfg::GetIntValue(config::ParagraphType::DEFAULT, "StreamingInterval"));
-    EXPECT_EQ(1000,
-        cfg::GetIntValue(config::ParagraphType::DEFAULT, "NodeSamplingRatio"));
     EXPECT_EQ(
         32, cfg::GetIntValue(config::ParagraphType::DEFAULT, "NodeIndexSize"));
     EXPECT_EQ(1, cfg::GetIntValue(config::ParagraphType::DEFAULT, "AirBuild"));
@@ -130,13 +128,8 @@ TEST_F(ConfigInterfaceTest, GetIntValue)
     EXPECT_EQ(
         100, cfg::GetIntValue(config::ParagraphType::NODE, "IndexSize", "PERF_CP"));
     EXPECT_EQ(0, cfg::GetIntValue(config::ParagraphType::NODE, "Build", "LAT_PSD"));
-    EXPECT_EQ(100,
-        cfg::GetIntValue(config::ParagraphType::NODE, "SamplingRatio", "LAT_PSD"));
     EXPECT_EQ(
         77, cfg::GetIntValue(config::ParagraphType::NODE, "IndexSize", "LAT_PSD"));
-    EXPECT_EQ(1000,
-        cfg::GetIntValue(
-            config::ParagraphType::NODE, "SamplingRatio", "LAT_SUBMIT"));
 }
 
 TEST_F(ConfigInterfaceTest, GetIntValue_Filter)

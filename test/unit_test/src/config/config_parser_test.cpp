@@ -31,18 +31,16 @@ TEST_F(ConfigParserTest, GetSentenceFromParagraph)
 {
     EXPECT_EQ(0,
         cfg->GetSentenceFromParagraph(config::ParagraphType::DEFAULT)
-            .compare(
-                "StreamingInterval:1, FileWrite: On, AirBuild:True,\n"
-                "         NodeBuild:False, NodeRun:Off, NodeSamplingRatio: 1000,\n"
-                "         NodeIndexSize:32, RemainingFileCount: 3"));
+            .compare("StreamingInterval:1, FileWrite: On, AirBuild:True,\n"
+                     "         NodeBuild:False, NodeRun:Off,"
+                     " NodeIndexSize:32, RemainingFileCount: 3"));
 
     EXPECT_EQ(0,
         cfg->GetSentenceFromParagraph(config::ParagraphType::GROUP, 1)
             .compare("Group: POS_JOURNAL ,\nNodeBuild: True, NodeIndexSize: 100"));
     EXPECT_EQ(0,
         cfg->GetSentenceFromParagraph(config::ParagraphType::GROUP, 3)
-            .compare("Group: POS_META, NodeBuild: False, NodeRun: On, "
-                     "NodeSamplingRatio: 100"));
+            .compare("Group: POS_META, NodeBuild: False, NodeRun: On"));
     EXPECT_EQ(0,
         cfg->GetSentenceFromParagraph(config::ParagraphType::GROUP, 5).compare(""));
     EXPECT_EQ(0,
@@ -94,7 +92,7 @@ TEST_F(ConfigParserTest, GetSentenceFromParagraph)
         cfg->GetSentenceFromParagraph(config::ParagraphType::NODE, 13)
             .compare(
                 "Node: Q_SCHEDULING, Filter: Basic\n, Type: QUEUE, Build   : True, "
-                "Run : Off, SamplingRatio: 1000,\n          Group: POS"));
+                "Run : Off,\n          Group: POS"));
 }
 
 TEST_F(ConfigParserTest, GetIndexFromParagraph)
@@ -163,55 +161,49 @@ TEST_F(ConfigParserTest, GetIntValueFromSentence)
     EXPECT_EQ(1,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:On, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "NodeIndexSize:32, FileWrite: On, "
             "RemainingFileCount: 3",
             "AirBuild"));
     EXPECT_EQ(1,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:On, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "NodeIndexSize:32, FileWrite: On, "
             "RemainingFileCount: 3",
             "NodeBuild"));
     EXPECT_EQ(0,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:Off, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "NodeIndexSize:32, FileWrite: On, "
             "RemainingFileCount: 3",
             "NodeRun"));
     EXPECT_EQ(3,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:  3   , AirBuild  : True, NodeBuild:True, "
-            "NodeRun:Off, NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: "
+            "NodeIndexSize:32, FileWrite: "
             "On, RemainingFileCount: 3",
             "StreamingInterval"));
-    EXPECT_EQ(1000,
-        cfg->GetIntValueFromSentence(
-            "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:off, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32 ,FileWrite: On, "
-            "RemainingFileCount: 3",
-            "NodeSamplingRatio"));
     EXPECT_EQ(-1,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:off, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "NodeIndexSize:32, FileWrite: On, "
             "RemainingFileCount: 3",
             "Condition"));
     EXPECT_EQ(32,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:Off, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "NodeIndexSize:32, FileWrite: On, "
             "RemainingFileCount: 3",
             "NodeIndexSize"));
     EXPECT_EQ(1,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:Off, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "NodeIndexSize:32, FileWrite: On, "
             "RemainingFileCount: 3",
             "FileWrite"));
     EXPECT_EQ(7,
         cfg->GetIntValueFromSentence(
             "StreamingInterval:1, AirBuild  : True, NodeBuild:True, NodeRun:Off, "
-            "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+            "NodeIndexSize:32, FileWrite: On, "
             "RemainingFileCount: 7",
             "RemainingFileCount"));
 
@@ -275,20 +267,16 @@ TEST_F(ConfigParserTest, GetIntValueFromSentence)
     // NODE
     EXPECT_EQ(1,
         cfg->GetIntValueFromSentence("Node: Q_IOWORER, Type: QUEUE, Build: True, "
-                                     "Filter: Basic, Run: Off, SamplingRatio: 10",
+                                     "Filter: Basic, Run: Off",
             "Build"));
     EXPECT_EQ(0,
         cfg->GetIntValueFromSentence("Node: Q_IOWORER, Type: QUEUE, Build: True, "
-                                     "Filter: Basic, Run: Off, SamplingRatio: 10",
+                                     "Filter: Basic, Run: Off",
             "Run"));
     EXPECT_EQ(-1,
         cfg->GetIntValueFromSentence("Node: Q_IOWORER, Type: QUEUE, Build: True, "
-                                     "Filter: Basic, Run: Off, SamplingRatio: 10",
+                                     "Filter: Basic, Run: Off",
             "AirBuild"));
-    EXPECT_EQ(10,
-        cfg->GetIntValueFromSentence("Node: Q_IOWORER, Type: QUEUE, Build: True, "
-                                     "Filter: Basic, Run: Off, SamplingRatio: 10",
-            "SamplingRatio"));
 }
 
 TEST_F(ConfigParserTest, GetStrValueFromSentence)
@@ -297,49 +285,42 @@ TEST_F(ConfigParserTest, GetStrValueFromSentence)
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "NodeIndexSize:32, FileWrite: On, "
                "RemainingFileCount: 3",
                "AirBuild")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:On, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "NodeIndexSize:32, FileWrite: On, "
                "RemainingFileCount: 3",
                "NodeBuild")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:Off, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "NodeIndexSize:32, FileWrite: On, "
                "RemainingFileCount: 3",
                "StreamingInterval")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:Off, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
-               "RemainingFileCount: 3",
-               "SamplingRatio")
-            .compare(""));
-    EXPECT_EQ(0,
-        cfg->GetStrValueFromSentence(
-               "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:Off, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "NodeIndexSize:32, FileWrite: On, "
                "RemainingFileCount: 3",
                "Condition")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:off, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "NodeIndexSize:32, FileWrite: On, "
                "RemainingFileCount: 3",
                "NodeRun")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "StreamingInterval:1, AirBuild:True, NodeBuild:True, NodeRun:off, "
-               "NodeSamplingRatio: 1000, NodeIndexSize:32, FileWrite: On, "
+               "NodeIndexSize:32, FileWrite: On, "
                "RemainingFileCount: 3",
                "NodeIndexSize")
             .compare(""));
@@ -362,10 +343,6 @@ TEST_F(ConfigParserTest, GetStrValueFromSentence)
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence(
                "Group: POS_RSC  , NodeBuild: False, NodeRun: On", "NodeRun")
-            .compare(""));
-    EXPECT_EQ(0,
-        cfg->GetStrValueFromSentence(
-               "Group: POS_RSC  , NodeBuild: False, NodeRun: On", "SamplingRatio")
             .compare(""));
 
     // FILTER
@@ -390,42 +367,37 @@ TEST_F(ConfigParserTest, GetStrValueFromSentence)
     // NODE
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence("Node:   Q_IOWORKER    , Type: QUEUE, Build: "
-                                     "True, Run: Off, SamplingRatio: 10",
+                                     "True, Run: Off",
                "Node")
             .compare("Q_IOWORKER"));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence("Node: Q_IOWORKER, Type: QUEUE, Build: True, "
-                                     "Run: Off, SamplingRatio: 10",
+                                     "Run: Off",
                "Type")
             .compare("QUEUE"));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence("Node: Q_IOWORKER, Type: QUEUE, Build: True, "
-                                     "Run: Off, SamplingRatio: 10, Group:  IO     ",
+                                     "Run: Off, Group:  IO     ",
                "Group")
             .compare("IO"));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence("Node: Q_IOWORKER, Type: QUEUE, Build: True, "
-                                     "Run: Off, SamplingRatio: 10",
+                                     "Run: Off",
                "Run")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence("Node: Q_IOWORKER, Type: QUEUE, Build: True, "
-                                     "Run: Off, SamplingRatio: 10",
-               "SamplingRatio")
-            .compare(""));
-    EXPECT_EQ(0,
-        cfg->GetStrValueFromSentence("Node: Q_IOWORKER, Type: QUEUE, Build: True, "
-                                     "Run: Off, SamplingRatio: 10",
+                                     "Run: Off",
                "AirBuild")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence("Node: Q_IOWORKER, Type: QUEUE, Build: True, "
-                                     "Run: Off, SamplingRatio: 10",
+                                     "Run: Off",
                "Build")
             .compare(""));
     EXPECT_EQ(0,
         cfg->GetStrValueFromSentence("Node: Q_IOWORKER, Type: QUEUE, Build: True, "
-                                     "Run: Off, SamplingRatio: 10",
+                                     "Run: Off",
                "Group")
             .compare(""));
 }

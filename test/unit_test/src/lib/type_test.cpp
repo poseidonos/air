@@ -34,7 +34,6 @@ TEST_F(TypeTest, Node)
         node_meta.nid);
     EXPECT_EQ(air::ProcessorType::PERFORMANCE, node_meta.processor_type);
     EXPECT_EQ(true, node_meta.run);
-    EXPECT_EQ(1000, node_meta.sample_ratio);
 
     node_meta.nid =
         (uint32_t)cfg::GetSentenceIndex(config::ParagraphType::NODE, "PERF_VOLUME");

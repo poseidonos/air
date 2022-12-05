@@ -60,16 +60,6 @@ public:
         return node[nid].run;
     }
     virtual inline uint32_t
-    SampleRatio(uint32_t nid) const
-    {
-        if (MAX_NID_SIZE <= nid)
-        {
-            throw std::out_of_range("nid exceeded maximum node size!");
-        }
-
-        return node[nid].sample_ratio;
-    }
-    virtual inline uint32_t
     GroupId(uint32_t nid) const
     {
         if (MAX_NID_SIZE <= nid)
@@ -103,16 +93,6 @@ public:
         }
 
         node[nid].run = run;
-    }
-    virtual inline void
-    SetSampleRatio(uint32_t nid, uint32_t sample_ratio)
-    {
-        if (MAX_NID_SIZE <= nid)
-        {
-            throw std::out_of_range("nid exceeded maximum node size!");
-        }
-
-        node[nid].sample_ratio = sample_ratio;
     }
     virtual inline void
     SetGroupId(uint32_t nid, uint32_t group_id)
@@ -192,11 +172,6 @@ public:
     Run(uint32_t nid) const
     {
         return node_meta->Run(nid);
-    }
-    inline uint32_t
-    SampleRatio(uint32_t nid) const
-    {
-        return node_meta->SampleRatio(nid);
     }
     virtual inline uint32_t
     GroupId(uint32_t nid) const

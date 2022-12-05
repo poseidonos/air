@@ -38,9 +38,6 @@ TEST(Protocol, ValueCheck)
     uint16_t value16 {0x0001};
     EXPECT_EQ(to_dtype(pi::Type2_Upper::COLLECTION), value16);
 
-    value16 = 0x0106;
-    EXPECT_EQ(to_dtype(pi::Type2_Lower::SET_SAMPLING_RATE_ALL), value16);
-
     value32 = 5;
     EXPECT_EQ(to_dtype(pi::ChainHandler::STREAM), value32);
 

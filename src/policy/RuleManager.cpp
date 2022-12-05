@@ -72,8 +72,6 @@ policy::RuleManager::SetNodeMetaConfig(void* node)
         else if (0 == type.compare("QUEUE") || 0 == type.compare("Queue"))
         {
             node_meta[i].processor_type = air::ProcessorType::QUEUE;
-            node_meta[i].sample_ratio = cfg::GetIntValue(
-                config::ParagraphType::NODE, "SamplingRatio", node_name);
         }
         else if (0 == type.compare("UTILIZATION") ||
             0 == type.compare("Utilization"))

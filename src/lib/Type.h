@@ -49,9 +49,6 @@ struct NodeMetaData
     uint32_t group_id {0};
     uint32_t index_size {0};
     uint32_t filter_size {0};
-
-    // Optional
-    uint32_t sample_ratio {1000};
 };
 
 } // namespace air

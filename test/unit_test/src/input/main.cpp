@@ -7,24 +7,23 @@
 
 TEST_F(InTest, HandleKernelMsg)
 {
-    char command[6][30];
+    char command[5][30];
     strcpy(command[0], "air-run");
     strcpy(command[1], "air-stream-interval");
     strcpy(command[2], "node-run");
     strcpy(command[3], "node-init");
-    strcpy(command[4], "node-sample-ratio");
-    strcpy(command[5], "error");
+    strcpy(command[4], "error");
 
     for (int range = 1; range <= 4; range++)
     {
-        for (int cmd = 0; cmd < 5; cmd++)
+        for (int cmd = 0; cmd < 4; cmd++)
         {
             fake_cli_send->FakeSend(range, command[cmd]);
             EXPECT_EQ(1, in_command->HandleKernelMsg());
         }
     }
 
-    fake_cli_send->FakeSend(1, command[6]);
+    fake_cli_send->FakeSend(1, command[5]);
     EXPECT_EQ(0, in_command->HandleKernelMsg());
 }
 

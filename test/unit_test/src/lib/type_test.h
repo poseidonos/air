@@ -50,7 +50,6 @@ protected:
         node_meta.index_size = 10;
         ;
         node_meta.filter_size = 10;
-        node_meta.sample_ratio = 1000;
     }
     void
     TearDown() override

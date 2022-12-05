@@ -70,37 +70,6 @@ TEST_F(PolicyTest, RulerCheckRule)
     EXPECT_EQ(
         0, ruler->CheckRule(0, to_dtype(pi::Type2::INITIALIZE_NODE_ALL), 0, 0));
 
-    // set sampling rate
-    EXPECT_EQ(0, ruler->CheckRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE), 1, 0));
-    EXPECT_EQ(
-        0, ruler->CheckRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE), 10000, 0));
-    EXPECT_EQ(
-        -13, ruler->CheckRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE), 0, 0));
-    EXPECT_EQ(
-        -13, ruler->CheckRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE), 10001, 0));
-    EXPECT_EQ(-11,
-        ruler->CheckRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE), 1, 0x0000ffff));
-    EXPECT_EQ(0,
-        ruler->CheckRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE), 1,
-            0x00000001)); // 0~1
-    EXPECT_EQ(-11,
-        ruler->CheckRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE), 1,
-            0x0000ffff)); // 0~0xffff
-    EXPECT_EQ(-11,
-        ruler->CheckRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE), 1,
-            0xffff0000)); // 0xffff~0
-    EXPECT_EQ(-11,
-        ruler->CheckRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE), 1,
-            0x00001000)); // 1~0
-    EXPECT_EQ(-11,
-        ruler->CheckRule(
-            0, to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP), 1, 0x0000000f));
-    EXPECT_EQ(-13,
-        ruler->CheckRule(
-            0, to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP), 0, 0x00000001));
-    EXPECT_EQ(
-        0, ruler->CheckRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL), 1, 0));
-
     // invalid command
     EXPECT_EQ(-1, ruler->CheckRule(0, to_dtype(pi::Type2::COUNT), 1, 0));
 }
@@ -141,18 +110,6 @@ TEST_F(PolicyTest, RulerSetRule)
         ruler->SetRule(0, to_dtype(pi::Type2::INITIALIZE_NODE_WITH_GROUP), 0, 0));
     EXPECT_EQ(
         true, ruler->SetRule(0, to_dtype(pi::Type2::INITIALIZE_NODE_ALL), 0, 0));
-
-    // set sampling rate
-    EXPECT_EQ(
-        true, ruler->SetRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE), 2, 0));
-    EXPECT_EQ(true,
-        ruler->SetRule(
-            0, to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE), 2, 0x00000001));
-    EXPECT_EQ(true,
-        ruler->SetRule(
-            0, to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP), 10, 0x00000001));
-    EXPECT_EQ(
-        true, ruler->SetRule(0, to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL), 2, 0));
 }
 
 TEST_F(PolicyTest, RuleManagerConfig)

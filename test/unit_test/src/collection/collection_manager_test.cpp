@@ -164,14 +164,6 @@ TEST_F(CollectionManagerTest, Observer)
     // handle init msg
     collection_cor_handler->HandleRequest();
 
-    // handle error
-    EXPECT_EQ(1, perf_data->period_iops);
-    EXPECT_EQ(128, perf_data->period_bandwidth); // not initialized yet
-    EXPECT_EQ(1, acc_perf_data->need_erase);
-
-    observer->Update(0, to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL), 0, 0, 0, 0, 0);
-    collection_cor_handler->HandleRequest();
-
     delete observer;
     delete collection_cor_handler;
 }

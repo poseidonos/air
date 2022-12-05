@@ -165,13 +165,6 @@ collection::CollectionManager::UpdateCollection(
             result = _UpdateInit(type1, type2, value1, value2);
             break;
 
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE)):
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL)):
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE)):
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP)):
-            result = _UpdateSamplingRate(type1, type2, value1, value2);
-            break;
-
         default:
             result = -1;
             break;
@@ -349,68 +342,4 @@ collection::CollectionManager::_UpdateInit(
     }
 
     return 0;
-}
-
-int
-collection::CollectionManager::_UpdateNodeSamplingRate(
-    uint32_t node_index, uint32_t ratio)
-{
-    if (collector[node_index] != nullptr)
-    {
-        return collector[node_index]->SetSamplingRate(ratio);
-    }
-    return 0;
-}
-
-int
-collection::CollectionManager::_UpdateSamplingRate(
-    uint32_t type1, uint32_t type2, uint32_t value1, uint32_t value2)
-{
-    // value1: rate, value2: node info(node id, range, group id)
-    uint32_t lower_bit = value2 & 0x0000FFFF;
-    uint32_t upper_bit = (value2 >> 16) & 0x0000FFFF;
-    int result {0};
-
-    switch (type2)
-    {
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE)):
-            result = _UpdateNodeSamplingRate(value2, value1);
-            break;
-
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_RANGE)):
-            for (uint32_t i = upper_bit; i <= lower_bit; i++)
-            {
-                result = _UpdateNodeSamplingRate(i, value1);
-                if (result != 0)
-                {
-                    break;
-                }
-            }
-            break;
-
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_WITH_GROUP)):
-            for (uint32_t i = 0;
-                 i < cfg::GetSentenceCount(config::ParagraphType::NODE); i++)
-            {
-                result = _UpdateNodeSamplingRate(i, value1);
-                if (result != 0)
-                {
-                    break;
-                }
-            }
-            break;
-
-        case (to_dtype(pi::Type2::SET_SAMPLING_RATE_ALL)):
-            for (uint32_t i = 0; i < MAX_NID_SIZE; i++)
-            {
-                result = _UpdateNodeSamplingRate(i, value1);
-                if (result != 0)
-                {
-                    break;
-                }
-            }
-            break;
-    }
-
-    return result;
 }

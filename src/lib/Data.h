@@ -128,16 +128,9 @@ struct AccLatencyData : public AccData
 struct QueueData : public Data
 {
     double period_qd_avg {0.0};
-    uint32_t period_qd_max {0};
-    uint32_t period_num_req {0};
+    uint64_t period_qd_max {0};
+    uint64_t period_num_req {0};
     uint64_t period_qd_sum {0};
-
-    uint32_t logging_point {0};
-    uint32_t num_called {0};
-    uint32_t sampling_rate {0};
-    std::mt19937 mersenne {
-        0,
-    };
 };
 
 struct AccQueueData : public AccData

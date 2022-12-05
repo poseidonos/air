@@ -60,11 +60,6 @@ public:
             count_data->period_num_req_positive += 1;
         }
     }
-    int
-    SetSamplingRate(uint32_t rate) override
-    {
-        return 0;
-    }
 
 private:
     const uint64_t MAX_INT64_VALUE {9223372036854775807};

@@ -114,8 +114,6 @@ CheckKeyTypoNode(const air::string_view* key_list, air::string_view sentence)
 {
     size_t cur_pos {sentence.find(":")};
     size_t prev_pos {0};
-    bool is_queue_type {false};
-    bool has_sampling_ratio {false};
     bool is_histogram_type {false};
     bool has_bucket_key {false};
 
@@ -126,10 +124,6 @@ CheckKeyTypoNode(const air::string_view* key_list, air::string_view sentence)
 
         bool find {false};
 
-        if (key == "SamplingRatio")
-        {
-            has_sampling_ratio = true;
-        }
         if (key == "Bucket")
         {
             has_bucket_key = true;
@@ -144,11 +138,7 @@ CheckKeyTypoNode(const air::string_view* key_list, air::string_view sentence)
             air::string_view value {
                 sentence.substr(cur_pos + 1, next_comma - cur_pos - 1)};
             value = Strip(value);
-            if (value == "QUEUE" || value == "Queue")
-            {
-                is_queue_type = true;
-            }
-            else if (value == "HISTOGRAM" || value == "Histogram")
+            if (value == "HISTOGRAM" || value == "Histogram")
             {
                 is_histogram_type = true;
             }
@@ -170,11 +160,6 @@ CheckKeyTypoNode(const air::string_view* key_list, air::string_view sentence)
         cur_pos = sentence.find(":", cur_pos + 1);
         prev_pos = sentence.rfind(",", cur_pos + 1);
         prev_pos += 1;
-    }
-
-    if (!is_queue_type && has_sampling_ratio)
-    {
-        throw std::logic_error("Only queue type can have SamplingRatio option");
     }
 
     if (!is_histogram_type && has_bucket_key)

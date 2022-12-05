@@ -29,12 +29,6 @@ TEST_F(NodeMetaTest, NodeMeta)
     node_meta->SetRun(2, false);
     EXPECT_EQ(false, node_meta_getter->Run(2));
 
-    // sampling ratio
-    EXPECT_EQ(1000, node_meta_getter->SampleRatio(0)); // default
-
-    node_meta->SetSampleRatio(0, 100);
-    EXPECT_EQ(100, node_meta_getter->SampleRatio(0));
-
     // group id
     uint32_t group_id =
         cfg::GetSentenceIndex(config::ParagraphType::GROUP, "POS_IO");
@@ -46,7 +40,6 @@ TEST_F(NodeMetaTest, NodeMeta)
     air::NodeMetaData* node = (air::NodeMetaData*)node_meta_getter->Meta();
     EXPECT_EQ(node[0].processor_type, air::ProcessorType::PERFORMANCE);
     EXPECT_EQ(node[1].processor_type, air::ProcessorType::LATENCY);
-    EXPECT_EQ(node[0].sample_ratio, (uint32_t)100);
     EXPECT_EQ(node[0].group_id,
         cfg::GetSentenceIndex(config::ParagraphType::GROUP, "POS_IO"));
 }
